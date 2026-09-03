@@ -1,0 +1,13 @@
+# The answer store holds real organisational detail: names, phone numbers,
+# OCIDs, MTD figures, incident narratives. It never belongs in a public repo.
+.itscm/answers.yaml
+.itscm/answers.*.yaml
+
+# Discovery output: a complete inventory of a live tenancy.
+discovery-output/
+dr-resources.env
+*.dr-resources.env
+
+# Working files
+*.tmp
+.DS_Store
