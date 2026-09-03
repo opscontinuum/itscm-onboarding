@@ -1,0 +1,252 @@
+# .itscm/answers.yaml — the answer store. Copy to .itscm/answers.yaml in the
+# generated plan repository. See skills/_method/answer-store.md for the rules.
+#
+# THIS FILE IS GITIGNORED IN GENERATED REPOSITORIES AND MUST STAY THAT WAY.
+# It accumulates names, phone numbers, OCIDs, MTD figures and organisational
+# weak points. It is the most sensitive file the toolkit produces.
+#
+# Every field starts MISSING. A value appears only when a human said it or a
+# read-only API returned it. There is no third source.
+
+meta:
+  schema_version: 1
+  system_name: null
+  created: null
+  last_updated: null
+
+facts:
+
+  # ---- system.* — application owner ----------------------------------------
+  system.name:
+    status: MISSING
+    value: null
+    provenance: null
+    confidence: null
+    owner: "application owner"
+
+  system.business_name:
+    status: MISSING
+    value: null
+    owner: "business owner"
+    notes: "What the business calls it. The ISCP is read by both audiences."
+
+  system.categorization:
+    status: MISSING
+    value: null
+    owner: "governance"
+    notes: "Impact level or data classification. Determines which controls are
+            mandatory. If never categorised, that is itself the finding."
+
+  # ---- business.* — business / process owner -------------------------------
+  business.processes:
+    status: MISSING
+    value: null          # list of {name, impact_1h, impact_4h, impact_1d, impact_1w}
+    owner: "business owner"
+
+  business.mtd.tier0:
+    status: MISSING
+    value: null
+    mechanism: null      # REQUIRED alongside any duration. What breaks, and when?
+    owner: "business owner"
+    notes: "A number without a mechanism is a guess wearing a suit."
+
+  business.rpo.tier0:
+    status: MISSING
+    value: null
+    mechanism: null
+    owner: "business owner"
+    notes: "Elicited as: if we lost 15 minutes, who redoes the work, and can they?"
+
+  business.mbco.tier0:
+    status: MISSING
+    value: null
+    owner: "business owner"
+    notes: "Not NIST. What must work to keep trading while recovery runs."
+
+  business.workarounds:
+    status: MISSING
+    value: null          # list of {process, workaround, sustainable_for}
+    owner: "business owner"
+    notes: "Appendix E. Ask about the last real outage, not the hypothetical one."
+
+  business.tier_signoff:
+    status: MISSING
+    value: null
+    owner: "business owner"
+    notes: "Signed, or explicitly recorded as not signed and who owes it."
+
+  # ---- app.* — application owner -------------------------------------------
+  app.start_order:
+    status: MISSING
+    value: null
+    owner: "application owner"
+    notes: "Rarely written down, usually in one person's head. Capture verbatim."
+
+  app.interconnections:
+    status: MISSING
+    value: null          # list of {partner, direction, transport, contact, replayable}
+    owner: "application owner"
+    notes: "Appendix I. A partner contact stored only inside the system being
+            recovered is not a contact."
+
+  app.validation_pack:
+    status: MISSING
+    value: null          # list of {check, duration, who}
+    owner: "application owner"
+    notes: "Appendix F. On the MTD critical path and routinely omitted from timings."
+
+  app.wrt_activities:
+    status: MISSING
+    value: null          # list of {activity, duration, parallel_with_bringup}
+    owner: "application owner"
+    notes: "The parallel/serial flag decides whether the MTD is achievable."
+
+  app.concurrent_processing:
+    status: MISSING
+    value: null
+    owner: "application owner"
+    notes: "Usually NOT_APPLICABLE. NIST does not require it; the plan must
+            still address it, with the reason."
+
+  # ---- infra.* — infrastructure owner + discovery --------------------------
+  infra.primary_region:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+
+  infra.standby_region:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+
+  infra.measured_rtt_ms:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+    notes: "Measured, not published. A synchronous design over an unmeasured
+            link has an unexploded assumption in the middle of it."
+
+  infra.replication:
+    status: MISSING
+    value: null          # list of {tier, mechanism, sync, measured_lag,
+                         #          failover_behaviour, rebaseline_on_reversal, one_way}
+    owner: "infrastructure owner"
+    notes: "Press the re-baseline question. It is the failback cost and it is
+            almost never costed."
+
+  infra.standby_cost_floor:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+    notes: "The tier the business chose may be unaffordable at the floor. Now is
+            when that conversation is cheap."
+
+  infra.region_locked_naming:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+    notes: "Often the single largest RTO lever, and cheaper than more capacity."
+
+  infra.last_end_to_end_execution:
+    status: MISSING
+    value: null
+    owner: "infrastructure owner"
+    notes: "'Never' is common and acceptable. Record it; it calibrates how much
+            every duration in the plan can be trusted."
+
+  # ---- continuity.* — DR process owner -------------------------------------
+  continuity.declaration_authority:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Exactly one individual. Not 'the incident team', which is nobody."
+
+  continuity.succession:
+    status: MISSING
+    value: null          # ordered list of {order, role, passes_after}
+    owner: "DR process owner"
+    notes: "Must terminate in someone always reachable."
+
+  continuity.activation_criteria:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Comparisons against something knowable at 3am, not feelings."
+
+  continuity.decision_time_budget:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+
+  continuity.unknown_estimate_default:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Declare, or wait? Nobody has answered this. Decide it in daylight."
+
+  continuity.call_tree:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+
+  continuity.bridge:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Check what it depends on. A bridge that authenticates through the
+            failed estate is a plan with a loop in it."
+
+  continuity.assessment_procedure:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Where the repair estimate the activation criteria consume comes from."
+
+  continuity.escalation_thresholds:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Observable at 3am by a tired person. 'When it feels wrong' is not one."
+
+  continuity.deactivation_authority:
+    status: MISSING
+    value: null
+    owner: "DR process owner"
+    notes: "Declaration and deactivation are a matched pair."
+
+  # ---- governance.* — governance / risk / audit ----------------------------
+  governance.signing_authority:
+    status: MISSING
+    value: null
+    owner: "governance"
+
+  governance.review_cadence:
+    status: MISSING
+    value: null
+    owner: "governance"
+    notes: "Frequency AND triggers AND an owner. An unowned cadence does not happen."
+
+  governance.training_programme:
+    status: MISSING
+    value: null
+    owner: "governance"
+    notes: "Distinct from drills. Drills exercise the plan; training makes
+            individuals competent. Auditors check for both."
+
+  governance.finding_to_change_route:
+    status: MISSING
+    value: null
+    owner: "governance"
+    notes: "If there is no route, the drills are theatre."
+
+  governance.risk_register:
+    status: MISSING
+    value: null
+    owner: "governance"
+
+  # ---- discovery.* — written only by itscp-discover ------------------------
+  discovery.completed:
+    status: MISSING
+    value: null
+    provenance: null
+    notes: "Set by itscp-discover. Never written by an interview."
