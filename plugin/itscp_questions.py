@@ -113,8 +113,38 @@ CROSSWALK_MARKERS: tuple[str, ...] = ("[glossary]", "(practice guide; not verifi
 #: with ordinary provenance, so a narrative carries provenance, confidence, mechanism,
 #: supersede history and conflicts exactly as a scalar does. The one thing it carries in
 #: addition is a read-back: see :attr:`Question.readback_required`.
+#: Six further kinds come from surveying the reference plan this toolkit has to reproduce.
+#: That survey found 51 distinct value shapes across its 30 files and 6,481 lines; 25 fitted
+#: the nine kinds above and the other 26 collapsed into these six families. No starter
+#: question uses them yet, because the questions that would are still being recovered from
+#: the original interview. They are declared here so that adding those questions is data:
+#:
+#: ``code``
+#:     An exact-fidelity block: shell, SQL, a configuration stanza, Terraform, a formula
+#:     with its worked example. Reproduced byte for byte or not at all. Dictated by a lead
+#:     engineer or taken from a file, so ordinary provenance covers it.
+#: ``diagram``
+#:     Nodes and edges, participants and messages, states and transitions, bars and
+#:     durations. Elicited as structure; the layout is the renderer's problem.
+#: ``citation``
+#:     A source record: title, publisher, version, date accessed, and what it supports. Also
+#:     the negative form, recording a source that could not be read and what was used
+#:     instead, which is the one the reference plan most needs and least has.
+#: ``blank``
+#:     A cell deliberately left empty, which is a value and not an unanswered question. A
+#:     cost template with elicited row labels and empty rates is complete; a signature block
+#:     with no signature is correct until it is signed.
+#: ``range``
+#:     A compound scalar that is meaningless split: a rehearsed duration range, a warning
+#:     and critical threshold pair, a cadence with a per-tier override, a measurement that
+#:     has to carry whether it was measured or published.
+#: ``reference``
+#:     A pointer that must resolve: an identifier used elsewhere, a role name shared across
+#:     files, a cross-reference to another document's section. A typo here breaks something
+#:     silently, which plain text does not imply.
 KINDS: tuple[str, ...] = (
     "text", "narrative", "duration", "number", "currency", "enum", "list", "rows", "date",
+    "code", "diagram", "citation", "blank", "range", "reference",
 )
 
 #: How a narrative answer came to be attributable. Recorded on the record, not only in the
