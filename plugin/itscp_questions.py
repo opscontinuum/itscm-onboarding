@@ -10,9 +10,10 @@ Read alongside:
   the seven-role owner vocabulary.
 * ``skills/_method/interview-method.md`` for the Iron Rule, the status lattice, the confidence
   rubric and the closed provenance list.
-* ``docs/ITIL-GROUNDING.md`` §4 for the three-class structural-provenance partition that
+* ``docs/ITIL-GROUNDING.md`` §4 for the structural-provenance partition that
   :attr:`Question.structural_provenance` implements, and the rule that ``crosswalk`` may
-  never justify a field on its own.
+  never justify a field on its own. §4.3 recommended three classes; §4.3a records the fourth,
+  ``method``, and why the three did not cover the toolkit's own templated content.
 
 The module holds no behaviour beyond lookup. Validation lives in ``itscp_store``; rendering
 lives in a module this one knows nothing about.
@@ -84,9 +85,11 @@ ROLES: tuple[str, ...] = (
 #: Every legal ``owner`` value: the seven roles and the deputy of each.
 OWNER_VOCABULARY: tuple[str, ...] = ROLES + tuple(f"{role} deputy" for role in ROLES)
 
-#: The three structural-provenance classes of ``docs/ITIL-GROUNDING.md`` §4.3. There is no
-#: fourth class, and ``crosswalk`` is annotation only: see :data:`CROSSWALK_NEVER_JUSTIFIES`.
-STRUCTURAL_PROVENANCE: tuple[str, ...] = ("nist", "ours", "crosswalk")
+#: The structural-provenance classes: the three of ``docs/ITIL-GROUNDING.md`` §4.3 and the
+#: fourth of §4.3a. ``crosswalk`` is annotation only, see :data:`CROSSWALK_NEVER_JUSTIFIES`;
+#: ``method`` is the toolkit's own templated content, see
+#: :data:`METHOD_IS_NEVER_A_CUSTOMER_CLAIM`.
+STRUCTURAL_PROVENANCE: tuple[str, ...] = ("nist", "ours", "crosswalk", "method")
 
 #: The load-bearing rule of §4.3, stated once so the test that enforces it can quote it.
 CROSSWALK_NEVER_JUSTIFIES = (
@@ -94,6 +97,21 @@ CROSSWALK_NEVER_JUSTIFIES = (
     "justified. It can never be the reason a field exists. Without this rule, 'ITIL says we "
     "need X' becomes a route by which an unread paywalled standard smuggles invented "
     "requirements into a generated plan."
+)
+
+#: The rule of §4.3a, stated once so the tests and the renderer can both quote it.
+#:
+#: ``ours`` and ``method`` are near neighbours and the difference is the whole point of
+#: splitting them. ``ours`` means this project chose to carry an element no standard gives it
+#: a slot for, and the answer in that element still came from an interview. ``method`` means
+#: the toolkit supplied the words. A reader who cannot tell the two apart cannot tell what
+#: the customer actually said, which is the failure the whole partition exists to prevent.
+METHOD_IS_NEVER_A_CUSTOMER_CLAIM = (
+    "Method content is templated text the toolkit supplies. It must be identifiable as the "
+    "toolkit's in the rendered document, and it may never be presented as something a "
+    "customer said. It renders as structural text under its own heading and never as an "
+    "answer, because an answer segment is the claim that a person or a read-only API "
+    "produced the words."
 )
 
 #: The two markers §4.3 permits on an ITIL or ISO term, and never an unmarked ITIL claim.
@@ -209,8 +227,14 @@ class Question:
     never in ``value``.
 
     ``structural_provenance`` is the §4.3 class. ``nist`` fields carry the verbatim NIST
-    heading in ``nist_heading``; ``ours`` fields carry the empty string and claim nothing.
-    ``crosswalk`` is legal in the enum and illegal on a question, which is the point of it.
+    heading in ``nist_heading``; ``ours`` and ``method`` fields carry the empty string and
+    claim nothing. ``crosswalk`` is legal in the enum and illegal on a question, which is the
+    point of it.
+
+    ``method_statement`` carries the templated text a ``method`` field's element consists of,
+    and is empty on every other class. The text lives in the bank rather than in the renderer
+    because the renderer may only write strings a corpus already holds, and because an
+    element the toolkit supplies has to be readable beside the question that parameterises it.
     """
 
     id: str
@@ -239,6 +263,7 @@ class Question:
     nist_heading: str = ""
     nist_source: str = ""
     crosswalk_note: str = ""
+    method_statement: str = ""
 
 
 # --------------------------------------------------------------- transcribed NIST headings
@@ -704,8 +729,12 @@ QUESTIONS: tuple[Question, ...] = (
         "happen? Which of those can run while we are still bringing things up?",
         "Each work-recovery activity, its duration, and whether it runs in parallel with "
         "bring-up",
-        "application owner", "ours", kind="rows",
+        "application owner", "method", kind="rows",
         columns=("activity", "duration", "parallel_with_bringup"),
+        method_statement="Maximum tolerable downtime is recovery time plus work recovery "
+                         "time. The toolkit decomposes it that way so that a recovery which "
+                         "meets its technical target and still misses what the business can "
+                         "tolerate is visible on paper rather than at four in the morning.",
         guidance="The parallel/serial flag decides whether the MTD is achievable.",
     ),
     Question(

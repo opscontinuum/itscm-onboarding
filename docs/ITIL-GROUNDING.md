@@ -523,6 +523,36 @@ different provenances and puts them in one table where the reader can see which 
 lines 22 to 25. The recommendation here is that table, generalised to element level and made
 mandatory.
 
+### 4.3a Amendment: a fourth class, `method`
+
+§4.3 states there is no fourth class. Building the question bank against the reference plan
+found content that fits none of the three, and the amendment is recorded here rather than
+left as a contradiction between this document and the code.
+
+The reference plan carries a posture model, the decomposition of maximum tolerable downtime
+into recovery time plus work recovery time, a one-way-door rule and a drill-level model. None
+of them is a NIST element, so `nist` is wrong. None of them was elicited from anybody, so
+filing them `ours` is a near miss that matters: `ours` means this project chose to carry an
+element no standard gives it a slot for, and the answer inside that element still came from
+an interview. These are cases where the toolkit supplied the words.
+
+| Class | Means | Text comes from | Example |
+|---|---|---|---|
+| `method` | The toolkit's own approach, templated | Written by us, rendered under its own heading | Maximum tolerable downtime is recovery time plus work recovery time; the standby posture model; the one-way-door rule |
+
+**The load-bearing rule: method content may never be presented as something a customer
+said.** It renders as structural text under a heading that names it as the toolkit's, and
+never as an answer, because an answer is the claim that a person or a read-only API produced
+the words. The question beside a method element elicits the *parameters* of the approach and
+carries ordinary interview provenance; the approach itself carries none, and says so.
+
+This does not weaken §4.3's refusal rule. `method` claims no standard. It is the opposite of
+the failure §4.3 guards against: it exists so that content with no external provenance is
+labelled as having none, rather than borrowing the authority of the elements around it.
+
+`itscp_questions.METHOD_IS_NEVER_A_CUSTOMER_CLAIM` states the rule, `itscp_render.METHOD_HEADING`
+renders it, and `tests/test_questions` and `tests/test_render` enforce both.
+
 ### 4.4 What the generated document must never imply
 
 Stated as a short list because it is the single failure mode both repositories exist to prevent.
