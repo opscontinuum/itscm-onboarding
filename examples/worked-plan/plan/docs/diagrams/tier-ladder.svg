@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400" role="img" aria-label="Recovery tiers plotted by maximum tolerable downtime on a logarithmic axis against relative run cost">
+  <style>
+  .bg   { fill: #ffffff; }
+  .txt  { fill: #1a1a1a; font-family: ui-sans-serif, Helvetica, Arial, sans-serif; }
+  .mut  { fill: #5c6470; font-family: ui-sans-serif, Helvetica, Arial, sans-serif; }
+  .grid { stroke: #c2c8d0; }
+  .ttl  { font-size: 15px; font-weight: 700; }
+  .nm   { font-size: 13.5px; font-weight: 700; }
+  .sub  { font-size: 11px; }
+  .val  { font-size: 12.5px; font-weight: 700; }
+  </style>
+  <rect class="bg" x="0" y="0" width="1040" height="400"/>
+  <text class="txt ttl" x="24" y="30">Recovery tiers by maximum tolerable downtime against relative run cost</text>
+  <text class="txt val" x="24" y="60">**[MISSING — owner: unassigned]**</text>
+  <text class="mut sub" x="24" y="84">No tier table has been recorded for this plan.</text>
+</svg>
