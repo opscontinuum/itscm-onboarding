@@ -56,12 +56,12 @@ Elicitation, generation and discovery belong here.
 
 ## Decision 3 — Provenance on every fact
 
-Direct analogue of the reference example's citation discipline. Every `ANSWERED` field records
+Direct analog of the reference example's citation discipline. Every `ANSWERED` field records
 `interview:<role>:<date>`, `oci-discovery:<operation>`, `document:<path>` or `operator`.
 
 **There is deliberately no provenance value meaning "the assistant worked it out."** Removing
 the representation removes the option. Reasoned conclusions go into a document's *Unverified
-statements* section, labeled as judgements — never into the store as facts.
+statements* section, labeled as judgments — never into the store as facts.
 
 ## Decision 4 — Every field starts MISSING
 

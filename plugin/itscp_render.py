@@ -109,7 +109,7 @@ GENERATED_NOTICE = ("This document is generated from the answer store. Correct i
                     "correcting the interview, not by editing this file.")
 REFERENCES_PREAMBLE = "Sources for every value above, as recorded when the value was given."
 NO_SOURCES_YET = "No value in this document has a recorded source yet."
-UNVERIFIED_PREAMBLE = ("Engineering judgements, outstanding gaps and disagreements, "
+UNVERIFIED_PREAMBLE = ("Engineering judgments, outstanding gaps and disagreements, "
                        "labeled as such.")
 NOTHING_UNVERIFIED = "Every value in this document is traceable to a recorded source."
 NO_FIELDS_HERE = ("No field of the answer store is written to this document. It is part of "

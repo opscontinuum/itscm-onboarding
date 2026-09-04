@@ -17,7 +17,7 @@ applications DBA rather than the cloud team.
 
 **Bring the lead engineer, and the backup lead engineer if there is one.** Sections 2 and 5
 below ask what actually happens when the system is brought up, and the owner is accountable for
-that rather than practised at it. If the only person who can answer section 2 is one engineer,
+that rather than practiced at it. If the only person who can answer section 2 is one engineer,
 say so: that is a deputy gap as well as an undocumented start order, and it belongs in the
 roster finding rather than only in the notes.
 

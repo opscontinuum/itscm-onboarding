@@ -27,7 +27,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Each period when failing over costs more than the outage, and who decides during it**: **[MISSING — owner: business owner]**
 - **Who may authorize a failover inside a freeze period, and on what evidence**: **[MISSING — owner: business owner]**

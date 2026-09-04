@@ -142,7 +142,7 @@ which. **Take inversions back to the owners; never resolve one by editing a numb
 
 `itscp-build` runs once per system, in wave order, generating a plan repository each. The
 register is the input: it supplies the tier, the targets and the dependencies each plan has
-to honour. Re-validate after each plan is signed, because a signed plan can change a number
+to honor. Re-validate after each plan is signed, because a signed plan can change a number
 the register was checked against.
 
 ---

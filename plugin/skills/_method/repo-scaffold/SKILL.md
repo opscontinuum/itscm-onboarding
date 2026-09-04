@@ -74,8 +74,8 @@ which are outstanding.
 ## Sections every generated document carries
 
 - `## References` — sources for any claim about product behavior or a standard.
-- `### Unverified statements` — engineering judgements the toolkit or the author made,
-  labeled as judgements. This is where anything not traceable to a person or an API goes.
+- `### Unverified statements` — engineering judgments the toolkit or the author made,
+  labeled as judgments. This is where anything not traceable to a person or an API goes.
 
 The second section is not optional. It is what keeps a generated document honest about the
 difference between what was elicited and what was reasoned.

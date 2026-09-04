@@ -174,7 +174,7 @@ controls. This is gap G4 reproduced, and §2.4 treats it as such.
 "Monitoring alarms: what currently pages, versus what the plan will need", so the toolkit knows
 the gap exists. Nothing closes it. `itscp-interview-infrastructure` has seven elicitation
 sections and none of them is monitoring, its output list does not include `docs/04-monitoring.md`,
-and no coverage-map row mentions alarms, signals or an alert catalogue. `templates/repo-scaffold.md`
+and no coverage-map row mentions alarms, signals or an alert catalog. `templates/repo-scaffold.md`
 line 18 nevertheless lists `docs/04-monitoring.md` as an infrastructure-owned file. **A scaffold
 file with no eliciting question renders empty or renders invented.** This is also the artefact
 that [5] §2 calls the sharpest constraint on the design: "If you dont define what alerts the app
@@ -364,40 +364,40 @@ pointing at them; the user answers `recovery.procedures` to say so themselves ([
 Note also the scope refusal at [6] line 47: a Business Continuity Plan, COOP, Occupant Emergency
 Plan and crisis-communications plan are not emitted, because the template's own Table 1.4 lists
 them as "Plans Outside of ISCP Scope". The exclusion is sourced to the template rather than to a
-judgement.
+judgment.
 
 ### 3.4 The equivalent bar for this toolkit
 
-The checklist. Each item names the `iscp-author` mechanism it is the analogue of.
+The checklist. Each item names the `iscp-author` mechanism it is the analog of.
 
 - [ ] **1. Declare the instrument.** Every generated repository states in its `README.md` that
       it is an ITSCP, that it aligns to NIST SP 800-34 Rev. 1 structure, and that it is not an
-      ISCP. Analogue: [6] line 22, the emit table's first column.
+      ISCP. Analog: [6] line 22, the emit table's first column.
 - [ ] **2. Declare structural provenance per element.** Every heading in a generated document
-      is traceable to exactly one of a fixed set of structural sources. Analogue: [6] lines 22
+      is traceable to exactly one of a fixed set of structural sources. Analog: [6] lines 22
       to 25.
 - [ ] **3. Transcribe, do not paraphrase.** Where an element's structure comes from NIST, the
       heading text is the transcribed NIST text, held in a data-only module that says where each
-      block came from and when it was read. Analogue: [7] lines 1 to 24.
+      block came from and when it was read. Analog: [7] lines 1 to 24.
 - [ ] **4. Record the fetch.** Source version, date, and a byte count or hash where the source
-      is a file. Analogue: [7] lines 12 to 14, `153865 bytes, md5 298f6b...`.
+      is a file. Analog: [7] lines 12 to 14, `153865 bytes, md5 298f6b...`.
 - [ ] **5. Enforce content provenance mechanically.** Every non-markup byte of a generated
       document is template text, a value from the answer store, or a status marker. A test
-      asserts it. Analogue: [8] lines 3 to 21 and [9] `ProvenanceTests`.
+      asserts it. Analog: [8] lines 3 to 21 and [9] `ProvenanceTests`.
 - [ ] **6. Segments must reassemble.** The provenance record covers the whole document, not a
-      sample of it. Analogue: [9] line 413.
+      sample of it. Analog: [9] line 413.
 - [ ] **7. Unanswered renders the marker, never a default.** Already the toolkit's stated rule
       in `templates/repo-scaffold.md` lines 56 to 63 and `itscp-build/SKILL.md`. Not yet
-      enforced by anything. Analogue: [8] `_slot` and [9] line 460.
+      enforced by anything. Analog: [8] `_slot` and [9] line 460.
 - [ ] **8. The reference example's numbers never leak.** No value from `oci-itscp` may appear in
       a generated plan as a default. A test asserts it, using the reference plan's own figures as
-      the tripwire list. Analogue: [9] line 454, which uses NIST's sample business process the
+      the tripwire list. Analog: [9] line 454, which uses NIST's sample business process the
       same way.
-- [ ] **9. Determinism.** Same answer store, same bytes out. Analogue: [9] line 468.
+- [ ] **9. Determinism.** Same answer store, same bytes out. Analog: [9] line 468.
 - [ ] **10. Refuse what has no template.** The toolkit does not emit a document whose title
-      asserts conformance to an instrument it has not read. Analogue: [6] lines 27 to 40.
+      asserts conformance to an instrument it has not read. Analog: [6] lines 27 to 40.
 - [ ] **11. State the gaps in the artefact itself.** Known limits are published beside the tool,
-      not discovered by the user. Analogue: [6] line 168, "Known gaps, stated rather than
+      not discovered by the user. Analog: [6] line 168, "Known gaps, stated rather than
       hidden". The toolkit already does this in `README.md` and `docs/DESIGN.md`.
 
 Items 1, 2, 3, 4, 5, 6, 8 and 9 are not met today. Item 7 is stated but unenforced. Items 10 and
@@ -427,7 +427,7 @@ So the toolkit cannot copy an authoritative ITSCP structure, because there is no
 And the one ITIL text it can read is one it should not bake into a template corpus even
 technically: reproducing a copyrighted training glossary verbatim inside every generated
 repository is a different act from quoting six definitions with attribution in one crosswalk
-document. *(Judgement, not legal advice; recorded in Unverified statements.)*
+document. *(Judgment, not legal advice; recorded in Unverified statements.)*
 
 The asymmetry that makes the recommendation obvious: **NIST's text is free to reproduce and
 ITIL's is not.** `iscp-author` already relies on this, transcribing NIST Appendix B into
@@ -441,7 +441,7 @@ through `docs/07`.
 | For | Against |
 |---|---|
 | The structure is free, citable, quotable and transcribable verbatim, so checklist items 3 and 4 become achievable today | Leaves the five "Beyond NIST" coverage-map rows with no declared provenance at all |
-| The audit skill already audits against 800-34 and the 800-53 CP family, so the structure and the audit agree | Says nothing about elements an ITSCP needs that an ISCP has no slot for: the availability boundary, the alert catalogue, service-level targets |
+| The audit skill already audits against 800-34 and the 800-53 CP family, so the structure and the audit agree | Says nothing about elements an ITSCP needs that an ISCP has no slot for: the availability boundary, the alert catalog, service-level targets |
 | The crosswalk pattern is proven, and the compliance-audit skill [10] already knows how to reason across it | Under (a) alone, MBCO and the review cadence either get dropped, losing the gap-closing that is the toolkit's best feature, or get carried with an implied ITIL provenance that cannot be shown |
 
 **(b) Declare the structure as the project's own.** What `iscp-author` does for its runbooks and
@@ -470,7 +470,7 @@ structure.
 | Class | Means | Heading text comes from | Example |
 |---|---|---|---|
 | `nist` | The element and its heading are NIST SP 800-34 Rev. 1's | Transcribed NIST text, verbatim | §3.3 Outage Assessment; Appendix K |
-| `ours` | This project's own element. No standards provenance claimed | Written by us, declared as ours | Minimum business continuity objective per tier; cost model; alert catalogue |
+| `ours` | This project's own element. No standards provenance claimed | Written by us, declared as ours | Minimum business continuity objective per tier; cost model; alert catalog |
 | `crosswalk` | An ITIL 4 or ISO term named against an element the other two classes already placed | Nothing. It is an annotation | "The tier assignment workshop is a business impact analysis [glossary]" |
 
 **There is no fourth class** *(amended: see §4.3a, which adds `method` and states the rule
@@ -507,7 +507,7 @@ template", is three claims, all mechanically checkable:
    crosswalk annotation is attached to an element that has no independent structural
    justification.
 
-**The refusal rule**, the direct analogue of §3.3. The toolkit must never emit a document whose
+**The refusal rule**, the direct analog of §3.3. The toolkit must never emit a document whose
 title asserts conformance to an instrument it has not read. No "ISO 22301 conformance
 statement", no "ITIL 4 ITSCM practice assessment", no "ITIL-compliant continuity plan". It may
 emit `docs/07-standards-alignment.md`, already in the scaffold at `templates/repo-scaffold.md`
@@ -596,7 +596,7 @@ substantive rows: 36 NIST-derived, 5 "Beyond NIST", 3 "Not yet covered".
 |---|---|
 | All 36 NIST-derived rows | Add `Provenance: nist`. Separately, replace the paraphrased element names with the transcribed NIST heading text (see §5.3, item 3); today's "1.1 Background — why the plan exists, its objectives" is a gloss, not a heading |
 | All 5 "Beyond NIST" rows | Add `Provenance: ours`. The section's existing preamble already half-declares this; make it explicit per row |
-| New rows, `ours` | Availability and continuity boundary (closes G4); monitoring, alarms and the alert catalogue; service-level targets and the link to any existing SLA; change authority for a planned switchover, and whether invocation is a pre-authorized emergency change; the major-incident entry condition to the activation gate; threat and scenario basis, mapped to NIST Step 3 preventive controls; information-security contributions (backup immutability, evidence sensitivity) |
+| New rows, `ours` | Availability and continuity boundary (closes G4); monitoring, alarms and the alert catalog; service-level targets and the link to any existing SLA; change authority for a planned switchover, and whether invocation is a pre-authorized emergency change; the major-incident entry condition to the activation gate; threat and scenario basis, mapped to NIST Step 3 preventive controls; information-security contributions (backup immutability, evidence sensitivity) |
 | New table, `crosswalk` | The ITIL and ISO term map, six quotable terms and the rest marked `(practice guide; not verified)`, feeding `docs/07-standards-alignment.md` |
 | "Not yet covered" table | Add a row: the toolkit produces no threat basis, and add the copyright and paywall constraint of §4.1 as a stated limit |
 
@@ -604,7 +604,7 @@ substantive rows: 36 NIST-derived, 5 "Beyond NIST", 3 "Not yet covered".
 
 | Skill | New or altered questions |
 |---|---|
-| `itscp-interview-infrastructure` | **New section: monitoring and the alert catalogue.** What pages today, what should, what the app team needs the SRE to see, and what alarms on the *absence* of signal. This is the largest single hole; it also fills `docs/04-monitoring.md`, which currently has no owner. **New section: availability versus continuity.** Which controls are availability controls, which are continuity controls, and what single-point dependency the local recovery claim rests on. Closes G4. **New questions: threat basis and preventive controls.** What is this protecting against, and which preventive controls were considered and rejected |
+| `itscp-interview-infrastructure` | **New section: monitoring and the alert catalog.** What pages today, what should, what the app team needs the SRE to see, and what alarms on the *absence* of signal. This is the largest single hole; it also fills `docs/04-monitoring.md`, which currently has no owner. **New section: availability versus continuity.** Which controls are availability controls, which are continuity controls, and what single-point dependency the local recovery claim rests on. Closes G4. **New questions: threat basis and preventive controls.** What is this protecting against, and which preventive controls were considered and rejected |
 | `itscp-interview-continuity` | **New: the major-incident entry condition.** What the organization's existing major-incident process is, and where the declaration gate hangs off it. **New: change authority.** Who authorizes a planned switchover and a failback, and whether invocation is a pre-authorized emergency change recorded after the fact |
 | `itscp-interview-governance` | **New: which instruments this plan will be assessed against**, so the crosswalk document is generated against the right set rather than all of them. **New: does an SLA document exist**, and is it the home of the availability targets. **New: is `docs/07-standards-alignment.md` wanted**, and to which instruments |
 | `itscp-interview-business` | No new questions. MBCO, mechanisms, workarounds and time dependence are already elicited. One wording change: §4 says "Not in NIST; asked because MTD alone is insufficient and an ISO 22301 auditor will ask", which should carry the `(practice guide; not verified)` marker for MBCO rather than an unqualified appeal to ISO |
@@ -672,7 +672,7 @@ the machine that produced this document. No source was fetched over the network.
    [6]. **Not fetched by this document.**
 5. `picoagent/docs/engineering/continuity-tooling.md`. Read locally. Supports: §3, the three plan
    families table, the "inherits the wrong requirement set in both directions" statement and the
-   naming rule (§1); §2, the alert-catalogue and dependency-graph constraints (§2.2).
+   naming rule (§1); §2, the alert-catalog and dependency-graph constraints (§2.2).
 6. `picoagent/examples/plugins/iscp-author/README.md`, 186 lines. Read locally. Supports: the
    emit table (lines 22 to 25), the DRP refusal (lines 27 to 40), the anti-fabrication guarantee
    (lines 48 to 74), the sources record (lines 128 to 166) and the known-gaps section (line 168).
@@ -707,10 +707,10 @@ the machine that produced this document. No source was fetched over the network.
   paraphrased. This document therefore treats the seven names as [1]'s own editorial choice,
   reproduced unchanged, and does not present them as quotable ITIL 4 wording. Whether the
   glossary lists them as practice names was not checked.
-- **The copyright judgement in §4.1.** That a copyrighted training glossary should not be
+- **The copyright judgment in §4.1.** That a copyrighted training glossary should not be
   reproduced verbatim inside every generated repository, while quoting six definitions with
   attribution in one crosswalk document is ordinary citation, is an engineering and editorial
-  judgement made by this document. It is not legal advice and no legal source was consulted.
+  judgment made by this document. It is not legal advice and no legal source was consulted.
 - **That NIST publications are free to reproduce.** Used as the working assumption behind
   recommendation (c) and behind checklist item 3. It is the same assumption `iscp-author` relies
   on when it transcribes NIST Appendix B into `BIA_BLOCKS` [7]. No source establishing it was

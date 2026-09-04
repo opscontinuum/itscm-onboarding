@@ -184,7 +184,7 @@ class Reconciliation:
     def label(self) -> str:
         """The literal text a renderer prints beside the shape.
 
-        Text, not colour. Colour alone fails for colour-blind readers and in greyscale
+        Text, not color. Color alone fails for color-blind readers and in greyscale
         print, so the state is always spelled out and the consequence travels with a gap.
         """
         if self.state == "gap":

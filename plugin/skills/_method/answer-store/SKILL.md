@@ -149,8 +149,8 @@ The reference repository keeps an append-only record of changes for the same rea
 continuity plan whose numbers move without a trail cannot be audited, and the question
 "when did this become six hours, and who said so?" is asked exactly once, in the worst week.
 
-**Never write a value the toolkit produced.** Engineering judgements belong in the generated
-document's *Unverified statements* section, attributed as judgements. The store holds only
+**Never write a value the toolkit produced.** Engineering judgments belong in the generated
+document's *Unverified statements* section, attributed as judgments. The store holds only
 what humans and read-only APIs said.
 
 ---

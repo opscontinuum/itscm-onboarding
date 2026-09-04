@@ -24,7 +24,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The assigned availability impact level, which selects the template this plan is graded against**: **[MISSING — owner: governance/risk contact]**
 - **Each related plan, who owns it and how it relates to this one**: **[MISSING — owner: governance/risk contact]**

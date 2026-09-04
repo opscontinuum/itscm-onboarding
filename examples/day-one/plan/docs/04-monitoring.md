@@ -16,6 +16,6 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The failures this environment does not notice, and what would have shown them**: **[MISSING — owner: lead engineer]**

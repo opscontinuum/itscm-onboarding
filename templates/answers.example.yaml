@@ -255,7 +255,7 @@ facts:
     status: MISSING
     value: null
     owner: "governance/risk contact"
-    notes: "If there is no route, the drills are theatre."
+    notes: "If there is no route, the drills are theater."
 
   governance.risk_register:
     status: MISSING

@@ -75,7 +75,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Whether concurrent processing is performed, and the reason either way**: Not applicable — Not performed. A single EBS instance with one authoritative database cannot run production in two regions at once; a second writable copy would diverge, and reconciling it is worse than the outage. NIST does not require it, stating that information systems are not required to have concurrent processing capabilities.
 - **Each scheduled job, whether it is safe to resubmit, and what a second run does**: **[MISSING — owner: application owner]**

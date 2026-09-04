@@ -20,7 +20,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Each interconnection, its direction, transport, contact and whether it is replayable**: **[MISSING — owner: application owner]**
 - **Where inbound interface data lands today and whether that location is replicated**: **[MISSING — owner: lead engineer]**

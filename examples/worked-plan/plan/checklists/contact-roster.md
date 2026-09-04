@@ -46,7 +46,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The incident bridge and its dependencies**: **[MISSING — owner: DR process owner]**
 - **Each role, who holds it, how they are reached and when that was last verified**: **[MISSING — owner: DR process owner]**

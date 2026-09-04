@@ -38,6 +38,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The monthly standby cost floor**: **[MISSING — owner: infrastructure owner]**

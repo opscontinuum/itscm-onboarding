@@ -395,7 +395,7 @@ owner = "infrastructure owner"
 
 # infra.silent_failures - asked of the lead engineer
 # Ask it exactly like that and then stop talking. It is the question that produces the
-# alert catalogue, and it produces it as a story about something that already happened
+# alert catalog, and it produces it as a story about something that already happened
 # rather than as a list of metrics somebody invented.
 # Read this back and get a yes before recording it.
 [facts."infra.silent_failures"]
@@ -637,7 +637,7 @@ status = "MISSING"
 owner = "governance/risk contact"
 
 # governance.finding_to_change_route - asked of the governance/risk contact
-# If there is no route, the drills are theatre.
+# If there is no route, the drills are theater.
 # Read this back and get a yes before recording it.
 [facts."governance.finding_to_change_route"]
 status = "MISSING"

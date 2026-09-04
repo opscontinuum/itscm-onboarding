@@ -21,7 +21,7 @@ the `itscp-method-answer-store` skill (where answers live). Do not start without
 >
 > `itscp-portfolio` builds the register, ranks the tiers comparatively and fixes the recovery
 > order. This skill then runs **once per system, in wave order**, taking that system's tier,
-> targets and dependencies from the register as constraints it must honour rather than as
+> targets and dependencies from the register as constraints it must honor rather than as
 > questions to re-ask.
 >
 > If the organization genuinely has one system, say so explicitly and proceed. That is a
@@ -192,7 +192,7 @@ describes and the rendering-rules table beneath it. Rendering rules:
   `**[MISSING — owner: Head of Finance Systems]**`. Never blank, never a plausible default.
 - A `low` confidence value renders with its tag: `4 hours *(low confidence; not measured)*`.
 - Every generated document carries a `## References` section and an `### Unverified statements`
-  section. Judgements the toolkit made go in the latter, attributed as judgements.
+  section. Judgments the toolkit made go in the latter, attributed as judgments.
 - Every `conflict` renders in place, naming both sources and the decision owner.
 
 **The generated plan is a design, not a commitment.** Every duration in it is a target until a

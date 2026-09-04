@@ -20,7 +20,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Each business process and what its outage costs at one hour, four hours, a day and a week**: **[MISSING — owner: business owner]**
 - **Each business process, the tier it is assigned to, and the argument for it**: **[MISSING — owner: business owner]**

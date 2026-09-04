@@ -1266,13 +1266,13 @@ QUESTIONS: tuple[Question, ...] = (
                  "NOT_APPLICABLE with a reason is a good answer here; silence is not.",
     ),
     Question(
-        "infra.silent_failures", "infra", "Beyond NIST", "Alert catalogue",
+        "infra.silent_failures", "infra", "Beyond NIST", "Alert catalog",
         "docs/04-monitoring.md",
         "What has broken before without anyone noticing until it mattered?",
         "The failures this environment does not notice, and what would have shown them",
         "lead engineer", "ours", kind="narrative", readback_required=True,
         guidance="Ask it exactly like that and then stop talking. It is the question that "
-                 "produces the alert catalogue, and it produces it as a story about something "
+                 "produces the alert catalog, and it produces it as a story about something "
                  "that already happened rather than as a list of metrics somebody invented.",
     ),
     Question(
@@ -1631,7 +1631,7 @@ QUESTIONS: tuple[Question, ...] = (
         "A drill finds something wrong. What happens to that finding, and who closes it?",
         "The route from a drill finding to a change in the plan",
         "governance/risk contact", "ours", kind="narrative", readback_required=True,
-        guidance="If there is no route, the drills are theatre.",
+        guidance="If there is no route, the drills are theater.",
     ),
     Question(
         "governance.risk_register", "governance", "Beyond NIST", "Risk register",

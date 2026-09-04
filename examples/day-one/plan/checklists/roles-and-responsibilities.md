@@ -30,7 +30,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The ordered line of succession and what each hand-off waits for**: **[MISSING — owner: DR process owner]**
 - **Each duty in a recovery, the role that holds it and the deputy behind them**: **[MISSING — owner: DR process owner]**

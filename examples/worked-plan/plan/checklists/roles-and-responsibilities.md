@@ -49,7 +49,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Who could execute the plan if the disruption also removed the primary team**: **[MISSING — owner: DR process owner]**
 - **Who owns the disclosure clock when the cause is an attack, and how fast it runs**: **[MISSING — owner: governance/risk contact]**

@@ -39,8 +39,8 @@ So an unsourced figure is marked in three independent channels:
 * a dashed outline on the shape,
 * a footnote on the drawing naming what the dagger means.
 
-Three and not one, because roughly one man in twelve has a red or green colour deficiency
-and these documents get photocopied for audits. Colour is never load-bearing here. Whether a
+Three and not one, because roughly one man in twelve has a red or green color deficiency
+and these documents get photocopied for audits. Color is never load-bearing here. Whether a
 figure counts as sourced is not the drawing's opinion: the caller passes the provenance that
 the answer store recorded, and an empty provenance is an unsourced figure.
 
@@ -101,7 +101,7 @@ class Canvas:
 #: appear on any drawing carrying an unsourced figure, and neither appears on one that is
 #: not, so the mark never becomes decoration a reader learns to skip.
 UNSOURCED_MARK = "†"
-UNSOURCED_FOOTNOTE = ("† No recorded source. This figure is an engineering judgement rather "
+UNSOURCED_FOOTNOTE = ("† No recorded source. This figure is an engineering judgment rather "
                       "than a measurement, and its outline is dashed for the same reason.")
 
 _STYLE_SHEET = """
@@ -464,7 +464,7 @@ class RealisationStyle:
 
 
 #: One style per state of :mod:`itscp_realization`. Distinct fills, distinct dash patterns
-#: and distinct words, so that no two states differ by colour alone. ``unknown`` is first
+#: and distinct words, so that no two states differ by color alone. ``unknown`` is first
 #: because it is the default and the one a reader meets most often.
 REALIZATION_STYLES: dict[str, RealisationStyle] = {
     "unknown": RealisationStyle("#f1f3f5", "#5c6470", "2 4", "unknown, not checked"),

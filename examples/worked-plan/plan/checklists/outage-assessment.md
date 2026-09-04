@@ -20,11 +20,11 @@ This document is generated from the answer store. Correct it by correcting the i
 
 Sources for every value above, as recorded when the value was given.
 
-- **The default action when the repair estimate is unknown**, recorded by document:oci-itscp/checklists/outage-assessment.md; mechanism: The rule is conditioned: declare when the radius is regional and no credible repair estimate exists. The plan's reasoning is that the honest reading of unknown is not wait and see, but that the budget is being spent at a known rate against an unknown duration. It records the rule, and the judgement that a late declaration is worse than an unnecessary failover, as its own engineering judgement, noting that NIST requires an estimated time to restore and does not say what to do when none can be produced.
+- **The default action when the repair estimate is unknown**, recorded by document:oci-itscp/checklists/outage-assessment.md; mechanism: The rule is conditioned: declare when the radius is regional and no credible repair estimate exists. The plan's reasoning is that the honest reading of unknown is not wait and see, but that the budget is being spent at a known rate against an unknown duration. It records the rule, and the judgment that a late declaration is worse than an unnecessary failover, as its own engineering judgment, noting that NIST requires an estimated time to restore and does not say what to do when none can be produced.
 - **The outage assessment procedure and where the repair estimate comes from**, recorded by document:oci-itscp/checklists/outage-assessment.md
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **How long this organization actually takes to produce a repair estimate**: **[MISSING — owner: DR process owner]**

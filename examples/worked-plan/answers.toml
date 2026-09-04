@@ -550,7 +550,7 @@ parallel_with_bringup = "yes"
 [facts."app.concurrent_processing"]
 status = "NOT_APPLICABLE"
 reason = "Not performed. A single EBS instance with one authoritative database cannot run production in two regions at once; a second writable copy would diverge, and reconciling it is worse than the outage. NIST does not require it, stating that information systems are not required to have concurrent processing capabilities."
-notes = "The reference plan records the divergence half of this reasoning as engineering judgement about this application rather than a sourced claim. Provenance for the reason is docs/10-phase-reconstitution.md."
+notes = "The reference plan records the divergence half of this reasoning as engineering judgment about this application rather than a sourced claim. Provenance for the reason is docs/10-phase-reconstitution.md."
 
 # app.recovery_procedures - asked of the lead engineer
 # Reproduced byte for byte or not at all. A paraphrased command is worse than no
@@ -651,7 +651,7 @@ notes = "The reference plan names the hazard plainly, that concurrent requests i
 [facts."app.reconfiguration_duration"]
 status = "ANSWERED"
 value = "About 20 to 40 minutes when the EBS logical host names are preserved, because application-tier recovery is then just starting the services. About 3 to 5 hours when they are not, because the documented Oracle sequence for a role transition has to run: purge FND_NODES, then AutoConfig on the database tier, then AutoConfig on both the run and patch filesystems of every application-tier node."
-mechanism = "Neither figure has been timed. The reference plan marks both as engineering judgement with no documentation found, in four separate places, and states that an unnecessary hostname-rebuild cycle adds 3 to 5 hours and turns a one-hour switchover into a multi-hour one. The 3 to 5 hour figure is built on Oracle's documented purge-and-AutoConfig sequence rather than on a rehearsal, and the whole portfolio has never been exercised end to end."
+mechanism = "Neither figure has been timed. The reference plan marks both as engineering judgment with no documentation found, in four separate places, and states that an unnecessary hostname-rebuild cycle adds 3 to 5 hours and turns a one-hour switchover into a multi-hour one. The 3 to 5 hour figure is built on Oracle's documented purge-and-AutoConfig sequence rather than on a rehearsal, and the whole portfolio has never been exercised end to end."
 provenance = "document:oci-itscp/docs/01-architecture.md"
 confidence = "low"
 notes = "This is the figure carrying the plan's central design argument, that logical host names are the single largest recovery-time lever, and it is an estimate."
@@ -684,7 +684,7 @@ confidence = "high"
 [facts."infra.measured_rtt_ms"]
 status = "MISSING"
 owner = "lead engineer"
-notes = "The reference plan uses about 60 to 70 milliseconds throughout and states in the same breath that this is a representative estimate rather than an Oracle-published number, marked unverified engineering judgement, and tells the reader to measure their own. The only published figure it can cite is Oracle's statement that the latency between these regions exceeds 50 milliseconds. It directs the measurement to a latency-baseline file in the evidence directory that does not exist. This field records a measured figure and there is none."
+notes = "The reference plan uses about 60 to 70 milliseconds throughout and states in the same breath that this is a representative estimate rather than an Oracle-published number, marked unverified engineering judgment, and tells the reader to measure their own. The only published figure it can cite is Oracle's statement that the latency between these regions exceeds 50 milliseconds. It directs the measurement to a latency-baseline file in the evidence directory that does not exist. This field records a measured figure and there is none."
 
 # infra.replication - asked of the infrastructure owner
 # Press the re-baseline question. It is the failback cost and it is almost never
@@ -747,7 +747,7 @@ one_way = "no"
 [facts."infra.standby_cost_floor"]
 status = "MISSING"
 owner = "infrastructure owner"
-notes = "The reference plan gives no currency figure and no monthly total. It carries a cost model as an empty template, with the currency itself a blank to fill in, and every line item present and unpriced. Its percentages describe the shape of a typical bill, are marked unverified engineering judgement, and exclude licensing."
+notes = "The reference plan gives no currency figure and no monthly total. It carries a cost model as an empty template, with the currency itself a blank to fill in, and every line item present and unpriced. Its percentages describe the shape of a typical bill, are marked unverified engineering judgment, and exclude licensing."
 
 # infra.region_locked_naming - asked of the infrastructure owner
 # Often the single largest RTO lever, and cheaper than more capacity.
@@ -845,15 +845,15 @@ notes = "The reference plan states that moving from the warm steady state to hot
 
 # infra.silent_failures - asked of the lead engineer
 # Ask it exactly like that and then stop talking. It is the question that produces the
-# alert catalogue, and it produces it as a story about something that already happened
+# alert catalog, and it produces it as a story about something that already happened
 # rather than as a list of metrics somebody invented.
 # Read this back and get a yes before recording it.
 [facts."infra.silent_failures"]
 status = "ANSWERED"
-value = "The reference plan carries a catalogue of them and says why: an environment that is not monitored is not a DR environment, it is an assumption. Data Guard apply can stop while transport keeps running, so the standby falls arbitrarily far behind while the console still looks connected. The configuration can fall unsynchronized, at which point recovery point zero stops being true and fast-start failover can no longer occur, so the local automatic-failover story stops working in exactly the case tier 0 exists for. Volume group replication can stall silently, leaving the replica frozen at an old point in time that is discovered only at failover. File storage replication can miss its interval repeatedly and leave files hours or days stale. The in-guest agent that runs every orchestrated step can stop on a Windows node, so every user-defined step fails mid plan. Backup protection can fail to be re-enabled on the new primary after a role change, so the region that is now primary is not being backed up at all. The fast recovery area can fill, which stalls apply and fails drills. The Phoenix cluster can be scaled to zero cores by a cost-cutting change, which stops redo apply and silently turns tier 1 into tier 3 while the documentation still claims the old recovery point. And configuration can drift between the regions, so failover succeeds and the application misbehaves. The governing rule the plan draws from this is to alarm on the absence of signal and not only on bad values, because several of these show up as silence rather than as a bad number."
+value = "The reference plan carries a catalog of them and says why: an environment that is not monitored is not a DR environment, it is an assumption. Data Guard apply can stop while transport keeps running, so the standby falls arbitrarily far behind while the console still looks connected. The configuration can fall unsynchronized, at which point recovery point zero stops being true and fast-start failover can no longer occur, so the local automatic-failover story stops working in exactly the case tier 0 exists for. Volume group replication can stall silently, leaving the replica frozen at an old point in time that is discovered only at failover. File storage replication can miss its interval repeatedly and leave files hours or days stale. The in-guest agent that runs every orchestrated step can stop on a Windows node, so every user-defined step fails mid plan. Backup protection can fail to be re-enabled on the new primary after a role change, so the region that is now primary is not being backed up at all. The fast recovery area can fill, which stalls apply and fails drills. The Phoenix cluster can be scaled to zero cores by a cost-cutting change, which stops redo apply and silently turns tier 1 into tier 3 while the documentation still claims the old recovery point. And configuration can drift between the regions, so failover succeeds and the application misbehaves. The governing rule the plan draws from this is to alarm on the absence of signal and not only on bad values, because several of these show up as silence rather than as a bad number."
 provenance = "document:oci-itscp/docs/04-monitoring.md"
 confidence = "high"
-notes = "One alarm in the catalogue has no metric behind it: the plan records that no monitoring metric exists for object storage replication and that its status has to be polled instead. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
+notes = "One alarm in the catalog has no metric behind it: the plan records that no monitoring metric exists for object storage replication and that its status has to be polled instead. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
 
 # infra.irreversible_choices - asked of the lead engineer
@@ -936,7 +936,7 @@ where_it_is_recorded = "not stated in the reference plan"
 status = "ANSWERED"
 provenance = "document:oci-itscp/runbooks/RB-05-replication-lifecycle.md"
 confidence = "medium"
-notes = "Retention is the column this field refuses to leave blank, and it is the column the reference plan cannot fill for two of its three copies. The plan also records that the whole standby-backup arrangement is engineering judgement rather than a verified Oracle pattern."
+notes = "Retention is the column this field refuses to leave blank, and it is the column the reference plan cannot fill for two of its three copies. The plan also records that the whole standby-backup arrangement is engineering judgment rather than a verified Oracle pattern."
 
 [[facts."infra.offsite_storage".value]]
 copy = "Autonomous Recovery Service backup of the primary, with retention lock for immutability"
@@ -966,7 +966,7 @@ status = "ANSWERED"
 value = "Nothing protects the recovered system until somebody turns protection on, and the reference plan says so in as many words: this is the step most likely to be missed, because Ashburn's protection was the recovery service and Phoenix as primary is a different posture that does not inherit it. Backups are disabled on the new standby after any role change, and the failover runbook carries an explicit step to enable the recovery service on the new primary, warning that backups are not running there until somebody does. An alarm covers it: the protected-database status is checked, and a non-healthy status or no backup in twenty-six hours pages the DBA on-call. The database team owns re-protection, meaning a new standby and a fresh backup, and the plan's exit checklist will not close until a fresh full backup of the current primary exists in whatever region is now primary and a standby exists again inside the tier recovery point. No deadline in hours is stated for that first backup; the twenty-six hour figure is a monitoring threshold rather than a target."
 provenance = "document:oci-itscp/docs/10-phase-reconstitution.md"
 confidence = "high"
-notes = "The conflict recorded here is the reference plan's own, between two Oracle sources it cites. It picks the release note's reading and marks the design that follows from the choice as unverified engineering judgement, so the disagreement is surfaced rather than settled. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
+notes = "The conflict recorded here is the reference plan's own, between two Oracle sources it cites. It picks the release note's reading and marks the design that follows from the choice as unverified engineering judgment, so the disagreement is surfaced rather than settled. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
 
 [facts."infra.post_recovery_backup".conflict]
@@ -996,7 +996,7 @@ readback = "confirmed"
 status = "ANSWERED"
 provenance = "document:oci-itscp/checklists/roles-and-responsibilities.md"
 confidence = "high"
-notes = "The reference plan records the ten and fifteen minute intervals as its own engineering judgement, chosen to fit inside the ten-minute decision gate, and notes that no source it read specifies succession intervals. It also states the rule the list depends on: succession is for unreachability and not for disagreement, and the clock does not stop while succession runs. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
+notes = "The reference plan records the ten and fifteen minute intervals as its own engineering judgment, chosen to fit inside the ten-minute decision gate, and notes that no source it read specifies succession intervals. It also states the rule the list depends on: succession is for unreachability and not for disagreement, and the clock does not stop while succession runs. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
 
 [[facts."continuity.succession".value]]
@@ -1042,7 +1042,7 @@ value = 10
 mechanism = "Ten minutes end to end, phased: reachability triage in the first minute, evidence capture running in parallel through minute four, blast radius from two to six, the estimate with a confidence band from five to eight, and the hand-off to the DR Commander and the gate decision from eight to ten. What is happening to the outage meanwhile is that the budget is being spent at a known rate against an unknown duration, and the clock does not stop while succession runs, so ten minutes spent failing to reach the Commander is ten minutes of the tolerable downtime. Overrunning the budget is itself an input: if no estimate exists by minute eight, the estimate is unknown and the unknown rule applies."
 provenance = "document:oci-itscp/checklists/outage-assessment.md"
 confidence = "medium"
-notes = "The reference plan records the budget and the placement of the assessment inside the gate as its own engineering judgement derived from the gate, and notes that NIST requires only that assessment be completed as quickly as conditions permit. Confidence is medium for that reason: it is stated plainly and it is a choice, not a measurement."
+notes = "The reference plan records the budget and the placement of the assessment inside the gate as its own engineering judgment derived from the gate, and notes that NIST requires only that assessment be completed as quickly as conditions permit. Confidence is medium for that reason: it is stated plainly and it is a choice, not a measurement."
 
 # continuity.unknown_estimate_default - asked of the DR process owner
 # Declare, or wait? Nobody has answered this. Decide it in daylight.
@@ -1050,7 +1050,7 @@ notes = "The reference plan records the budget and the placement of the assessme
 [facts."continuity.unknown_estimate_default"]
 status = "ANSWERED"
 value = "declare"
-mechanism = "The rule is conditioned: declare when the radius is regional and no credible repair estimate exists. The plan's reasoning is that the honest reading of unknown is not wait and see, but that the budget is being spent at a known rate against an unknown duration. It records the rule, and the judgement that a late declaration is worse than an unnecessary failover, as its own engineering judgement, noting that NIST requires an estimated time to restore and does not say what to do when none can be produced."
+mechanism = "The rule is conditioned: declare when the radius is regional and no credible repair estimate exists. The plan's reasoning is that the honest reading of unknown is not wait and see, but that the budget is being spent at a known rate against an unknown duration. It records the rule, and the judgment that a late declaration is worse than an unnecessary failover, as its own engineering judgment, noting that NIST requires an estimated time to restore and does not say what to do when none can be produced."
 provenance = "document:oci-itscp/checklists/outage-assessment.md"
 confidence = "high"
 notes = "The option list this field offers cannot carry the regional-radius condition the reference plan attaches, so the condition is recorded as the mechanism beside the value rather than being dropped. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
@@ -1094,7 +1094,7 @@ status = "ANSWERED"
 value = "Four triggers, each tied to something observable. Any numbered recovery step exceeding twice its drill-measured duration, or the elapsed total passing half the tier's tolerable downtime: escalate to the declaring authority, re-forecast against what remains, and consider the failover runbook's branches. A key step completing, meaning the database transitioned, traffic steered, or service declared: status to the bridge and to the business owner. Standby capacity proving insufficient, whether core scaling is blocked or Phoenix shape capacity is unavailable: escalate to the cloud account team. And measured data loss exceeding the tier's recovery point, which leaves the runbook altogether and becomes a business decision. Beyond those, a suspected cyber cause, regulatory exposure or media interest escalates to security incident response, Legal and Communications."
 provenance = "document:oci-itscp/docs/09-phase-recovery.md"
 confidence = "low"
-notes = "Confidence is low because the reference plan says so: the thresholds are its own engineering judgement, NIST requires thresholds to be defined but specifies no values, and none have been calibrated against a completed drill. The first threshold is worse than uncalibrated, it is unusable: twice the drill-measured duration of a step presumes a drill, and no drill has been run. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
+notes = "Confidence is low because the reference plan says so: the thresholds are its own engineering judgment, NIST requires thresholds to be defined but specifies no values, and none have been calibrated against a completed drill. The first threshold is worse than uncalibrated, it is unusable: twice the drill-measured duration of a step presumes a drill, and no drill has been run. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
 
 # continuity.deactivation_authority - asked of the DR process owner
@@ -1311,7 +1311,7 @@ notes = "The reference plan records its own intervals, the twelve-month refreshe
 readback = "confirmed"
 
 # governance.finding_to_change_route - asked of the governance/risk contact
-# If there is no route, the drills are theatre.
+# If there is no route, the drills are theater.
 # Read this back and get a yes before recording it.
 [facts."governance.finding_to_change_route"]
 status = "ANSWERED"
@@ -1326,7 +1326,7 @@ readback = "confirmed"
 [facts."governance.risk_register"]
 status = "MISSING"
 owner = "governance/risk contact"
-notes = "The reference plan records this as gap G2 against itself: no risk register, with material assumptions and design risks scattered across the architecture assumptions, the tier caveats, the one-way-door catalogue and the freeze rules, and no owners and no review. It recommends adding the file with owner, likelihood, impact and treatment, seeded from the material assumptions and the unverified statements each document lists. Another document refers a reader to that register anyway. The file does not exist."
+notes = "The reference plan records this as gap G2 against itself: no risk register, with material assumptions and design risks scattered across the architecture assumptions, the tier caveats, the one-way-door catalog and the freeze rules, and no owners and no review. It recommends adding the file with owner, likelihood, impact and treatment, seeded from the material assumptions and the unverified statements each document lists. Another document refers a reader to that register anyway. The file does not exist."
 
 # governance.event_documentation - asked of the governance/risk contact
 # A drill report and an event report are different documents and most organizations

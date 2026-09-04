@@ -327,27 +327,27 @@ def _edges_of_kind(portfolio: Portfolio, kinds: tuple[str, ...],
 def _find_cycle(graph: dict[str, set[str]]) -> list[str] | None:
     """One cycle if the graph has any, as the path that closes it. Iterative depth-first."""
     WHITE, GREY, BLACK = 0, 1, 2
-    colour = dict.fromkeys(graph, WHITE)
+    color = dict.fromkeys(graph, WHITE)
     for root in sorted(graph):
-        if colour[root] != WHITE:
+        if color[root] != WHITE:
             continue
         stack = [(root, iter(sorted(graph[root])))]
         path = [root]
-        colour[root] = GREY
+        color[root] = GREY
         while stack:
             node, children = stack[-1]
             advanced = False
             for child in children:
-                if colour.get(child, BLACK) == GREY:
+                if color.get(child, BLACK) == GREY:
                     return path[path.index(child):] + [child]
-                if colour.get(child, BLACK) == WHITE:
-                    colour[child] = GREY
+                if color.get(child, BLACK) == WHITE:
+                    color[child] = GREY
                     path.append(child)
                     stack.append((child, iter(sorted(graph[child]))))
                     advanced = True
                     break
             if not advanced:
-                colour[node] = BLACK
+                color[node] = BLACK
                 stack.pop()
                 path.pop()
     return None

@@ -21,7 +21,7 @@ visual authority of a measured bar is a number a reader will act on, so the gene
 an unsourced figure in three independent channels: a dagger in the text, a dashed stroke on
 the shape, and a footnote naming what the dagger means. Three, because roughly one man in
 twelve has a red or green deficiency and these documents get photocopied for audits, so
-neither colour nor a single glyph is enough on its own.
+neither color nor a single glyph is enough on its own.
 
 The realization states are held to the same rule. Each of the five carries a distinct fill,
 a distinct dash pattern and a literal word, and the checks below assert that no two states
@@ -91,7 +91,7 @@ def main() -> None:
     section.check("every realization state has its own dash pattern",
                   _states_have_distinct_dashes)
     section.check("every realization state has a literal label", _states_have_literal_labels)
-    section.check("no state is distinguishable by colour alone", _colour_is_never_the_only_cue)
+    section.check("no state is distinguishable by color alone", _colour_is_never_the_only_cue)
     section.check("an unrecognised state is unknown, never conformant",
                   _the_default_state_is_unknown)
     section.check("a reconciliation renders with its state's label", _reconciliations_render)
@@ -333,7 +333,7 @@ def _colour_is_never_the_only_cue() -> None:
     for position, style in enumerate(styles):
         for other in styles[position + 1:]:
             assert (style.dashes, style.label) != (other.dashes, other.label), (
-                f"{style.label} and {other.label} differ only by colour, so a greyscale "
+                f"{style.label} and {other.label} differ only by color, so a greyscale "
                 f"reader cannot tell a gap from a conformant component")
 
 

@@ -22,6 +22,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **How long it takes to move the standby to its warned state**: **[MISSING — owner: infrastructure owner]**

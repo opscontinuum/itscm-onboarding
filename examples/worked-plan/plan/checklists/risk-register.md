@@ -33,7 +33,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Each external party, what their contract obliges, how fast, and where the contract is held**: **[MISSING — owner: governance/risk contact]**
 - **Each material assumption or design risk, its owner and its review date**: **[MISSING — owner: governance/risk contact]**

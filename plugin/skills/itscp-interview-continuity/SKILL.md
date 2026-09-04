@@ -248,6 +248,6 @@ in `runbooks/RB-02`.
 | "Only one engineer has ever run the failback, but they're reliable" | Reliability is not availability. No deputy is a finding, at the same weight as no owner |
 | "The on-call rota is the deputy" | A rota is not a name. Ask who is on it who could actually execute this step |
 | "The roster and the succession are near enough the same" | "Near enough" is a conflict you have not looked at. Record both, name the decision owner |
-| "Thresholds are a judgement call" | Judgement at 3am is not repeatable. Get an observable number |
+| "Thresholds are a judgment call" | Judgment at 3am is not repeatable. Get an observable number |
 | "The bridge is our usual incident channel" | Check what that channel depends on. A loop through the failed environment is not a bridge |
 | "Safety isn't relevant, it's all cloud" | The event that takes the region may take the people. Ask |

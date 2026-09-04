@@ -229,7 +229,7 @@ def _validate_provenance(record: Record) -> None:
         raise ValidationError(
             f"{record.key}: {record.provenance!r} is refused because no provenance value "
             f"means the assistant worked it out. If you worked it out it is not a fact: it "
-            f"is a MISSING with a named owner, or an engineering judgement for the "
+            f"is a MISSING with a named owner, or an engineering judgment for the "
             f"generated document's Unverified statements section."
         )
     if _provenance_is_legal(record.provenance):

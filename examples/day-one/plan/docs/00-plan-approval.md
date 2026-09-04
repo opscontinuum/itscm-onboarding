@@ -24,7 +24,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The business-facing name for the same system**: **[MISSING — owner: business owner]**
 - **The signatory and the alternate signatory**: **[MISSING — owner: signing authority]**

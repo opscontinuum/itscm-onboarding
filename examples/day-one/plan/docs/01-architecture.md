@@ -51,7 +51,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The system's technical name, as the plan's title and throughout**: **[MISSING — owner: application owner]**
 - **Each stated assumption, what breaks if it is wrong, who confirms it and by when**: **[MISSING — owner: lead engineer]**

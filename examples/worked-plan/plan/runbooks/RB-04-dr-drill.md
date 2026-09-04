@@ -40,6 +40,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **How often the plan is exercised, in practice**: **[MISSING — owner: governance/risk contact]**

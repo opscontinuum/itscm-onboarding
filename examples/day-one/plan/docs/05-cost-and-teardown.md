@@ -27,7 +27,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The monthly standby cost floor**: **[MISSING — owner: infrastructure owner]**
 - **Storage features that constrain what the standby may be built on**: **[MISSING — owner: lead engineer]**

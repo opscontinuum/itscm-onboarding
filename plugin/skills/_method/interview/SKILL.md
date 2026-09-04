@@ -166,7 +166,7 @@ means the plan ends up written in the business's own words rather than yours.
 
 ## Provenance on every fact
 
-Every `ANSWERED` field records where it came from. This is the direct analogue of the citation
+Every `ANSWERED` field records where it came from. This is the direct analog of the citation
 discipline in the reference repository, where every claim about product behavior carries a
 source and every untraceable claim is tagged.
 
@@ -178,7 +178,7 @@ source and every untraceable claim is tagged.
 | `operator` | The person running the toolkit supplied it about themselves |
 
 There is no provenance value meaning "the assistant worked it out". If you worked it out, it
-is not a fact; it is either a `MISSING` or a clearly-labeled engineering judgement written
+is not a fact; it is either a `MISSING` or a clearly-labeled engineering judgment written
 into the generated document's *Unverified statements* section — never into the answer store.
 
 ---
@@ -232,7 +232,7 @@ side was silently dropped is a plan that fails in exactly that place.
 | "They're busy, I'll batch the last five questions" | Batched answers cannot be attributed. One at a time |
 | "The number seems low but they were confident" | Record it with the mechanism. If there is no mechanism, record `confidence: low` |
 | "Both interviewees are roughly saying the same thing" | "Roughly" is a contradiction you have not looked at yet |
-| "This field doesn't really apply here" | NOT_APPLICABLE requires a stated reason, not a judgement call |
+| "This field doesn't really apply here" | NOT_APPLICABLE requires a stated reason, not a judgment call |
 | "I already know this from the reference repo" | The reference repo describes a hypothetical corporation. It is not evidence about this one |
 
 ---

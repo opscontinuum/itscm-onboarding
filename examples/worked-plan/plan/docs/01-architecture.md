@@ -74,7 +74,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The release of each major component, and any upgrade in flight**:  *(low confidence; not measured)*
 - **Whether the production environment is one instance or several, and how they are split**:  *(low confidence; not measured)*

@@ -106,7 +106,7 @@ plan change.
 
 > "When a drill finds something wrong, what makes the plan actually change?"
 
-If there is no route, the drills are theatre. That is a finding, not a criticism, and it is
+If there is no route, the drills are theater. That is a finding, not a criticism, and it is
 usually welcomed.
 
 ### 6. Risk register (10 min)

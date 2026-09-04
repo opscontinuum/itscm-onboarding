@@ -16,6 +16,6 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labeled as such.
+Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **How a real event is written up, by whom, and where the record goes**: **[MISSING — owner: governance/risk contact]**
