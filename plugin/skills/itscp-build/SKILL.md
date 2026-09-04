@@ -136,8 +136,8 @@ assumed tiers. Assumed tiers become real architecture within a day and are never
 After every phase, report against `coverage-map.md`:
 
 ```
-Coverage: 17/37 fields (46%)
-  ANSWERED 14 | NOT_APPLICABLE 3 | DEFERRED 2 | MISSING 18
+Coverage: 17/82 fields (20%)
+  ANSWERED 14 | NOT_APPLICABLE 3 | DEFERRED 2 | MISSING 63
   Confidence of ANSWERED: high 4 | medium 7 | low 3
 
 Complete sections:  1.3 Assumptions, 3.2 Notification, App. A, App. H
@@ -147,7 +147,7 @@ Next:               itscp-interview-infrastructure (infrastructure owner, ~90 mi
 ```
 
 The figures above are worked against the starter field set described by the
-`itscp-method-answer-store` skill, which is 37 fields. They are an illustration of the shape,
+`itscp-method-answer-store` skill, which is 82 fields. They are an illustration of the shape,
 not a target to reproduce.
 
 **Four rules for this report.**
@@ -155,11 +155,12 @@ not a target to reproduce.
 1. **Coverage is not quality.** Always print the confidence distribution beside it. A plan at
    90% coverage with 60% low confidence is an organisation that has guessed comprehensively.
 2. **Count the denominator; never quote one.** It is the number of fields in scope for *this*
-   plan, counted from that plan's answer store. The starter set is 37 fields; a plan that adds
+   plan, counted from that plan's answer store. The starter set is 82 fields; a plan that adds
    fields for its own tiers, processes or interfaces reports against its own total. A
    denominator nobody counted is an invented number in the one report whose entire job is to be
    trustworthy about what is known.
-3. **Never round up.** 17/37 is 46%, not "about half done". The number is the deliverable.
+3. **Never round up.** Coverage is floored. 17 of 37 is 45%, not the 46% a rounding gives it,
+   and not "about half done". The number is the deliverable.
 4. **Never report a section complete because its file exists.** A rendered document full of
    `MISSING` markers is a rendered document, not a complete section.
 

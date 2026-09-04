@@ -6,7 +6,7 @@ cannot drift: this suite regenerates it and fails if the committed file differs,
 a stale example a failing test rather than a thing somebody notices later.
 
 The denominator matters because ``skills/itscp-build/SKILL.md`` reports coverage against the
-starter field set and pins it at 37. A plan that adds fields reports against its own counted
+starter field set and pins it at 82. A plan that adds fields reports against its own counted
 total, but the example is the starter set and has to be the number the skill quotes.
 """
 from __future__ import annotations

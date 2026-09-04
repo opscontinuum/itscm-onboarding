@@ -458,6 +458,11 @@ CI inventory [6] lines 24 to 25.
 
 ### 4.3 Recommendation: (c), as a three-class partition with a fourth thing forbidden
 
+> **Amended.** §4.3a below adds a fourth class, `method`, for the toolkit's own templated
+> content. The crosswalk class remains forbidden as a justification, which is what this
+> section's guarantee is actually about.
+
+
 **Recommendation.** Adopt (c). Every element of a generated ITSCP carries exactly one
 structural-provenance class, and the crosswalk class is annotation only and can never introduce
 structure.
@@ -468,7 +473,8 @@ structure.
 | `ours` | This project's own element. No standards provenance claimed | Written by us, declared as ours | Minimum business continuity objective per tier; cost model; alert catalogue |
 | `crosswalk` | An ITIL 4 or ISO term named against an element the other two classes already placed | Nothing. It is an annotation | "The tier assignment workshop is a business impact analysis [glossary]" |
 
-**There is no fourth class**, which is the same shape of guarantee as [8] lines 3 to 21. In
+**There is no fourth class** *(amended: see §4.3a, which adds `method` and states the rule
+that governs it)*, which is the same shape of guarantee as [8] lines 3 to 21. In
 particular there is no class meaning "ITIL requires this", because we cannot read the text that
 would say so.
 

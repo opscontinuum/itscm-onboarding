@@ -121,8 +121,8 @@ CROSSWALK_MARKERS: tuple[str, ...] = ("[glossary]", "(practice guide; not verifi
 
 #: Answer kinds.
 #:
-#: ``rows`` is a list of maps, which the emitter writes as a TOML array of tables; there are
-#: exactly seven of them and :func:`row_questions` returns them.
+#: ``rows`` is a list of maps, which the emitter writes as a TOML array of tables.
+#: :func:`row_questions` returns them; their number is counted there and never quoted here.
 #:
 #: ``narrative`` is a multi-paragraph answer and is a first-class value, not a long ``text``.
 #: The reference plan this toolkit has to reproduce is mostly narrative: design rationale,
@@ -133,9 +133,9 @@ CROSSWALK_MARKERS: tuple[str, ...] = ("[glossary]", "(practice guide; not verifi
 #: addition is a read-back: see :attr:`Question.readback_required`.
 #: Six further kinds come from surveying the reference plan this toolkit has to reproduce.
 #: That survey found 51 distinct value shapes across its 30 files and 6,481 lines; 25 fitted
-#: the nine kinds above and the other 26 collapsed into these six families. No starter
-#: question uses them yet, because the questions that would are still being recovered from
-#: the original interview. They are declared here so that adding those questions is data:
+#: the nine kinds above and the other 26 collapsed into these six families. ``code`` is in
+#: use, on the question that asks for the recovery procedure at the level of what is actually
+#: typed. The other five are declared so that adding the questions that need them is data:
 #:
 #: ``code``
 #:     An exact-fidelity block: shell, SQL, a configuration stanza, Terraform, a formula
@@ -1750,10 +1750,10 @@ QUESTIONS: tuple[Question, ...] = (
 )
 
 
-#: The starter field set, and the denominator ``itscp-build`` reports against today. It is a
-#: subset of the bank, not the whole of it: the bank grows as elicitation gets more complete,
-#: and ``itscp-build`` rule 2 already says a plan reports against its own counted total
-#: rather than a quoted one. ``templates/answers.example.toml`` emits exactly these.
+#: The starter field set, and the denominator ``itscp-build`` reports against today. It is
+#: every question in the bank: a plan that adds fields for its own tiers, processes or
+#: interfaces reports against its own counted total, which is ``itscp-build`` rule 2.
+#: ``plugin/answers.example.toml`` emits exactly these.
 STARTER_KEYS: tuple[str, ...] = tuple(question.id for question in QUESTIONS)
 
 BY_ID: dict[str, Question] = {question.id: question for question in QUESTIONS}
