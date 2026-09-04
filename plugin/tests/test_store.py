@@ -279,7 +279,8 @@ def _coverage_fixture() -> dict:
 def _fixture_answer(key: str, confidence: str) -> store.Record:
     question = store.bank.BY_ID[key]
     return store.Record(
-        key, "ANSWERED", value="stated", provenance=INTERVIEW, confidence=confidence,
+        key, "ANSWERED", value=question.options[0] if question.options else "stated",
+        provenance=INTERVIEW, confidence=confidence,
         mechanism="stated mechanism" if question.mechanism_required else "",
         readback="confirmed" if question.readback_required else "not_required")
 

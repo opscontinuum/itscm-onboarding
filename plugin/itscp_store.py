@@ -267,6 +267,11 @@ def _validate_question_requirements(record: Record, question: bank.Question) -> 
                  "get a yes; a draft nobody confirmed is not an answer they gave.")
     if question.confidence_required:
         _require(record.confidence, record.key, "requires a confidence.")
+    if question.options:
+        _require(record.value in question.options, record.key,
+                 f"{record.value!r} is not one of the options this question offers: "
+                 f"{', '.join(question.options)}. An option list that binds nothing is "
+                 f"documentation, and a value outside it is one the plan cannot act on.")
 
 
 def _validate_conflict(record: Record) -> None:
