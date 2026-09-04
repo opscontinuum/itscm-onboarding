@@ -304,7 +304,8 @@ def gaps(ledger: dict) -> list[Reconciliation]:
 
 def emit(ledger: dict) -> str:
     """The whole ledger as TOML, with the state legend regenerated as comments."""
-    lines = ["\n".join(f"# {line}" for line in _ledger_notice()), "", "[meta]"]
+    lines = ["\n".join(f"# {line}".rstrip() for line in _ledger_notice()),
+             "", "[meta]"]
     lines.extend(f"{name} = {toml_value(value)}" for name, value in ledger["meta"].items())
     for result in ledger["reconciliations"]:
         lines.append("")

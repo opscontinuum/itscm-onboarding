@@ -202,7 +202,8 @@ def unanswered(transcript: dict) -> list[Entry]:
 
 def emit(transcript: dict) -> str:
     """The whole transcript as TOML. Deterministic, so a diff shows only new entries."""
-    lines = ["\n".join(f"# {line}" for line in _SENSITIVITY_NOTICE), "", "[meta]"]
+    lines = ["\n".join(f"# {line}".rstrip() for line in _SENSITIVITY_NOTICE),
+             "", "[meta]"]
     lines.extend(f"{name} = {toml_value(value)}"
                  for name, value in transcript["meta"].items())
     for entry in transcript["entries"]:

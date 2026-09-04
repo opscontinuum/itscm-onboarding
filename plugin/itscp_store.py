@@ -314,6 +314,19 @@ def new_document(system_name: str) -> dict:
     }
 
 
+def starter_document() -> dict:
+    """Every field in the bank, MISSING, owned by the role who can answer it.
+
+    The shape ``templates/answers.example.toml`` ships and the shape a new plan starts in.
+    Every field starts refuted: nobody has answered anything, and each gap already names who
+    can close it, which is the state an interview is supposed to begin from.
+    """
+    document = new_document("")
+    for question in bank.QUESTIONS:
+        document = put(document, Record(question.id, "MISSING", owner=question.owner_role))
+    return document
+
+
 def put(document: dict, record: Record) -> dict:
     """A copy of ``document`` with ``record`` stored, after validating it.
 
@@ -458,8 +471,7 @@ def emit(document: dict) -> str:
     changed in the interview rather than what changed in the emitter.
     """
     lines = [_header(), "", "[meta]"]
-    lines.extend(f"{name} = {toml_value(value)}"
-                 for name, value in document["meta"].items())
+    lines.extend(_named_lines(document["meta"]))
     for question in bank.QUESTIONS:
         stored = record(document, question.id)
         if stored is None:
@@ -472,7 +484,7 @@ def emit(document: dict) -> str:
 
 def _header() -> str:
     return "\n".join(
-        f"# {line}" for line in (
+        f"# {line}".rstrip() for line in (
             "The answer store. One file per plan; every interview reads it and appends to it.",
             "",
             "THIS FILE IS GITIGNORED AND MUST STAY THAT WAY. It accumulates names, phone",
