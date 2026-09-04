@@ -19,6 +19,8 @@
 #      out, graded on structure, provenance and quoted-standard fidelity.
 #   9. The two committed examples under examples/ are still what the build
 #      step writes from their own answer stores.
+#  10. The portfolio holds: recovery time inversions, dependency cycles and
+#      wave ordering are caught above the level of any single plan.
 #
 # Check 2's round trip is the one that matters over time. The emitter is hand
 # written and tomllib is the standard library's parser; without a property
@@ -44,7 +46,7 @@ if ! "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)
 fi
 
 for module in test_questions test_store test_session test_realisation test_example \
-              test_render test_diagrams test_acceptance test_examples; do
+              test_render test_diagrams test_acceptance test_examples test_portfolio; do
     if ! "$PYTHON" "${module}.py"; then
         FAILS=$((FAILS + 1))
     fi
