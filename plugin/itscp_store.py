@@ -43,6 +43,10 @@ import itscp_questions as bank
 
 SCHEMA_VERSION = 1
 
+#: Where a regenerated guidance comment wraps. Wide enough that most guidance is two
+#: lines, narrow enough to read beside the values in a terminal.
+_COMMENT_WIDTH = 86
+
 #: How ``itscp-build`` names the status counts in its coverage report.
 _REPORT_STATUS_ORDER = ("ANSWERED", "NOT_APPLICABLE", "DEFERRED", "MISSING")
 
@@ -511,7 +515,7 @@ def _comment_block(question: bank.Question) -> list[str]:
     return lines
 
 
-def _wrapped_comment(text: str, width: int = 86) -> list[str]:
+def _wrapped_comment(text: str, width: int = _COMMENT_WIDTH) -> list[str]:
     words = text.split()
     lines: list[str] = []
     current = "#"

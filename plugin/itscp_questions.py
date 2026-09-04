@@ -6,11 +6,11 @@ schema file, because a second copy of the field list is a second thing to drift.
 
 Read alongside:
 
-* ``skills/_method/answer-store.md`` — the record shape, the namespace ownership rules and
+* ``skills/_method/answer-store.md`` for the record shape, the namespace ownership rules and
   the seven-role owner vocabulary.
-* ``skills/_method/interview-method.md`` — the Iron Rule, the status lattice, the confidence
+* ``skills/_method/interview-method.md`` for the Iron Rule, the status lattice, the confidence
   rubric and the closed provenance list.
-* ``docs/ITIL-GROUNDING.md`` §4 — the three-class structural-provenance partition that
+* ``docs/ITIL-GROUNDING.md`` §4 for the three-class structural-provenance partition that
   :attr:`Question.structural_provenance` implements, and the rule that ``crosswalk`` may
   never justify a field on its own.
 

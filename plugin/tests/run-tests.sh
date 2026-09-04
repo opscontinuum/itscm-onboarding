@@ -25,6 +25,9 @@ set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 PYTHON="${PYTHON:-python3}"
+# No .pyc files: the repo has no ignore rule for them and a test run should not
+# leave the working tree dirty for whoever looks at git status next.
+export PYTHONDONTWRITEBYTECODE=1
 FAILS=0
 
 if ! "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)'; then

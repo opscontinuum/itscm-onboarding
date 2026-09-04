@@ -202,20 +202,20 @@ def reconcile(requirement: PlanRequirement | None,
     half was missing, so an unknown can always be chased to the thing that would resolve it.
     """
     if requirement is None and observation is None:
-        return _unknown("", "", "the plan states no requirement and no source has looked")
+        return _unknown("the plan states no requirement and no source has looked",
+                        None, None)
     if requirement is None:
         return _reconcile_without_a_requirement(observation)
     if observation is None:
-        return _unknown(requirement.identity, "",
-                        f"the plan requires this and no source has looked for it. Owner: "
-                        f"{requirement.owner}", requirement)
+        return _unknown(f"the plan requires this and no source has looked for it. "
+                        f"Owner: {requirement.owner}", requirement, None)
     return _reconcile_both(requirement, observation)
 
 
 def _reconcile_without_a_requirement(observation: SourceObservation) -> Reconciliation:
     if not observation.present:
-        return _unknown(observation.identity, observation.source,
-                        "the plan states no requirement and the source did not find it")
+        return _unknown("the plan states no requirement and the source did not find it",
+                        None, observation)
     return Reconciliation(
         identity=observation.identity, source=observation.source, state="shadow",
         reason=f"{observation.source} found this on {observation.observed_at} and the plan "
@@ -255,10 +255,14 @@ def _differing_attributes(expected: dict[str, str],
                         if observed.get(name) != value))
 
 
-def _unknown(identity: str, source: str, reason: str,
-             requirement: PlanRequirement | None = None) -> Reconciliation:
+def _unknown(reason: str, requirement: PlanRequirement | None,
+             observation: SourceObservation | None) -> Reconciliation:
+    """An unknown state, taking its identity and source from whichever half exists."""
+    identity = requirement.identity if requirement else (
+        observation.identity if observation else "")
     return Reconciliation(
-        identity=identity, source=source, state="unknown", reason=reason,
+        identity=identity, source=observation.source if observation else "",
+        state="unknown", reason=reason,
         owner=requirement.owner if requirement else "",
         consequence=requirement.invalidates if requirement else "")
 
