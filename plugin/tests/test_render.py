@@ -56,6 +56,8 @@ def main() -> None:
     section.check("an empty store produces no answer segments", _empty_store_answers_nothing)
     section.check("structural text comes from the declared corpus", _structural_is_corpus)
     section.check("NIST headings render verbatim", _nist_headings_are_verbatim)
+    section.check("method text is structural, never an answer", _method_text_is_structural)
+    section.check("a method field is headed as the toolkit's own", _method_is_headed_as_ours)
     section.check("answer text comes from the store", _answers_come_from_the_store)
     section.check("markup contains no letter and no digit", _markup_has_no_content)
     section.check("annotations come from a closed vocabulary", _annotations_are_closed)
@@ -126,6 +128,45 @@ def _nist_headings_are_verbatim() -> None:
     for heading in cited:
         assert heading in bank.NIST_CORPUS, f"{heading!r} is not a transcribed NIST heading"
         assert heading in corpus, f"{heading!r} is cited by the bank but never rendered"
+
+
+def _method_questions() -> list[bank.Question]:
+    return [question for question in bank.QUESTIONS
+            if question.structural_provenance == "method"]
+
+
+def _method_text_is_structural() -> None:
+    """Templated text the toolkit supplies is in the corpus, and never in an answer segment.
+
+    This is the whole of the fourth class's guarantee. Method content is neither elicited nor
+    transcribed, so a reader has to be able to tell it from both, and the one way it could be
+    mistaken for something a customer said is by arriving as an answer segment.
+    """
+    corpus = render.structural_corpus()
+    statements = {question.method_statement for question in _method_questions()}
+    assert statements, "nothing is classified method, so the class guarantees nothing"
+    for statement in statements:
+        assert statement in corpus, f"method text is in no corpus: {statement!r}"
+    for segment in _of_kind(_scripted(), "answer"):
+        assert segment.text not in statements, (
+            f"method text rendered as an answer, which says a customer supplied it: "
+            f"{segment.text!r}")
+
+
+def _method_is_headed_as_ours() -> None:
+    """A method field sits under its own heading, distinct from ours and from NIST's."""
+    assert render.METHOD_HEADING != render.OURS_HEADING, (
+        "method and ours share a heading, so a reader cannot tell the toolkit's own approach "
+        "from a field this plan simply recorded")
+    assert render.METHOD_HEADING not in bank.NIST_CORPUS, (
+        "the method heading is a transcribed NIST heading, which claims NIST supplied it")
+    rendered = _scripted()
+    for question in _method_questions():
+        text = _text_for(rendered, question.id)
+        assert render.METHOD_HEADING in text, (
+            f"{question.id} is method and its document never says so")
+        assert question.method_statement in text, (
+            f"{question.id} is method and the text the toolkit supplies is not rendered")
 
 
 def _answers_come_from_the_store() -> None:

@@ -3,10 +3,11 @@
 The bank is the schema. Every rule the store enforces at write time rests on the bank being
 internally consistent, so these run first and the rest of the suite assumes them.
 
-The check that matters most over time is :func:`_crosswalk_never_justifies`. The partition of
-``docs/ITIL-GROUNDING.md`` section 4.3 is only worth having if the forbidden class is
-mechanically forbidden, and a future edit that classifies a field ``crosswalk`` would
-otherwise be a silent route for an unread paywalled standard to introduce a required field.
+The check that matters most over time is :func:`_crosswalk_never_justifies`. The partition
+of ``docs/ITIL-GROUNDING.md`` section 4.3, extended here by a fourth class, is only worth
+having if the forbidden class is mechanically forbidden, and a future edit that classifies a
+field ``crosswalk`` would otherwise be a silent route for an unread paywalled standard to
+introduce a required field.
 
 The second-most load bearing group is the mechanism pairing. ``mechanism_required`` on its
 own can only ever *reject* a figure that arrived without an explanation; it cannot elicit
@@ -89,11 +90,16 @@ def main() -> None:
     section.check("every kind is a known kind", _every_question(
         lambda question: _assert_in(question.kind, bank.KINDS, "kind"), "kind"))
 
-    section.check("every structural provenance is one of the three classes", _every_question(
+    section.check("every structural provenance is one of the four classes", _every_question(
         lambda question: _assert_in(
             question.structural_provenance, bank.STRUCTURAL_PROVENANCE,
             "structural_provenance"),
         "provenance class"))
+
+    section.check("method is the fourth class and is in use", _method_is_a_class_in_use)
+
+    section.check("every method field carries the text the toolkit supplies", _every_question(
+        _method_supplies_its_own_text, "method statement"))
 
     section.check("no field is justified by the crosswalk class", _every_question(
         _crosswalk_never_justifies, "crosswalk rule"))
@@ -104,8 +110,8 @@ def main() -> None:
     section.check("every nist field cites a transcribed heading", _every_question(
         _nist_heading_is_transcribed, "nist heading"))
 
-    section.check("no ours field claims a nist heading", _every_question(
-        _ours_claims_nothing, "ours claims nothing"))
+    section.check("only a nist field claims a nist heading", _every_question(
+        _only_nist_claims_a_nist_heading, "claims nothing"))
 
     section.check("no field opts out of provenance", _every_question(
         lambda question: _assert(question.provenance_required,
@@ -192,11 +198,44 @@ def _nist_heading_is_transcribed(question) -> None:
     assert question.nist_source, "classified nist but names no source location"
 
 
-def _ours_claims_nothing(question) -> None:
-    if question.structural_provenance != "ours":
+def _only_nist_claims_a_nist_heading(question) -> None:
+    """``ours`` and ``method`` both claim no standards provenance, so neither cites one."""
+    if question.structural_provenance == "nist":
         return
     assert not question.nist_heading, (
-        f"classified ours but claims NIST heading {question.nist_heading!r}"
+        f"classified {question.structural_provenance!r} but claims NIST heading "
+        f"{question.nist_heading!r}"
+    )
+
+
+def _method_is_a_class_in_use() -> None:
+    """The fourth class exists, and something is actually classified by it.
+
+    A class nobody uses is a claim in a tuple. The posture model, the decomposition of
+    maximum tolerable downtime and the one-way-door rule are the toolkit's own approach:
+    neither elicited from anybody nor transcribed from anything, and the reference plan
+    carries all three with no provenance a reader can check.
+    """
+    equal(len(bank.STRUCTURAL_PROVENANCE), 4, "the structural-provenance classes")
+    _assert_in("method", bank.STRUCTURAL_PROVENANCE, "the fourth class")
+    counts = bank.structural_provenance_counts()
+    assert counts["method"], (
+        "method is declared and nothing is classified by it, so the class is a word in a "
+        "tuple rather than a partition of the bank"
+    )
+
+
+def _method_supplies_its_own_text(question) -> None:
+    """Method content is text the toolkit supplies, so the bank has to carry the text."""
+    if question.structural_provenance == "method":
+        assert question.method_statement.strip(), (
+            "classified method and supplies no text; method means the toolkit brought the "
+            "element, and an element nobody wrote down cannot be shown to a reader as ours"
+        )
+        return
+    assert not question.method_statement, (
+        f"supplies method text without being classified method: "
+        f"{question.method_statement!r}"
     )
 
 
