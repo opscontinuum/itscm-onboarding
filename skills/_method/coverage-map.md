@@ -86,7 +86,7 @@ it does.
 | F. System validation test plan | `itscp-interview-application` | `checklists/validation-pack.md` |
 | G. Diagrams — architecture and I/O | `itscp-discover` + `itscp-interview-infrastructure` | `docs/01` §2, `docs/diagrams/` |
 | H. Hardware, software and firmware inventory | `itscp-discover` | `docs/11-inventory.md` |
-| I. System interconnections | `itscp-discover` + `itscp-interview-application` | `docs/12-interconnections.md` |
+| I. System interconnections | `itscp-interview-application` only. `itscp-discover` collects the raw data but does not render it, see *Not yet covered* | `docs/12-interconnections.md` |
 | J. Test, training and exercise documentation | `itscp-interview-governance` | `checklists/contingency-training.md`, `runbooks/RB-04` |
 | K. Business impact analysis | `itscp-interview-business` | `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md` |
 | L. Vendor SLAs and reciprocal agreements | `itscp-interview-governance` | `checklists/contact-roster.md` §5 |
@@ -117,3 +117,4 @@ Stated so the toolkit does not imply completeness it lacks.
 | No elicitation for platform types other than Oracle EBS on OCI | The runbook templates assume Oracle Data Guard and OCI replication primitives. Other stacks get the structure but must supply their own procedures |
 | No automated import of an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
 | Discovery covers OCI only | AWS, Azure, GCP and on-premises inventories are manual |
+| Discovery does not render Appendix I | `oci-discover.sh` writes `inventory.md`, `dr-resources.env`, `gaps.md` and `raw/`, and nothing else. The interconnection data is collected into `raw/*.json` and left unrendered, so the whole register comes from the application interview. The half discovery could have pre-filled is recalled in a meeting instead, which is where interfaces get missed |

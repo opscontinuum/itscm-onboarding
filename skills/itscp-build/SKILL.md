@@ -135,29 +135,39 @@ assumed tiers. Assumed tiers become real architecture within a day and are never
 After every phase, report against `coverage-map.md`:
 
 ```
-Coverage: 34/71 fields (48%)
-  ANSWERED 31 | NOT_APPLICABLE 3 | DEFERRED 4 | MISSING 33
-  Confidence of ANSWERED: high 9 | medium 14 | low 8
+Coverage: 17/37 fields (46%)
+  ANSWERED 14 | NOT_APPLICABLE 3 | DEFERRED 2 | MISSING 18
+  Confidence of ANSWERED: high 4 | medium 7 | low 3
 
 Complete sections:  1.3 Assumptions, 3.2 Notification, App. A, App. H
 Blocked sections:   App. K BIA (business owner unavailable until 2026-09-15)
-Lowest confidence:  business.wrt.tier0 (low) - no measurement, no mechanism given
+Lowest confidence:  business.rpo.tier0 (low) - no measurement, no mechanism given
 Next:               itscp-interview-infrastructure (infrastructure owner, ~90 min)
 ```
 
-**Three rules for this report.**
+The figures above are worked against the starter field set in
+`templates/answers.example.yaml`, which is 37 fields. They are an illustration of the shape,
+not a target to reproduce.
+
+**Four rules for this report.**
 
 1. **Coverage is not quality.** Always print the confidence distribution beside it. A plan at
    90% coverage with 60% low confidence is an organisation that has guessed comprehensively.
-2. **Never round up.** 34/71 is 48%, not "about half done". The number is the deliverable.
-3. **Never report a section complete because its file exists.** A rendered document full of
+2. **Count the denominator; never quote one.** It is the number of fields in scope for *this*
+   plan, counted from that plan's answer store. The starter set is 37 fields; a plan that adds
+   fields for its own tiers, processes or interfaces reports against its own total. A
+   denominator nobody counted is an invented number in the one report whose entire job is to be
+   trustworthy about what is known.
+3. **Never round up.** 17/37 is 46%, not "about half done". The number is the deliverable.
+4. **Never report a section complete because its file exists.** A rendered document full of
    `MISSING` markers is a rendered document, not a complete section.
 
 ---
 
 ## Generating the repository
 
-The generated repository follows `templates/repo-scaffold/`. Rendering rules:
+The generated repository follows `templates/repo-scaffold.md`, which is a single file: the
+tree it describes and the rendering-rules table beneath it. Rendering rules:
 
 - A `MISSING` field renders as a visible marker with its owner:
   `**[MISSING — owner: Head of Finance Systems]**`. Never blank, never a plausible default.

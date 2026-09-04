@@ -73,6 +73,11 @@ plan's dependency. Then ask the deputy question:
 
 The section most likely to be incomplete, and the one that causes the most damage when it is.
 
+**Discovery gives you nothing here.** It renders an inventory, not an interconnection list, so
+unlike section 2 there is no found-in-the-tenancy list to react to and no safety net under a
+partner nobody remembers. This section is elicited from a blank page. Budget the full 25
+minutes and do not let it get compressed when the session overruns.
+
 > "Who sends you files, and who's waiting on files from you?"
 
 Per interface, record: partner, direction, transport, frequency, what breaks on their side

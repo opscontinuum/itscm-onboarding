@@ -23,7 +23,7 @@ reference example so that anyone who has read one plan can navigate any other.
 │   ├── 09-phase-recovery.md           build           ITSCP phase 2 routing
 │   ├── 10-phase-reconstitution.md     build           ITSCP phase 3 routing
 │   ├── 11-inventory.md                discovery       Appendix H
-│   ├── 12-interconnections.md         discovery + app Appendix I
+│   ├── 12-interconnections.md         application     Appendix I (discovery does not render it)
 │   ├── references.md                  build           consolidated citation index
 │   └── compliance-audit.md            audit           adversarial audit output
 ├── runbooks/

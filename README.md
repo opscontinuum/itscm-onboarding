@@ -25,7 +25,7 @@ output says so, by name.
 | Skill | Interviews | Produces |
 |---|---|---|
 | [`itscp-build`](skills/itscp-build/SKILL.md) | nobody — it sequences | Phase order, coverage reporting, repository generation |
-| [`itscp-discover`](skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, Appendix I interconnections, resource file |
+| [`itscp-discover`](skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, resource file, gap list |
 | [`itscp-interview-business`](skills/itscp-interview-business/SKILL.md) | business / process owner | Appendix K BIA, MTD tiers, MBCO, Appendix E workarounds |
 | [`itscp-interview-application`](skills/itscp-interview-application/SKILL.md) | application owner + lead engineer | §2.1 system description, interconnections, Appendix F validation, WRT |
 | [`itscp-interview-infrastructure`](skills/itscp-interview-infrastructure/SKILL.md) | infrastructure owner + lead engineer | Recovery strategy, replication matrix, Appendix C, cost model |
