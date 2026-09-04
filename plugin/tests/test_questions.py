@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank
 from harness import Section, equal
 
-EXPECTED_STARTER_KEYS = 38
+EXPECTED_STARTER_KEYS = 82
 #: The seven fields ``templates/answers.example.yaml`` annotates ``# list of {...}``. Named
 #: rather than counted, so a rename cannot silently satisfy the check.
 YAML_LIST_FIELDS = (
@@ -39,15 +39,83 @@ YAML_LIST_FIELDS = (
     "continuity.succession",
 )
 
-#: One field beyond those seven is modelled as rows here and was a bare ``value: null`` in the
-#: YAML: ``governance.risk_register``. A register with an owner and a review date per row is
-#: rows; prose that lists risks is not a register. Recorded as a deliberate deviation rather
-#: than left to be discovered as an off-by-one in the emitted example.
-DELIBERATE_EXTRA_ROW_FIELDS = ("governance.risk_register",)
+#: Every other field modelled as rows, named rather than counted so that a question cannot
+#: become a table by accident. ``governance.risk_register`` was a bare ``value: null`` in the
+#: YAML; a register with an owner and a review date per row is rows, and prose that lists
+#: risks is not a register. The rest arrived with the questions recovered from the reference
+#: plan, where the same content is carried as a table in the plan itself.
+DELIBERATE_EXTRA_ROW_FIELDS = (
+    "governance.risk_register",
+    "system.assumptions",
+    "business.tier_targets",
+    "business.tier_assignment",
+    "business.freeze_periods",
+    "app.validation_data_tests",
+    "app.unsafe_reruns",
+    "infra.irreversible_choices",
+    "infra.licensing",
+    "infra.offsite_storage",
+    "continuity.contact_roster",
+    "continuity.vendor_contacts",
+    "continuity.vendor_obligations",
+    "continuity.decision_and_recovery_roles",
+    "governance.associated_plans",
+    "governance.drill_levels",
+)
+
+#: The plan rows that had no question at all, as the NIST headings a question now has to
+#: cite. Nine were named in the brief; three more turned up in the same sweep and are here
+#: because the reference plan carries content for each of them and nothing elicited it.
+NIST_ROWS_THAT_OWED_A_QUESTION = (
+    "1.3 Assumptions",
+    "4.2 Recovery Procedures",
+    "5.2 Validation Data Testing",
+    "5.4 Recovery Declaration",
+    "5.5 Notifications (users)",
+    "5.6 Cleanup",
+    "5.7 Offsite Data Storage",
+    "5.8 Data Backup",
+    "5.9 Event Documentation",
+    "APPENDIX A PERSONNEL CONTACT LIST",
+    "APPENDIX B VENDOR CONTACT LIST",
+    "APPENDIX K ASSOCIATED PLANS AND PROCEDURES",
+)
+
+#: The tenth row of the brief's nine, which cannot be named by a NIST heading because it has
+#: none: ``NIST_DISCREPANCIES`` records that no appendix of vendor SLAs and reciprocal
+#: agreements exists in any of the three templates, and reclassifies the row ours.
+VENDOR_OBLIGATIONS_KEY = "continuity.vendor_obligations"
+
+#: The platform facts the reference plan carries as unconfirmed assumptions. Every one of
+#: them is something a person knows and nobody was asked to confirm, which is how a human
+#: fact ends up in an assumption table. Each is read back before it is written down.
+ASSUMPTION_BEARING = (
+    "system.assumptions",
+    "system.component_terms",
+    "system.releases",
+    "system.operating_systems",
+    "system.instances",
+    "infra.inter_region_transport",
+    "infra.storage_constraints",
+    "infra.shared_storage",
+)
+
+#: The columns an assumption row carries beyond the assumption itself. A flag on an
+#: unconfirmed fact says it is unconfirmed; these say who closes it and by when.
+ASSUMPTION_COLUMNS = ("owner", "confirm_by")
+
+#: The role question. NIST's own template names posts, and a customer does not know them; a
+#: question that asks who the ISCP Director is teaches the interviewee the answer.
+ROLE_CROSSWALK_KEY = "continuity.decision_and_recovery_roles"
+
+#: Words that would mean the question had asked for a post rather than for a duty.
+POSTS_NOBODY_SHOULD_BE_ASKED_FOR = ("Director", "Coordinator", "ISCP")
 
 #: Fields ``docs`` and the brief name as load bearing: they are asked independently, and a
 #: discovery value that disagrees becomes a conflict rather than a value.
 NEVER_SEEDABLE = (
+    "system.impact_level",
+    "business.tier_targets",
     "business.mtd.tier0",
     "business.rpo.tier0",
     "business.mbco.tier0",
@@ -156,6 +224,13 @@ def main() -> None:
     section.check("lookup by id finds every question", _lookup_round_trips)
 
     section.check("every discrepancy has a known kind", _discrepancy_kinds_are_closed)
+
+    section.check("every plan row that owed a question has one", _the_owed_rows_are_covered)
+
+    section.check("an assumption is read back, owned and dated", _assumptions_are_read_back)
+
+    section.check("the role question asks for duties, not for NIST's posts",
+                  _the_role_question_asks_for_duties)
 
     section.check("the bank asks which impact level was assigned", _the_bank_asks_for_a_level)
 
@@ -451,6 +526,58 @@ def _an_unknown_level_is_refused() -> None:
         raise AssertionError(
             f"lettered an appendix at impact level {level!r}; an uncategorised system has no "
             f"template, and picking one silently is the guess the toolkit exists to refuse")
+
+
+def _the_owed_rows_are_covered() -> None:
+    """Every plan row the bank could not fill, now filled.
+
+    A row of the plan with no question behind it is a section the toolkit will render as a
+    heading with nothing under it, or worse, a section somebody fills in by hand and nobody
+    can trace. The reference plan carries content for every row named here.
+    """
+    cited = {question.nist_heading for question in bank.QUESTIONS if question.nist_heading}
+    uncited = [heading for heading in NIST_ROWS_THAT_OWED_A_QUESTION if heading not in cited]
+    assert not uncited, f"plan rows still with no question: {uncited}"
+    vendors = bank.BY_ID[VENDOR_OBLIGATIONS_KEY]
+    equal(vendors.structural_provenance, "ours", f"class of {VENDOR_OBLIGATIONS_KEY}")
+
+
+def _assumptions_are_read_back() -> None:
+    """An assumption is a human fact nobody confirmed, so confirming it is the whole fix.
+
+    The reference plan's seven material assumptions are all things a person knows: which
+    release, which operating system, one instance or several, how the two regions are joined.
+    They became assumptions because the interview never said them back. A flag marking them
+    unconfirmed is not the fix; a read-back, an owner and a date are.
+    """
+    for key in ASSUMPTION_BEARING:
+        assert bank.BY_ID[key].readback_required, (
+            f"{key} carries a fact that ends up in an assumption table and is written down "
+            f"without being said back")
+    columns = bank.BY_ID["system.assumptions"].columns
+    for column in ASSUMPTION_COLUMNS:
+        assert column in columns, (
+            f"an assumption row has no {column!r} column, so the gap is flagged and unowned")
+
+
+def _the_role_question_asks_for_duties() -> None:
+    """Ask who decides and who recovers. Never ask a customer to name an ISCP Director.
+
+    The post names belong to NIST's template, not to the organisation being interviewed.
+    Putting one in the question supplies the answer, and the plan then records a role the
+    customer heard from us rather than the one they actually have.
+    """
+    question = bank.BY_ID[ROLE_CROSSWALK_KEY]
+    equal(question.structural_provenance, "method", f"class of {ROLE_CROSSWALK_KEY}")
+    asked = f"{question.prompt} {question.guidance}"
+    for post in POSTS_NOBODY_SHOULD_BE_ASKED_FOR:
+        assert post not in asked, (
+            f"the question puts {post!r} in front of the interviewee, which supplies the "
+            f"answer it is meant to elicit")
+    duties = question.enum_columns.get("duty", ())
+    assert len(duties) > 1, (
+        "the question offers no duty vocabulary, so nothing distinguishes who decides from "
+        "who recovers")
 
 
 def _discrepancy_kinds_are_closed() -> None:
