@@ -6,7 +6,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Recorded for this plan
 
-- **The failures this estate does not notice, and what would have shown them**: **[MISSING — owner: lead engineer]**
+- **The failures this environment does not notice, and what would have shown them**: **[MISSING — owner: lead engineer]**
 
 ## References
 
@@ -16,6 +16,6 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
-- **The failures this estate does not notice, and what would have shown them**: **[MISSING — owner: lead engineer]**
+- **The failures this environment does not notice, and what would have shown them**: **[MISSING — owner: lead engineer]**

@@ -22,7 +22,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The release of each major component, and any upgrade in flight**:  *(low confidence; not measured)*
 - **Whether a discovery walk has run, and when**: **[MISSING — owner: infrastructure owner]**

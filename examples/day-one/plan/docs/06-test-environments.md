@@ -18,6 +18,6 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each exercise level, what it proves and what it does not**: **[MISSING — owner: governance/risk contact]**

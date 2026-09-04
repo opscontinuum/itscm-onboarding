@@ -14,17 +14,17 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Recorded for this plan
 
-- **Where the approved plan is held, and where it is held when the estate is unavailable**: The signed statement is evidence and carries the same handling rules as the rest of the evidence directory. In a private fork it is kept alongside the drill output it cites, and the approved commit or tag is recorded, so that the plan that was approved is a specific checkable revision rather than whatever the main branch happens to be today. For the second half of the question the plan states the requirement clearly but not for this document: the runbooks must be accessible from outside the primary region and the roster must be held outside it, printed, with the DR Commander and the deputy and in the standby-side runbook store, and the plan says plainly that a runbook living on a wiki hosted in the region being recovered is not a runbook. The same instruction is not given for the signed approval statement itself, and no out-of-region location for it is named. The record of changes gives the reason the question matters here: the plan is read during an outage as a standalone document, often printed, when the repository may be exactly what is unreachable.
+- **Where the approved plan is held, and where it is held when the environment is unavailable**: The signed statement is evidence and carries the same handling rules as the rest of the evidence directory. In a private fork it is kept alongside the drill output it cites, and the approved commit or tag is recorded, so that the plan that was approved is a specific checkable revision rather than whatever the main branch happens to be today. For the second half of the question the plan states the requirement clearly but not for this document: the runbooks must be accessible from outside the primary region and the roster must be held outside it, printed, with the DR Commander and the deputy and in the standby-side runbook store, and the plan says plainly that a runbook living on a wiki hosted in the region being recovered is not a runbook. The same instruction is not given for the signed approval statement itself, and no out-of-region location for it is named. The record of changes gives the reason the question matters here: the plan is read during an outage as a standalone document, often printed, when the repository may be exactly what is unreachable.
 
 ## References
 
 Sources for every value above, as recorded when the value was given.
 
 - **The signatory and the alternate signatory**, recorded by document:oci-itscp/docs/00-plan-approval.md
-- **Where the approved plan is held, and where it is held when the estate is unavailable**, recorded by document:oci-itscp/docs/00-plan-approval.md
+- **Where the approved plan is held, and where it is held when the environment is unavailable**, recorded by document:oci-itscp/docs/00-plan-approval.md
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The business-facing name for the same system**: **[MISSING — owner: business owner]**

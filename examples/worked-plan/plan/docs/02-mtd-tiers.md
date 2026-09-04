@@ -15,7 +15,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## 2.1 System Description
 
-- **Whether the production estate is one instance or several, and how they are split**: One production EBS instance, with no multi-org split across regions. The reference plan states this as assumption A7 and records that a multi-instance estate would change the tiering map. It is not marked MATERIAL. *(low confidence; not measured)*
+- **Whether the production environment is one instance or several, and how they are split**: One production EBS instance, with no multi-org split across regions. The reference plan states this as assumption A7 and records that a multi-instance environment would change the tiering map. It is not marked MATERIAL. *(low confidence; not measured)*
 
 ## 3.2.1 Determine Business Processes and Recovery Criticality
 
@@ -78,18 +78,18 @@ Maximum tolerable downtime is recovery time plus work recovery time. The toolkit
 
 Sources for every value above, as recorded when the value was given.
 
-- **Whether the production estate is one instance or several, and how they are split**, recorded by document:oci-itscp/docs/01-architecture.md
+- **Whether the production environment is one instance or several, and how they are split**, recorded by document:oci-itscp/docs/01-architecture.md
 - **Each business process and what its outage costs at one hour, four hours, a day and a week**, recorded by document:oci-itscp/checklists/tier-assignment-workshop.md
 - **Per tier: maximum tolerable downtime, recovery time, work recovery time, recovery point and the minimum service that counts as trading**, recorded by document:oci-itscp/docs/02-mtd-tiers.md
 - **Each business process, the tier it is assigned to, and the argument for it**, recorded by document:oci-itscp/docs/02-mtd-tiers.md
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The impact level or data classification and where it is recorded**: **[MISSING — owner: governance/risk contact]**
 - **The assigned availability impact level, which selects the template this plan is graded against**: **[MISSING — owner: governance/risk contact]**
-- **Whether the production estate is one instance or several, and how they are split**:  *(low confidence; not measured)*
+- **Whether the production environment is one instance or several, and how they are split**:  *(low confidence; not measured)*
 - **Maximum tolerable downtime for the tier 0 processes**: **[MISSING — owner: business owner]**
 - **Recovery point objective for the tier 0 processes**: **[MISSING — owner: business owner]**
 - **The minimum service level that must be available during work recovery**: **[MISSING — owner: business owner]**

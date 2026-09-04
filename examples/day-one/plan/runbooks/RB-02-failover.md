@@ -28,7 +28,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The recovery procedure at the level of what is actually typed, in order**: **[MISSING — owner: lead engineer]**
 - **Each scheduled job, whether it is safe to resubmit, and what a second run does**: **[MISSING — owner: application owner]**

@@ -21,12 +21,12 @@ This document is generated from the answer store. Correct it by correcting the i
 Sources for every value above, as recorded when the value was given.
 
 - **The component start order and what depends on what**, recorded by document:oci-itscp/docs/09-phase-recovery.md
-- **How long a full application-tier reconfiguration takes, measured**, recorded by document:oci-itscp/docs/01-architecture.md; mechanism: Neither figure has been timed. The reference plan marks both as engineering judgement with no documentation found, in four separate places, and states that an unnecessary hostname-rebuild cycle adds 3 to 5 hours and turns a one-hour switchover into a multi-hour one. The 3 to 5 hour figure is built on Oracle's documented purge-and-AutoConfig sequence rather than on a rehearsal, and the whole estate has never been exercised end to end.
+- **How long a full application-tier reconfiguration takes, measured**, recorded by document:oci-itscp/docs/01-architecture.md; mechanism: Neither figure has been timed. The reference plan marks both as engineering judgement with no documentation found, in four separate places, and states that an unnecessary hostname-rebuild cycle adds 3 to 5 hours and turns a one-hour switchover into a multi-hour one. The 3 to 5 hour figure is built on Oracle's documented purge-and-AutoConfig sequence rather than on a rehearsal, and the whole portfolio has never been exercised end to end.
 - **The escalation thresholds, each observable**, recorded by document:oci-itscp/docs/09-phase-recovery.md
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **How long a full application-tier reconfiguration takes, measured**:  *(low confidence; not measured)*
 - **The escalation thresholds, each observable**:  *(low confidence; not measured)*

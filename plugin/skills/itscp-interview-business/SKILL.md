@@ -22,12 +22,12 @@ functions with different tolerances.
 
 ## Tiering is comparative, and this interview does not set the budget
 
-If the organisation has more than one system, the tier budget was set in `itscp-portfolio`
+If the organization has more than one system, the tier budget was set in `itscp-portfolio`
 by ranking systems against each other. **Bring the budget into this interview and say what it
 is.** Asked in isolation every owner answers Tier 0, and they are not wrong to -- the question
 only has a meaningful answer relative to the others competing for the same engineers at 3am.
 
-> "Across the estate there are four Tier 0 places and eleven candidates. Yours is currently
+> "Across the environment there are four Tier 0 places and eleven candidates. Yours is currently
 > third. Here is what that means for you, and here is what would have to move for it to be
 > first."
 
@@ -108,7 +108,7 @@ Not in NIST; asked because MTD alone is insufficient and an ISO 22301 auditor wi
 
 The answer is usually far narrower than the full system: take orders and apply cash, defer
 reporting and batch. That narrower set is what recovery sequences to first, and it is often
-the difference between a Tier 0 estate and a Tier 1 one.
+the difference between a Tier 0 environment and a Tier 1 one.
 
 ### 5. Manual workarounds — Appendix E (10 min)
 

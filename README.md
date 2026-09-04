@@ -13,9 +13,9 @@ application suite at a time, for as many as you serve.
 
 ---
 
-## An estate, not a system
+## A portfolio, not a system
 
-An organisation does not have *a* system. It has a core product suite, the applications that
+An organization does not have *a* system. It has a core product suite, the applications that
 read from it, the tooling those are built and deployed with, the interfaces clients push data
 into, and the public sites fronting all of it.
 
@@ -42,7 +42,7 @@ Four failures exist only at this level and are all checked mechanically:
 | `wave-inversion` | A dependency scheduled to recover after its dependant |
 | `undeclared-shared-service` | Four systems hard-depend on it and it is classed as an ordinary app |
 
-`plugin/portfolio.example.toml` is a fourteen-system estate in that shape — identity and
+`plugin/portfolio.example.toml` is a fourteen-system portfolio in that shape — identity and
 network, secrets and recovery tooling, a core HR suite, dependent applications, a client
 ingest API, a public site — with the recovery order that follows from it.
 
@@ -128,7 +128,7 @@ answer nobody gave.**
 
 A generated plan that says "RTO: 4 hours" when no human ever said four hours is worse than one
 that says "RTO: MISSING — owner: Head of Finance Systems". The first cannot be audited, reads
-as finished, and will be believed. The second is honest and tells the organisation exactly
+as finished, and will be believed. The second is honest and tells the organization exactly
 what it does not know.
 
 So the toolkit enforces one rule everywhere:
@@ -138,7 +138,7 @@ So the toolkit enforces one rule everywhere:
 
 Every fact carries provenance — who said it, when, or which API call returned it — and a
 confidence. Coverage is reported alongside the confidence distribution, because a plan at 90%
-coverage where most values are low confidence is an organisation that has guessed
+coverage where most values are low confidence is an organization that has guessed
 comprehensively, and it deserves to be told so.
 
 This is the same discipline as the reference plan's citation audit, pointed at elicitation
@@ -175,7 +175,7 @@ Oracle E-Business Suite on Exadata across two OCI regions. It is what a finished
 like.
 
 This repository is the **generator**. It produces plans shaped like that one, populated with
-your organisation's answers instead of a fictional company's.
+your organization's answers instead of a fictional company's.
 
 They are separate because the relationship is one-to-many. One toolkit, many plan
 repositories — one per application suite you serve. A generator cannot live inside one of its
@@ -196,7 +196,7 @@ was built to prevent.
 |---|---|
 | Platforms other than Oracle EBS on OCI | You get the ITSCP structure and the interview method; the recovery procedures are yours to write |
 | Discovery outside OCI | AWS, Azure, GCP and on-premises inventories are manual |
-| Importing an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
+| Importing an existing plan | An organization with a plan in Word starts from interviews, not from its own document |
 | Terraform config generation | Discovery emits an inventory and a resource file. Turning that into working infrastructure code is not attempted |
 | Making the plan true | Every duration it produces is a design target. Only a drill makes it a commitment |
 
@@ -205,9 +205,9 @@ was built to prevent.
 ## Status
 
 Early. The skills are written, the plugin loads and the discovery tooling is tested; the
-toolkit has not yet been run end to end against a real estate. Findings from the first real engagement will change
+toolkit has not yet been run end to end against a real environment. Findings from the first real engagement will change
 it.
 
-## Licence
+## License
 
 MIT. See [`LICENSE`](LICENSE).

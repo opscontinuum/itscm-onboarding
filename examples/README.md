@@ -40,11 +40,11 @@ that page before a single answer exists.
 [`tier-ladder.svg`](day-one/plan/docs/diagrams/tier-ladder.svg) and
 [`mtd-timeline.svg`](day-one/plan/docs/diagrams/mtd-timeline.svg) render the store's MISSING
 marker instead of an axis with nothing on it. A chart with an axis and no bars reads as
-"nothing is at risk here", which is a plausible default wearing a graph. This behaviour is
+"nothing is at risk here", which is a plausible default wearing a graph. This behavior is
 invisible in a populated plan and it is the guard that matters most.
 
 **The coverage report reads 0 of 82.** An interview that produces forty named unknowns has
-done more for an organisation than one producing forty confident inventions.
+done more for an organization than one producing forty confident inventions.
 
 ---
 
@@ -60,7 +60,7 @@ Three files:
 
 Every value was read out of [`oci-itscp`](https://github.com/opscontinuum/oci-itscp) at
 commit `d475ee6`, a public repository documenting a **hypothetical corporation's** DR plan for
-Oracle E-Business Suite on Exadata. Nothing in it is real: no estate, no person, no
+Oracle E-Business Suite on Exadata. Nothing in it is real: no environment, no person, no
 identifier. Its own contact roster carries a warning banner saying every name and number in it
 is fictitious placeholder data, and this store treats it that way.
 
@@ -119,7 +119,7 @@ re-approval triggers and an owner and then says the wider maintenance section is
 
 `system.impact_level` is the one gap with a structural consequence. It selects which of NIST
 SP 800-34's three sample templates the plan is graded against, and therefore what letter each
-appendix carries. Uncategorised, the generated plan keeps the high-impact Appendix A.3
+appendix carries. Uncategorized, the generated plan keeps the high-impact Appendix A.3
 lettering, because that template is the superset and an auditor with no stated level grades
 against it. So
 [`worked-plan/plan/checklists/manual-workarounds.md`](worked-plan/plan/checklists/manual-workarounds.md)
@@ -224,17 +224,17 @@ toolkit, not about the reference plan, which states all six of those values.
 [`worked-plan/answers.toml`](worked-plan/answers.toml) is the only answer store that should
 ever be committed anywhere. The file's own header states the terms and so does this: every
 value in it was read out of a public repository about a hypothetical corporation. There is no
-real estate, no real person, no real organisation and no real identifier in it, so there is
+real environment, no real person, no real organization and no real identifier in it, so there is
 nothing to leak.
 
 **Your store is not this store.** A populated store accumulates roles, telephone numbers,
-resource identifiers, tolerable-downtime figures and the places an organisation is weak. It
+resource identifiers, tolerable-downtime figures and the places an organization is weak. It
 is the most sensitive file the toolkit produces, `.itscm/` is gitignored wholesale so that a
 new artefact is private by default rather than private if somebody remembers, and none of that
 changes because of this file. The exception exists so that the toolkit can be judged by
 reading its output instead of by running it, and it does not generalise.
 
-`day-one/` needs no such argument. It contains no organisational detail at all, because
+`day-one/` needs no such argument. It contains no organizational detail at all, because
 nothing has been answered.
 
 ---

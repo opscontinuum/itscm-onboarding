@@ -1,7 +1,7 @@
-# Everything the engagement produces about a real organisation. The answer
+# Everything the engagement produces about a real organization. The answer
 # store names roles and carries MTD figures and OCIDs; the session transcripts
-# name people and quote them; the realisation ledger records which parts of the
-# estate do not exist. The transcripts are the most sensitive artefact here.
+# name people and quote them; the realization ledger records which parts of the
+# environment do not exist. The transcripts are the most sensitive artefact here.
 # Ignore the directory wholesale rather than naming files, so a new artefact
 # is private by default instead of private only if somebody remembers.
 .itscm/

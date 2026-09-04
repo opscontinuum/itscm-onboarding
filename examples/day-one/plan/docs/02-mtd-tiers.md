@@ -15,7 +15,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## 2.1 System Description
 
-- **Whether the production estate is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
+- **Whether the production environment is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
 
 ## 3.2.1 Determine Business Processes and Recovery Criticality
 
@@ -50,11 +50,11 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The impact level or data classification and where it is recorded**: **[MISSING — owner: governance/risk contact]**
 - **The assigned availability impact level, which selects the template this plan is graded against**: **[MISSING — owner: governance/risk contact]**
-- **Whether the production estate is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
+- **Whether the production environment is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
 - **Each business process and what its outage costs at one hour, four hours, a day and a week**: **[MISSING — owner: business owner]**
 - **Maximum tolerable downtime for the tier 0 processes**: **[MISSING — owner: business owner]**
 - **Recovery point objective for the tier 0 processes**: **[MISSING — owner: business owner]**

@@ -80,14 +80,14 @@ python3 itscp_portfolio.py portfolio.toml
 | `recovery-cycle` | Systems that each need the other recovered first. Neither plan can execute |
 | `wave-inversion` | A dependency scheduled to recover after its dependant |
 | `undeclared-shared-service` | A concentration of risk the register's classing hides |
-| `no-plan` | A system the organisation knows it has and has not planned for |
+| `no-plan` | A system the organization knows it has and has not planned for |
 
 **Report an inversion against both plans, not one.** Naming only the faster of the two reads
 as a defect in that plan; it is a disagreement between two owners, and the finding is only
 actionable when both are named.
 
 If there is no `portfolio.toml`, say so as a finding in its own right: an audit of one plan
-in an estate of many has verified that plan against the standard and nothing against its
+in a portfolio of many has verified that plan against the standard and nothing against its
 neighbours.
 
 ## Scope
@@ -117,7 +117,7 @@ opinion with a table around it.
 |---|---|
 | "The intent is clearly met" | Then quote the sentence. If you cannot, it is not PASS |
 | "This section is thorough, PASS" | Thorough is not a verdict. Which requirement, which sentence |
-| "Not applicable — it's a cloud estate" | Quote the scope statement that excludes it, or ask for one |
+| "Not applicable — it's a cloud environment" | Quote the scope statement that excludes it, or ask for one |
 | "I know what SP 800-53 CP-2 says" | Read it. Remembered requirements are how audits go wrong quietly |
 | "I ran out of time, I'll report what I checked" | Report the uncovered count too, so the reader can judge the audit |
 | "Coverage is high so the plan is good" | Print the confidence split. Comprehensive guessing is still guessing |

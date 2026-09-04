@@ -305,7 +305,7 @@ def _claim_lines(text: str) -> list[str]:
 # --------------------------------------------------- 3. byte-similarity, sourced tier
 
 def _cited_headings(document: dict) -> list[str]:
-    """Every NIST heading the bank cites, lettered as this plan's categorisation letters it.
+    """Every NIST heading the bank cites, lettered as this plan's categorization letters it.
 
     The appendix letters are not constants: NIST's low-impact template omits one appendix and
     letters the rest one lower. An element the selected template has no appendix for comes

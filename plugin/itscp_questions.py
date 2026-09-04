@@ -15,7 +15,7 @@ Read alongside:
   never justify a field on its own. §4.3 recommended three classes; §4.3a records the fourth,
   ``method``, and why the three did not cover the toolkit's own templated content.
 
-The module holds no behaviour beyond lookup. Validation lives in ``itscp_store``; rendering
+The module holds no behavior beyond lookup. Validation lives in ``itscp_store``; rendering
 lives in a module this one knows nothing about.
 
 Ported from ``picoagent/examples/plugins/iscp-author/iscp_questions.py``: the frozen
@@ -325,7 +325,7 @@ NIST_A3_HEADINGS: tuple[str, ...] = (
 #: for each of: A.1 low, A.2 moderate, A.3 high.
 IMPACT_LEVELS: tuple[str, ...] = ("low", "moderate", "high")
 
-#: The key the categorisation is recorded under. Named once, because the lettering, the
+#: The key the categorization is recorded under. Named once, because the lettering, the
 #: renderer and the tests all have to read the same field.
 IMPACT_LEVEL_KEY = "system.impact_level"
 
@@ -380,14 +380,14 @@ def heading_in_scheme(nist_heading: str, impact_level: str) -> str:
     selected template has no appendix for it at all, which for the low-impact template is
     exactly one element.
 
-    Raises rather than defaulting when the level is not one of the three. An uncategorised
+    Raises rather than defaulting when the level is not one of the three. An uncategorized
     system has no template, and picking one on its behalf is the guess the toolkit exists to
-    refuse; the caller decides what an unstated categorisation renders as.
+    refuse; the caller decides what an unstated categorization renders as.
     """
     if impact_level not in IMPACT_LEVELS:
         raise ValueError(
             f"{impact_level!r} is not one of {', '.join(IMPACT_LEVELS)}. The appendix letter "
-            f"is a function of the categorisation, and a system nobody has categorised has "
+            f"is a function of the categorization, and a system nobody has categorized has "
             f"no letter rather than a default one."
         )
     title = _appendix_title(nist_heading)
@@ -655,7 +655,7 @@ _MTD_DECOMPOSITION = (
 
 _POSTURE_MODEL = (
     "A standby is held in one of a small number of postures, and the posture is a decision "
-    "about cost against readiness rather than a property of the estate. The toolkit asks "
+    "about cost against readiness rather than a property of the environment. The toolkit asks "
     "what is done to the standby when nothing is happening, what is done when there is "
     "warning, and who may change it. A posture nobody may change is a cost nobody may "
     "reduce; a posture anybody may change is a recovery nobody can rely on."
@@ -677,7 +677,7 @@ _DRILL_LEVELS = (
 
 _DUTY_CROSSWALK = (
     "The toolkit names duties, not posts. It asks who decides to declare, who runs the "
-    "recovery, who authorises the spending and who says it is over, and it maps those "
+    "recovery, who authorizes the spending and who says it is over, and it maps those "
     "answers onto the roles this plan already uses. A standard's own post names are supplied "
     "by the standard and never by the person being interviewed, because a question that "
     "names a post supplies the answer it was asked to elicit."
@@ -697,7 +697,7 @@ QUESTIONS: tuple[Question, ...] = (
         "servers, in the monitoring, in the change tickets?",
         "The system's technical name, as the plan's title and throughout",
         "application owner", "nist",
-        guidance="The name the estate uses. Where the business calls it something else, that "
+        guidance="The name the environment uses. Where the business calls it something else, that "
                  "goes in system.business_name and both appear in the plan.",
         nist_heading="2.1 System Description", nist_source=_A3,
     ),
@@ -718,9 +718,9 @@ QUESTIONS: tuple[Question, ...] = (
         "The impact level or data classification and where it is recorded",
         "governance/risk contact", "nist",
         guidance="Impact level or data classification. Determines which controls are "
-                 "mandatory. If never categorised, that is itself the finding.",
+                 "mandatory. If never categorized, that is itself the finding.",
         nist_heading="1.2 Scope", nist_source=_A3,
-        crosswalk_note="ISO 22301 uses a different categorisation vocabulary "
+        crosswalk_note="ISO 22301 uses a different categorization vocabulary "
                        "(practice guide; not verified)",
     ),
     Question(
@@ -734,11 +734,11 @@ QUESTIONS: tuple[Question, ...] = (
         "governance/risk contact", "nist", kind="enum", options=IMPACT_LEVELS,
         readback_required=True,
         guidance="Three answers are legal and 'nobody ever assigned one' is not among them: "
-                 "an uncategorised system leaves this MISSING with the governance contact "
+                 "an uncategorized system leaves this MISSING with the governance contact "
                  "owing it, which is the honest record and the finding an auditor wants. The "
                  "answer decides which of NIST's three sample templates the plan is graded "
                  "against, and therefore what letter each of its appendices carries. "
-                 "Uncategorised, the plan keeps the high-impact lettering, because that "
+                 "Uncategorized, the plan keeps the high-impact lettering, because that "
                  "template is the superset and an auditor with no stated level grades "
                  "against it.",
         nist_heading="1.2 Scope", nist_source=_A3,
@@ -746,7 +746,7 @@ QUESTIONS: tuple[Question, ...] = (
     Question(
         "system.assumptions", "system", "1.3", "1.3 Assumptions",
         "docs/01-architecture.md, checklists/risk-register.md",
-        "What are we taking as read about this estate that I have not asked you about "
+        "What are we taking as read about this environment that I have not asked you about "
         "directly? Take them one at a time, and for each one tell me what changes if it "
         "turns out to be wrong.",
         "Each stated assumption, what breaks if it is wrong, who confirms it and by when",
@@ -765,7 +765,7 @@ QUESTIONS: tuple[Question, ...] = (
         "docs/01-architecture.md",
         "You used a few words for parts of this that could mean more than one thing. Tell me "
         "what each of them means here, in your words, before I draw anything.",
-        "The words this organisation uses for its own components, and what each one means",
+        "The words this organization uses for its own components, and what each one means",
         "application owner", "ours", kind="narrative", readback_required=True,
         guidance="One word that means two things is the cheapest catastrophic mistake in a "
                  "continuity design: a whole section gets written for the wrong layer and "
@@ -801,7 +801,7 @@ QUESTIONS: tuple[Question, ...] = (
         "docs/01-architecture.md, docs/02-mtd-tiers.md",
         "Is this one production instance, or several? Separate ledgers, separate legal "
         "entities, anything split across sites?",
-        "Whether the production estate is one instance or several, and how they are split",
+        "Whether the production environment is one instance or several, and how they are split",
         "application owner", "nist", kind="narrative", readback_required=True,
         guidance="A second instance nobody mentioned changes the tier map, the recovery "
                  "order and the cost. Ask it early and read the answer back.",
@@ -949,7 +949,7 @@ QUESTIONS: tuple[Question, ...] = (
         "checklists/dr-authority-matrix.md",
         "If we were inside one of those periods and had to fail over anyway, who is allowed "
         "to say yes, and what do they need in front of them first?",
-        "Who may authorise a failover inside a freeze period, and on what evidence",
+        "Who may authorize a failover inside a freeze period, and on what evidence",
         "business owner", "ours", readback_required=True,
         guidance="A freeze with no override is a plan that stops working four weeks a year. "
                  "Name one individual and what they need to see; 'the board' is nobody at "
@@ -967,7 +967,7 @@ QUESTIONS: tuple[Question, ...] = (
                          "went down with everything else?",
         guidance="This is the recovery point objective turned into work recovery time, which "
                  "is the half of the sum that never gets costed. If the source they would "
-                 "rebuild from is inside the failed estate, the answer is not a duration, it "
+                 "rebuild from is inside the failed environment, the answer is not a duration, it "
                  "is a design finding.",
     ),
     # ------------------------------------------------------ app.* - application owner
@@ -1068,7 +1068,7 @@ QUESTIONS: tuple[Question, ...] = (
         guidance="Ask what it is, not what it should be. The recommended pattern is easy to "
                  "write and useless without the current state beside it, and a design "
                  "proposal in a description's clothes is how a plan ends up recovering an "
-                 "estate nobody has.",
+                 "environment nobody has.",
     ),
     Question(
         "app.unsafe_reruns", "app", "Beyond NIST",
@@ -1122,7 +1122,7 @@ QUESTIONS: tuple[Question, ...] = (
         "infrastructure owner", "nist",
         seedable=True, seed_operation="ListDrProtectionGroups",
         guidance="Where discovery finds standby resources in a region nobody names as the "
-                 "standby, that is a shadow estate and worth surfacing before the interview "
+                 "standby, that is a shadow environment and worth surfacing before the interview "
                  "moves on.",
         nist_heading="APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS",
         nist_source=_A3,
@@ -1145,10 +1145,10 @@ QUESTIONS: tuple[Question, ...] = (
         "For each tier, how does the data get to the other region, is it synchronous, and "
         "what is the measured lag? Then: when you fail back, do you have to re-baseline?",
         "Per tier: the replication mechanism, whether it is synchronous, measured lag, "
-        "failover behaviour, whether reversal needs a re-baseline, and whether it is one-way",
+        "failover behavior, whether reversal needs a re-baseline, and whether it is one-way",
         "infrastructure owner", "nist", kind="rows",
         columns=("tier", "mechanism", "sync", "measured_lag", "what_breaks_at_that_lag",
-                 "failover_behaviour", "rebaseline_on_reversal", "one_way"),
+                 "failover_behavior", "rebaseline_on_reversal", "one_way"),
         figure_columns={"measured_lag": "what_breaks_at_that_lag"},
         mechanism_prompt="For each tier, at what lag would you stop trusting the standby, "
                          "and what is the first thing that breaks when it reaches that?",
@@ -1262,14 +1262,14 @@ QUESTIONS: tuple[Question, ...] = (
         mechanism_required=True,
         mechanism_prompt="What does that state cost while you are holding it, and what "
                          "decides when you come back down from it?",
-        guidance="Most estates have no warned state and have never been asked for one. "
+        guidance="Most environments have no warned state and have never been asked for one. "
                  "NOT_APPLICABLE with a reason is a good answer here; silence is not.",
     ),
     Question(
         "infra.silent_failures", "infra", "Beyond NIST", "Alert catalogue",
         "docs/04-monitoring.md",
         "What has broken before without anyone noticing until it mattered?",
-        "The failures this estate does not notice, and what would have shown them",
+        "The failures this environment does not notice, and what would have shown them",
         "lead engineer", "ours", kind="narrative", readback_required=True,
         guidance="Ask it exactly like that and then stop talking. It is the question that "
                  "produces the alert catalogue, and it produces it as a story about something "
@@ -1408,7 +1408,7 @@ QUESTIONS: tuple[Question, ...] = (
         "The incident bridge and its dependencies",
         "DR process owner", "ours",
         guidance="Check what it depends on. A bridge that authenticates through the failed "
-                 "estate is a plan with a loop in it.",
+                 "environment is a plan with a loop in it.",
     ),
     Question(
         "continuity.assessment_procedure", "continuity", "3.3", "3.3 Outage assessment",
@@ -1458,12 +1458,12 @@ QUESTIONS: tuple[Question, ...] = (
     Question(
         "continuity.vendor_contacts", "continuity", "App. B", "B. Vendor contact list",
         "checklists/contact-roster.md",
-        "Which outside organisations would you have to call during this, how do you reach "
+        "Which outside organizations would you have to call during this, how do you reach "
         "them out of hours, and what reference do they need you to quote before they will "
         "help?",
         "Each vendor, what they supply, how they are reached and the reference they need",
         "DR process owner", "nist", kind="rows",
-        columns=("organisation", "what_they_supply", "reached_by", "reference_to_quote"),
+        columns=("organization", "what_they_supply", "reached_by", "reference_to_quote"),
         guidance="The reference column is the one that saves an hour. A support contract "
                  "number stored only inside the system being recovered is not a contract "
                  "number. Ask where a printed copy lives.",
@@ -1473,12 +1473,12 @@ QUESTIONS: tuple[Question, ...] = (
         "continuity.vendor_obligations", "continuity", "Beyond NIST",
         "Vendor obligations during a recovery", "checklists/contact-roster.md, "
         "checklists/risk-register.md",
-        "Is anyone outside this organisation contracted to do part of this if you cannot? "
+        "Is anyone outside this organization contracted to do part of this if you cannot? "
         "What does the contract actually oblige them to do, and how fast?",
         "Each external party, what their contract obliges, how fast, and where the contract "
         "is held",
         "governance/risk contact", "ours", kind="rows",
-        columns=("organisation", "what_the_contract_obliges", "response_time",
+        columns=("organization", "what_the_contract_obliges", "response_time",
                  "where_the_contract_is_held"),
         guidance="Not a NIST appendix: the templates have no heading for this and the "
                  "coverage map invented one. It is still worth asking, because a recovery "
@@ -1488,14 +1488,14 @@ QUESTIONS: tuple[Question, ...] = (
     Question(
         "continuity.decision_and_recovery_roles", "continuity", "2.3",
         "2.3 Roles and responsibilities", "checklists/roles-and-responsibilities.md",
-        "Who decides to declare, who runs the recovery, who authorises spending, and who says "
+        "Who decides to declare, who runs the recovery, who authorizes spending, and who says "
         "it is over? Take them one at a time, and tell me where the same person appears "
         "twice.",
         "Each duty in a recovery, the role that holds it and the deputy behind them",
         "DR process owner", "method", kind="rows",
         columns=("duty", "held_by", "deputy"),
         enum_columns={"duty": ("decides to declare", "runs the recovery",
-                               "authorises the spending", "says it is over")},
+                               "authorizes the spending", "says it is over")},
         method_statement=_DUTY_CROSSWALK, readback_required=True,
         guidance="Four duties, asked separately, because asking for one job title gets you "
                  "one name and hides the overlap. Where the same role holds two of them, say "
@@ -1520,12 +1520,12 @@ QUESTIONS: tuple[Question, ...] = (
         "checklists/outage-assessment.md",
         "Last time something broke badly, how long was it before anyone could say how long it "
         "would take to fix?",
-        "How long this organisation actually takes to produce a repair estimate",
+        "How long this organization actually takes to produce a repair estimate",
         "DR process owner", "ours", kind="duration", unit="minutes",
         mechanism_required=True,
         mechanism_prompt="What were they waiting on for that long, and is that thing any "
                          "faster now?",
-        guidance="Calibrates the assessment budget against what this organisation can do "
+        guidance="Calibrates the assessment budget against what this organization can do "
                  "rather than against what the plan would like. If the honest answer is two "
                  "hours, a ten-minute assessment step is fiction and the plan should say so.",
     ),
@@ -1575,7 +1575,7 @@ QUESTIONS: tuple[Question, ...] = (
         "DR process owner", "nist", kind="narrative", readback_required=True,
         guidance="Ask what the message has to say, not just who sends it. Users coming back "
                  "to a system that lost fifteen minutes of work need to be told that, and a "
-                 "channel that runs through the recovered estate is a channel with a loop "
+                 "channel that runs through the recovered environment is a channel with a loop "
                  "in it.",
         nist_heading="5.5 Notifications (users)", nist_source=_A3,
     ),
@@ -1614,12 +1614,12 @@ QUESTIONS: tuple[Question, ...] = (
         nist_heading="APPENDIX J TEST AND MAINTENANCE SCHEDULE", nist_source=_A3,
     ),
     Question(
-        "governance.training_programme", "governance", "App. J",
+        "governance.training_program", "governance", "App. J",
         "J. Test, training and exercise documentation",
         "checklists/contingency-training.md",
         "Separately from drills: how does someone new become competent to do their part of "
         "this?",
-        "The training programme, distinct from the drill programme",
+        "The training program, distinct from the drill program",
         "governance/risk contact", "nist", kind="narrative", readback_required=True,
         guidance="Distinct from drills. Drills exercise the plan; training makes individuals "
                  "competent. Auditors check for both.",
@@ -1652,7 +1652,7 @@ QUESTIONS: tuple[Question, ...] = (
         "How a real event is written up, by whom, and where the record goes",
         "governance/risk contact", "nist", kind="narrative", readback_required=True,
         guidance="A drill report and an event report are different documents and most "
-                 "organisations have neither. Ask the last part plainly: if it has never been "
+                 "organizations have neither. Ask the last part plainly: if it has never been "
                  "done, the answer is what the plan should say, not an intention dressed as "
                  "a procedure.",
         nist_heading="5.9 Event Documentation", nist_source=_A3,
@@ -1681,7 +1681,7 @@ QUESTIONS: tuple[Question, ...] = (
         mechanism_prompt="What would have to happen for one to be skipped, and who notices "
                          "when it is?",
         guidance="Two questions in one and the second is the real one. A stricter cadence "
-                 "than the organisation will fund is worse than an honest looser one, "
+                 "than the organization will fund is worse than an honest looser one, "
                  "because the plan then documents a control that does not run and an "
                  "auditor will find the gap rather than the intention.",
         nist_heading="3.5 Plan Testing, Training, and Exercises (TT&E)", nist_source=_CH3,
@@ -1697,7 +1697,7 @@ QUESTIONS: tuple[Question, ...] = (
         columns=("level", "what_it_proves", "what_it_does_not_prove"),
         method_statement=_DRILL_LEVELS,
         guidance="The last column is the one that gets argued about, which is why it is a "
-                 "column. An organisation whose only evidence is a reading has a plan nobody "
+                 "column. An organization whose only evidence is a reading has a plan nobody "
                  "has run, and it will believe otherwise until this table is filled in.",
     ),
     Question(
@@ -1716,7 +1716,7 @@ QUESTIONS: tuple[Question, ...] = (
         "docs/00-plan-approval.md",
         "Where will the signed copy of this plan live? And where will it live when the thing "
         "holding it is the thing that is down?",
-        "Where the approved plan is held, and where it is held when the estate is unavailable",
+        "Where the approved plan is held, and where it is held when the environment is unavailable",
         "signing authority", "ours", kind="narrative", readback_required=True,
         guidance="A plan readable only from the system it recovers is a plan nobody can read "
                  "when they need it. The second half of the question is the whole question; "

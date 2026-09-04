@@ -15,9 +15,9 @@ This document is generated from the answer store. Correct it by correcting the i
 ## 3.4.1 Backup and Recovery
 
 
-**Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behaviour, whether reversal needs a re-baseline, and whether it is one-way**
+**Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way**
 
-| tier | mechanism | sync | measured_lag | what_breaks_at_that_lag | failover_behaviour | rebaseline_on_reversal | one_way |
+| tier | mechanism | sync | measured_lag | what_breaks_at_that_lag | failover_behavior | rebaseline_on_reversal | one_way |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Tier 0, Platinum | Oracle Active Data Guard, synchronous within the region and asynchronous to Phoenix, with real-time apply and Fast-Start Failover on the local leg; Block Volume Group Replication running continuously; File Storage replication at its shortest supported interval of fifteen minutes; Object Storage replication policy | yes within the region, no across regions | target under 30 seconds across regions; the measured figure is not stated in the reference plan | Recovery point zero stops being true once the configuration falls unsynchronized, and fast-start failover cannot occur while the target standby is unsynchronized, so the local automatic-failover story stops working in exactly the double-fault case tier 0 exists to cover | A pre-approved Full Stack DR failover plan | yes for block, file and object storage; no for Data Guard, which reinstates the former primary through Flashback Database | yes for block, file and object storage |
 | Tier 1, Gold | Oracle Active Data Guard, asynchronous, with real-time apply; Volume Group Replication running continuously; File Storage replication; Object Storage replication policy. Phoenix instances exist but are stopped on a schedule | no | not stated in the reference plan | not stated in the reference plan | A Full Stack DR plan plus change approval | yes for block, file and object storage; no for Data Guard | yes for block, file and object storage |
@@ -67,7 +67,7 @@ Some decisions in a continuity design cost a change ticket to undo and some cann
 Sources for every value above, as recorded when the value was given.
 
 - **The standby region**, recorded by document:oci-itscp/docs/01-architecture.md
-- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behaviour, whether reversal needs a re-baseline, and whether it is one-way**, recorded by document:oci-itscp/docs/02-mtd-tiers.md
+- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way**, recorded by document:oci-itscp/docs/02-mtd-tiers.md
 - **Storage features that constrain what the standby may be built on**, recorded by document:oci-itscp/docs/01-architecture.md
 - **Each decision that cannot be cheaply reversed, what reversing it costs and who may take it**, recorded by document:oci-itscp/docs/03-replication-matrix.md
 - **Each backup copy, where it is held, how long it is kept and how it is retrieved**, recorded by document:oci-itscp/runbooks/RB-05-replication-lifecycle.md
@@ -75,7 +75,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Measured inter-region round-trip time in milliseconds**: **[MISSING — owner: lead engineer]**
 - **How the recovered system is protected again, when, and who confirms it**:  **[CONFLICT — Nothing protects the recovered system until somebody turns protection on, and the reference plan says so in as many words: this is the step most likely to be missed, because Ashburn's protection was the recovery service and Phoenix as primary is a different posture that does not inherit it. Backups are disabled on the new standby after any role change, and the failover runbook carries an explicit step to enable the recovery service on the new primary, warning that backups are not running there until somebody does. An alarm covers it: the protected-database status is checked, and a non-healthy status or no backup in twenty-six hours pages the DBA on-call. The database team owns re-protection, meaning a new standby and a fresh backup, and the plan's exit checklist will not close until a fresh full backup of the current primary exists in whatever region is now primary and a standby exists again inside the tier recovery point. No deadline in hours is stated for that first backup; the twenty-six hour figure is a monitoring threshold rather than a target. (document:oci-itscp/docs/10-phase-reconstitution.md) against Automatic backups may be enabled on a database holding the standby role in a Data Guard association, so the Phoenix standby could be backed up directly. (document:oci-itscp/docs/03-replication-matrix.md); decision owner: infrastructure owner]**

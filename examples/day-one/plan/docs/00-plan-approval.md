@@ -14,7 +14,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Recorded for this plan
 
-- **Where the approved plan is held, and where it is held when the estate is unavailable**: **[MISSING — owner: signing authority]**
+- **Where the approved plan is held, and where it is held when the environment is unavailable**: **[MISSING — owner: signing authority]**
 
 ## References
 
@@ -24,8 +24,8 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The business-facing name for the same system**: **[MISSING — owner: business owner]**
 - **The signatory and the alternate signatory**: **[MISSING — owner: signing authority]**
-- **Where the approved plan is held, and where it is held when the estate is unavailable**: **[MISSING — owner: signing authority]**
+- **Where the approved plan is held, and where it is held when the environment is unavailable**: **[MISSING — owner: signing authority]**

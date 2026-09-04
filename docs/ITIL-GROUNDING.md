@@ -30,14 +30,14 @@ ITIL.** It does not produce an ISCP, and it must never say that it does.
 
 `picoagent/docs/engineering/continuity-tooling.md` §3 [5] separates three families and states
 why the separation is load bearing: getting it wrong "inherits the wrong requirement set in
-both directions", so that a plan modelled as another family's plan "plus extras" acquires
+both directions", so that a plan modeled as another family's plan "plus extras" acquires
 requirements it does not have and misses the ones it does.
 
 | Family | Term | Level | Governing instrument |
 |---|---|---|---|
 | ISCP | Information System Contingency Plan | system | NIST SP 800-34 Rev. 1; FedRAMP SSP Appendix G |
 | ITSCP | IT Service Continuity Plan | service | ITIL 4 / ITSCM |
-| COOP | Continuity of Operations Plan | organisation | HSPD-20/NSPD-51, FCD 1 |
+| COOP | Continuity of Operations Plan | organization | HSPD-20/NSPD-51, FCD 1 |
 
 Reproduced from [5] §3.
 
@@ -160,7 +160,7 @@ references are to `skills/_method/coverage-map.md` in this repository.
 | **Monitoring and event management** (paraphrased) | `itscp-discover` only, as an inventory of alarms that already exist | none | **Absent** |
 | **Risk management** (paraphrased) | `itscp-interview-governance` §6 | Beyond-NIST risk-register row | **Covered** |
 | **Service level management** (paraphrased) | `itscp-interview-business` (tiers as the target set) | App. K, §1.2 | **Partial** |
-| **Information security management** (paraphrased) | `itscp-interview-governance` §2 (categorisation, regulatory regime) | §1.2 | **Partial** |
+| **Information security management** (paraphrased) | `itscp-interview-governance` §2 (categorization, regulatory regime) | §1.2 | **Partial** |
 
 The four verdicts that are not "Covered" are the substance of this section.
 
@@ -182,7 +182,7 @@ team needs the SRE to see you have no way to be successful in 3 9's or 4 9's."
 
 **Change enablement, partial.** The toolkit elicits who may declare a disaster and who signs the
 plan. It does not elicit who the change authority is for a planned switchover, and it does not
-elicit whether invocation is a pre-authorised emergency change recorded after the fact, which is
+elicit whether invocation is a pre-authorized emergency change recorded after the fact, which is
 the specific point doc/07 §4 raises against the reference plan. `runbooks/RB-01-switchover.md`
 and `RB-03-failback.md` are in the scaffold with `itscp-interview-infrastructure` as their owner,
 and that interview asks nothing about approval.
@@ -191,7 +191,7 @@ and that interview asks nothing about approval.
 outage assessment and escalation thresholds, and `docs/DESIGN.md` is right that §3.3 is the
 section most real plans lack. What is missing is the interface: doc/07 T10 recommends "major
 incident declared" as the entry condition to the decision gate, on the ground that invocation is
-a decision taken *within* a major incident. The toolkit never asks what the organisation's
+a decision taken *within* a major incident. The toolkit never asks what the organization's
 existing major-incident process is, so the generated gate hangs off nothing.
 
 **Service level management, partial.** The tier table is the business-facing target set and the
@@ -200,7 +200,7 @@ document is asked for anywhere, which is the same hole doc/07 §4 records agains
 plan ("Targets are not yet in an SLA document").
 
 **Information security management, partial.** `itscp-interview-governance` §2 elicits
-categorisation and regulatory regime, which is the part that gates other requirements. Backup
+categorization and regulatory regime, which is the part that gates other requirements. Backup
 immutability and retention lock, and the sensitivity of the `evidence/` directory, both of which
 doc/07 §4 names as this practice's contribution to the reference plan, are elicited nowhere.
 
@@ -224,7 +224,7 @@ unverified label it is.
 | Risk assessment | NIST Step 3, "identify preventive controls" [4] | none | none | **Largely absent.** See below |
 | Continuity strategy and recovery options | NIST Step 4, "create contingency strategies" [4] | Phase 4 | `itscp-interview-infrastructure` §§2 to 5, plus the three costed options | **Covered** |
 | Plan development | NIST Step 5, "develop an information system contingency plan" [4] | Phase 7 | `itscp-build` | **Covered as sequencing.** No renderer exists yet; see §5.3 |
-| Exercising and testing | NIST Step 6 [4] | Phase 5, plus Phase 7 | `itscp-interview-governance` §5; drill history in `itscp-interview-infrastructure` §6 | **Covered as elicitation.** The toolkit elicits the exercise programme and the finding-to-change route |
+| Exercising and testing | NIST Step 6 [4] | Phase 5, plus Phase 7 | `itscp-interview-governance` §5; drill history in `itscp-interview-infrastructure` §6 | **Covered as elicitation.** The toolkit elicits the exercise program and the finding-to-change route |
 | Review and improvement | NIST Step 7, "ensure plan maintenance" [4] | Phase 5 | `itscp-interview-governance` §3 | **Covered** |
 
 **Risk assessment is the hole.** The strings `threat` and `preventive` appear nowhere in the
@@ -234,7 +234,7 @@ but a register of assumptions is not a risk assessment: nothing in the toolkit a
 plan is protecting the service *against*. There is no scenario set, no threat elicitation, and
 no preventive-control question. The nearest fragments are two questions in
 `itscp-interview-continuity`: "What if the cause looks deliberate?" and "If the event that takes
-the estate also takes your main office, does the recovery still have the people it needs?" Both
+the environment also takes your main office, does the recovery still have the people it needs?" Both
 are branch conditions inside an assessment procedure, not a threat basis for the plan.
 
 The consequence is concrete. A plan with tiers, replication and runbooks but no stated threat
@@ -331,7 +331,7 @@ text, an answer, or markup") asserts four properties in `assert_provenance` ([9]
 4. Every `markup` segment is `assertRegex`-checked against `MARKUP_ONLY`, failing with "markup
    segment contains content".
 
-Six further tests pin the surrounding behaviour: headings equal `EXPECTED_HEADINGS` in the
+Six further tests pin the surrounding behavior: headings equal `EXPECTED_HEADINGS` in the
 template's order ([9] line 432); every table title appears with its column header row ([9] line
 438); instructional text is absent ([9] line 449); NIST's worked examples never appear ([9] line
 454, "NIST's sample {example!r} leaked into the plan"); unanswered items render the template's
@@ -554,7 +554,7 @@ carries ordinary interview provenance; the approach itself carries none, and say
 
 This does not weaken §4.3's refusal rule. `method` claims no standard. It is the opposite of
 the failure §4.3 guards against: it exists so that content with no external provenance is
-labelled as having none, rather than borrowing the authority of the elements around it.
+labeled as having none, rather than borrowing the authority of the elements around it.
 
 `itscp_questions.METHOD_IS_NEVER_A_CUSTOMER_CLAIM` states the rule, `itscp_render.METHOD_HEADING`
 renders it, and `tests/test_questions` and `tests/test_render` enforce both.
@@ -596,7 +596,7 @@ substantive rows: 36 NIST-derived, 5 "Beyond NIST", 3 "Not yet covered".
 |---|---|
 | All 36 NIST-derived rows | Add `Provenance: nist`. Separately, replace the paraphrased element names with the transcribed NIST heading text (see §5.3, item 3); today's "1.1 Background — why the plan exists, its objectives" is a gloss, not a heading |
 | All 5 "Beyond NIST" rows | Add `Provenance: ours`. The section's existing preamble already half-declares this; make it explicit per row |
-| New rows, `ours` | Availability and continuity boundary (closes G4); monitoring, alarms and the alert catalogue; service-level targets and the link to any existing SLA; change authority for a planned switchover, and whether invocation is a pre-authorised emergency change; the major-incident entry condition to the activation gate; threat and scenario basis, mapped to NIST Step 3 preventive controls; information-security contributions (backup immutability, evidence sensitivity) |
+| New rows, `ours` | Availability and continuity boundary (closes G4); monitoring, alarms and the alert catalogue; service-level targets and the link to any existing SLA; change authority for a planned switchover, and whether invocation is a pre-authorized emergency change; the major-incident entry condition to the activation gate; threat and scenario basis, mapped to NIST Step 3 preventive controls; information-security contributions (backup immutability, evidence sensitivity) |
 | New table, `crosswalk` | The ITIL and ISO term map, six quotable terms and the rest marked `(practice guide; not verified)`, feeding `docs/07-standards-alignment.md` |
 | "Not yet covered" table | Add a row: the toolkit produces no threat basis, and add the copyright and paywall constraint of §4.1 as a stated limit |
 
@@ -605,7 +605,7 @@ substantive rows: 36 NIST-derived, 5 "Beyond NIST", 3 "Not yet covered".
 | Skill | New or altered questions |
 |---|---|
 | `itscp-interview-infrastructure` | **New section: monitoring and the alert catalogue.** What pages today, what should, what the app team needs the SRE to see, and what alarms on the *absence* of signal. This is the largest single hole; it also fills `docs/04-monitoring.md`, which currently has no owner. **New section: availability versus continuity.** Which controls are availability controls, which are continuity controls, and what single-point dependency the local recovery claim rests on. Closes G4. **New questions: threat basis and preventive controls.** What is this protecting against, and which preventive controls were considered and rejected |
-| `itscp-interview-continuity` | **New: the major-incident entry condition.** What the organisation's existing major-incident process is, and where the declaration gate hangs off it. **New: change authority.** Who authorises a planned switchover and a failback, and whether invocation is a pre-authorised emergency change recorded after the fact |
+| `itscp-interview-continuity` | **New: the major-incident entry condition.** What the organization's existing major-incident process is, and where the declaration gate hangs off it. **New: change authority.** Who authorizes a planned switchover and a failback, and whether invocation is a pre-authorized emergency change recorded after the fact |
 | `itscp-interview-governance` | **New: which instruments this plan will be assessed against**, so the crosswalk document is generated against the right set rather than all of them. **New: does an SLA document exist**, and is it the home of the availability targets. **New: is `docs/07-standards-alignment.md` wanted**, and to which instruments |
 | `itscp-interview-business` | No new questions. MBCO, mechanisms, workarounds and time dependence are already elicited. One wording change: §4 says "Not in NIST; asked because MTD alone is insufficient and an ISO 22301 auditor will ask", which should carry the `(practice guide; not verified)` marker for MBCO rather than an unqualified appeal to ISO |
 | `itscp-interview-application` | No new questions. One wording change: line 45 "ISCP §1.2 scope" and line 118 "an ISCP is expected to address it" become crosswalk references, not descriptions of our own output |

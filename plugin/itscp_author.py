@@ -5,7 +5,7 @@ What the model gets
 Tools
   itscp_discover_oci   read-only walk of an Oracle Cloud Infrastructure compartment
 Skills
-  itscp-portfolio and itscp-dependencies (the estate: the register of systems, the graph
+  itscp-portfolio and itscp-dependencies (the environment: the register of systems, the graph
   between them and the recovery order), itscp-build, itscp-discover, itscp-audit, the five
   itscp-interview-* skills, and the four itscp-method-* skills that carry the shared method
   those ten refer to.
@@ -53,7 +53,7 @@ DISCOVER_SCRIPT = Path("scripts") / "discover" / "oci-discover.sh"
 #: because the inventory belongs to the plan being built rather than to this plugin.
 DEFAULT_OUTPUT_DIR = "discovery-output"
 
-#: A full walk of several regions is slow but not unbounded. Long enough for a large estate,
+#: A full walk of several regions is slow but not unbounded. Long enough for a large environment,
 #: short enough that a hung CLI does not hold the session open indefinitely.
 DEFAULT_TIMEOUT_SECONDS = 900
 
@@ -67,13 +67,13 @@ REGIONS_PATTERN = re.compile(r"^[a-z]{2,3}-[a-z]+-[0-9]+(,[a-z]{2,3}-[a-z]+-[0-9
 
 PROMPT_NOTE = """# IT service continuity planning (itscp-author)
 You can build an ITSCP, an IT service continuity plan aligned to NIST SP 800-34 Rev. 1.
-- **An organisation has an estate, not a system.** Start at `itscp-portfolio`: it registers
+- **An organization has a portfolio, not a system.** Start at `itscp-portfolio`: it registers
   every system, ranks the tiers against each other and fixes the recovery order.
   `itscp-dependencies` maps what each system needs, including what it needs in order to be
   *recovered* rather than to run. Then `itscp-build` runs once per system, in wave order.
-- `itscp-discover` inventories an Oracle Cloud tenancy once for the whole estate, the five
+- `itscp-discover` inventories an Oracle Cloud tenancy once for the whole portfolio, the five
   `itscp-interview-*` skills elicit each plan's content, `itscp-audit` checks the result.
-- Validate the estate with `python3 itscp_portfolio.py portfolio.toml` (exit 0 clean,
+- Validate the environment with `python3 itscp_portfolio.py portfolio.toml` (exit 0 clean,
   1 warnings, 2 errors). A recovery time inversion or a recovery dependency cycle is a
   contradiction between two signed plans; take it back to both owners, never resolve it by
   editing a figure.

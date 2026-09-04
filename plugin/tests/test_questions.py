@@ -39,7 +39,7 @@ YAML_LIST_FIELDS = (
     "continuity.succession",
 )
 
-#: Every other field modelled as rows, named rather than counted so that a question cannot
+#: Every other field modeled as rows, named rather than counted so that a question cannot
 #: become a table by accident. ``governance.risk_register`` was a bare ``value: null`` in the
 #: YAML; a register with an owner and a review date per row is rows, and prose that lists
 #: risks is not a register. The rest arrived with the questions recovered from the reference
@@ -441,7 +441,7 @@ def _yaml_list_fields_are_rows() -> None:
 def _row_fields_are_the_declared_ones() -> None:
     actual = {entry.id for entry in bank.row_questions()}
     expected = set(YAML_LIST_FIELDS) | set(DELIBERATE_EXTRA_ROW_FIELDS)
-    equal(sorted(actual), sorted(expected), "fields modelled as rows")
+    equal(sorted(actual), sorted(expected), "fields modeled as rows")
 
 
 def _starter_keys_are_in_the_bank() -> None:
@@ -478,7 +478,7 @@ _ABSENT_FROM_THE_LOW_TEMPLATE = "ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS
 
 
 def _the_bank_asks_for_a_level() -> None:
-    """The letter is a function of the categorisation, so the categorisation is elicited.
+    """The letter is a function of the categorization, so the categorization is elicited.
 
     The reference plan never states one, and its own compliance skill says a plan that states
     none has that row REFUTED. A toolkit whose appendix lettering depends on an answer nobody
@@ -524,7 +524,7 @@ def _an_unknown_level_is_refused() -> None:
         except ValueError:
             continue
         raise AssertionError(
-            f"lettered an appendix at impact level {level!r}; an uncategorised system has no "
+            f"lettered an appendix at impact level {level!r}; an uncategorized system has no "
             f"template, and picking one silently is the guess the toolkit exists to refuse")
 
 
@@ -563,7 +563,7 @@ def _assumptions_are_read_back() -> None:
 def _the_role_question_asks_for_duties() -> None:
     """Ask who decides and who recovers. Never ask a customer to name an ISCP Director.
 
-    The post names belong to NIST's template, not to the organisation being interviewed.
+    The post names belong to NIST's template, not to the organization being interviewed.
     Putting one in the question supplies the answer, and the plan then records a role the
     customer heard from us rather than the one they actually have.
     """

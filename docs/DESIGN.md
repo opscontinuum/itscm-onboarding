@@ -7,7 +7,7 @@ implementation and kept as the record of the decisions.
 
 ## Problem
 
-An organisation needs a continuity plan for each application suite it runs. The people who
+An organization needs a continuity plan for each application suite it runs. The people who
 must supply the facts are spread across the business, the application team, infrastructure,
 incident management and governance. None of them has read NIST SP 800-34, and the person
 assembling the plan usually has not either.
@@ -61,7 +61,7 @@ Direct analogue of the reference example's citation discipline. Every `ANSWERED`
 
 **There is deliberately no provenance value meaning "the assistant worked it out."** Removing
 the representation removes the option. Reasoned conclusions go into a document's *Unverified
-statements* section, labelled as judgements — never into the store as facts.
+statements* section, labeled as judgements — never into the store as facts.
 
 ## Decision 4 — Every field starts MISSING
 
@@ -71,7 +71,7 @@ named owner until somebody answers it.
 
 This makes the honest outcome — "we don't know, and here is who would" — a first-class result
 rather than a hole to be filled. An interview producing forty named unknowns has done more for
-the organisation than one producing forty confident inventions.
+the organization than one producing forty confident inventions.
 
 ## Decision 5 — A single flat answer store
 
@@ -88,7 +88,7 @@ three.
 ## Decision 6 — Discovery is read-only, structurally
 
 The reference example's Terraform is apply-locked because authoring against a hypothetical
-estate is a different risk posture from touching a real one. This toolkit touches real ones.
+environment is a different risk posture from touching a real one. This toolkit touches real ones.
 
 An allowlist (`^(list|get)`) rather than a denylist, so a service shipped tomorrow with a novel
 destructive verb is refused by default rather than discovered in production. Enforced by a
@@ -101,7 +101,7 @@ to look at our production tenancy" into a reviewable list of commands.
 ## Decision 7 — Coverage is always reported with confidence
 
 Coverage alone is a misleading metric. A plan at 90% coverage where two thirds of values are
-low confidence describes an organisation that has guessed comprehensively.
+low confidence describes an organization that has guessed comprehensively.
 
 `itscp-build` prints the confidence distribution beside every coverage figure, and `itscp-audit`
 treats low-confidence values in an approved plan as a first-class finding — they are the
@@ -111,7 +111,7 @@ numbers most likely to be wrong, in the document most likely to be believed.
 
 ## Decision 8 — The portfolio is a register, not an answer store
 
-Added after the single-system assumption was challenged. Organisations have estates: a core
+Added after the single-system assumption was challenged. Organizations have environments: a core
 suite, its dependants, the tooling underneath, public ingest interfaces, public sites.
 
 **A register of systems is a different shape from a set of facts about one system.** The
@@ -121,7 +121,7 @@ questions — is anything scheduled before its dependency, does anything need it
 recovered. So it is a separate file (`portfolio.toml`) with a separate module, rather than a
 namespace inside a store whose validation rules are about attribution.
 
-**Rejected — one plan per organisation with system annexes.** Simplest for a small estate,
+**Rejected — one plan per organization with system annexes.** Simplest for a small environment,
 unreadable past ten systems, and an auditor asking for one system's ISCP receives the whole
 portfolio. NIST's artefact is system-level and staying aligned with that is worth more than
 the convenience.
@@ -149,9 +149,9 @@ provenance intact. Stated here rather than left as a surprise.
 |---|---|
 | Oracle EBS on OCI is the only fully-supported stack | The interview method generalises; the recovery procedures do not. Other stacks get structure without runbooks |
 | Discovery is OCI-only | Other providers are a straightforward extension of the same guard pattern; not yet written |
-| No import of an existing plan | An organisation with a plan in Word starts from interviews. Parsing arbitrary prose into an attributed store is a harder problem than it appears, and getting it wrong reintroduces the exact failure mode above |
-| Terraform generation not attempted | Discovery emits an inventory and a resource file. Producing working infrastructure code for an arbitrary estate is where scope would explode, and it is not needed to produce a plan |
-| Not yet run end to end against a real estate | The largest limitation. The first real engagement will change this design |
+| No import of an existing plan | An organization with a plan in Word starts from interviews. Parsing arbitrary prose into an attributed store is a harder problem than it appears, and getting it wrong reintroduces the exact failure mode above |
+| Terraform generation not attempted | Discovery emits an inventory and a resource file. Producing working infrastructure code for an arbitrary environment is where scope would explode, and it is not needed to produce a plan |
+| Not yet run end to end against a real environment | The largest limitation. The first real engagement will change this design |
 | Portfolio-scope facts are duplicated per system | See Decision 8. The register knows them; the stores do not read from it yet |
 
 ## Open questions

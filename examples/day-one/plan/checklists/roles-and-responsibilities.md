@@ -10,7 +10,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Supplied by the toolkit's method
 
-The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorises the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
+The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorizes the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
 
 - **Each duty in a recovery, the role that holds it and the deputy behind them**: **[MISSING — owner: DR process owner]**
 
@@ -30,7 +30,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The ordered line of succession and what each hand-off waits for**: **[MISSING — owner: DR process owner]**
 - **Each duty in a recovery, the role that holds it and the deputy behind them**: **[MISSING — owner: DR process owner]**

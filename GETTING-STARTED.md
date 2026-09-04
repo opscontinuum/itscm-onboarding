@@ -46,7 +46,7 @@ Four things, and the last is the one people skip.
 
    **If a role has a name but no deputy, that is a finding of the same class**, not a lesser
    one. A plan whose recovery depends on one unreachable person has a single point of failure
-   written into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 says team
+   written into the plan rather than into the environment. NIST SP 800-34 Rev. 1 §3.4.6 says team
    leaders "should have a designated alternate to act as the leader if the primary leader is
    unavailable", and §4.2.1 that "a successor should be clearly identified" for whoever holds
    declaration authority. The reference example carries the gap it warns about: its
@@ -59,7 +59,7 @@ Four things, and the last is the one people skip.
 
 ---
 
-## Phase 0 — The estate (half a day, two or three people)
+## Phase 0 — The portfolio (half a day, two or three people)
 
 Invoke `itscp-portfolio` **before** planning anything.
 
@@ -70,7 +70,7 @@ CMDB misses:
 > "What's the core system of record everything reads from? What reads from it? What do you
 > build and deploy those with? What do clients push data into? What's publicly visible?"
 
-Then three things that only make sense across an estate:
+Then three things that only make sense across a portfolio:
 
 1. **Rank the tiers against a budget.** Asked alone, every owner says Tier 0. Set the budget
    from *people* — "recovering one system takes most of two engineers for the first hour, you
@@ -182,7 +182,7 @@ Invoke `itscp-interview-continuity`. Interviewee: the DR process owner, with the
 
 Runs after Phase 3 because escalation thresholds need real recovery steps to threshold against.
 
-This is where most organisations discover that **nobody owns the declaration decision.** That
+This is where most organizations discover that **nobody owns the declaration decision.** That
 is not a failure of the interview; it is the single most valuable thing it produces.
 
 **Output:** roles and the deputy named for each, succession, activation criteria, call tree,
@@ -248,14 +248,14 @@ guessed rather than elicited.** Be suspicious of your own output if it looks fin
 
 | Mistake | Consequence |
 |---|---|
-| Planning one application without registering the estate | The plan's targets are unchecked against the systems it depends on, and the first invocation finds the inversion |
+| Planning one application without registering the portfolio | The plan's targets are unchecked against the systems it depends on, and the first invocation finds the inversion |
 | Asking a single owner for their tier | In isolation the answer is always Tier 0. Tiering is comparative or it is nothing |
 | Asking only what a system needs to run | You will miss what it needs to be recovered, which is where the circular plans are |
-| Skipping discovery because "we know our estate" | The interview spends 40 minutes reconstructing what a read-only walk produces in 10 |
+| Skipping discovery because "we know our environment" | The interview spends 40 minutes reconstructing what a read-only walk produces in 10 |
 | Running the technical interviews before the tier gate | You design to assumed tiers and rebuild later |
 | Letting IT answer the business questions | IT sets its own targets; the business signs something it did not choose |
 | Naming a role holder and leaving the deputy blank | The plan now depends on one person being reachable. It is a finding, and it is cheapest to fix on day one |
 | Putting yourself down as the deputy to fill the column | An invented deputy is the plausible-answer failure, wearing a name badge |
 | Filling gaps with sensible defaults to look complete | The one failure this toolkit exists to prevent. A plausible number nobody gave is worse than a visible gap |
 | Treating the generated plan as finished | It is a design. The drill makes it a plan |
-| Committing the answer store | It holds names, numbers and organisational weak points. Check `.gitignore` before the first push |
+| Committing the answer store | It holds names, numbers and organizational weak points. Check `.gitignore` before the first push |

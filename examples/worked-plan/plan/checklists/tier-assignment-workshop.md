@@ -44,6 +44,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 Every value in this document is traceable to a recorded source.

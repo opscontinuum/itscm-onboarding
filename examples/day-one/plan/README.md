@@ -33,7 +33,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The business-facing name for the same system**: **[MISSING — owner: business owner]**
 - **The impact level or data classification and where it is recorded**: **[MISSING — owner: governance/risk contact]**

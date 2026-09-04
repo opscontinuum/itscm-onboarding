@@ -1,6 +1,6 @@
 ---
 name: itscp-portfolio
-description: Use when an organisation needs continuity plans for more than one system, when it is unclear which application to plan for first or in what order systems recover, when recovery tiers must be ranked across an estate rather than assigned one application at a time, or when asked how many plans an organisation needs.
+description: Use when an organization needs continuity plans for more than one system, when it is unclear which application to plan for first or in what order systems recover, when recovery tiers must be ranked across a portfolio rather than assigned one application at a time, or when asked how many plans an organization needs.
 ---
 
 # itscp-portfolio
@@ -10,7 +10,7 @@ recover in. Run **before** any per-system plan.
 
 **Read first:** `itscp-method-interview` for the elicitation discipline.
 
-**Interviewee:** whoever can see the whole estate — enterprise architect, head of
+**Interviewee:** whoever can see the whole portfolio — enterprise architect, head of
 infrastructure, or the CIO. Usually two or three people together, because nobody has the
 complete picture alone. That gap is itself the first finding.
 
@@ -20,7 +20,7 @@ complete picture alone. That gap is itself the first finding.
 
 ## Why this exists
 
-An organisation does not have *a* system. It has a core product suite, the applications that
+An organization does not have *a* system. It has a core product suite, the applications that
 read from it, the tooling those are built and deployed with, the public interfaces clients
 push data into, and the websites fronting all of it.
 
@@ -58,7 +58,7 @@ One `portfolio.toml`, one row per system:
 
 ## Run order
 
-### 1. Enumerate the estate (60 min)
+### 1. Enumerate the systems (60 min)
 
 Do not start from a CMDB export. Start from the shape:
 

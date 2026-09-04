@@ -173,4 +173,4 @@ printf '  %s/inventory.md         ISCP Appendix H\n' "$OUT"
 printf '  %s/dr-resources.env     resource file for runbook scripts\n' "$OUT"
 printf '  %s/gaps.md              what could not be read, and who to ask\n' "$OUT"
 printf '  %s/raw/                 raw JSON, for re-rendering without re-walking\n' "$OUT"
-printf '\nAll of these are gitignored. inventory.md is a complete map of a production estate.\n'
+printf '\nAll of these are gitignored. inventory.md is a complete map of a production environment.\n'

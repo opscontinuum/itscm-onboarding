@@ -20,7 +20,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each process, the workaround used, and how long it is sustainable**: **[MISSING — owner: business owner]**
 - **How long rebuilding the lost work takes, and who does it**: **[MISSING — owner: business owner]**

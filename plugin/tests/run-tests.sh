@@ -7,7 +7,7 @@
 #   2. Every store rule refuses bad input, and the emitter round-trips
 #      through tomllib (unit + property).
 #   3. The session transcript is append only and records read-backs.
-#   4. Realisation state is derived, defaults to unknown, and cannot change
+#   4. Realization state is derived, defaults to unknown, and cannot change
 #      the answer store's bytes.
 #   5. The shipped starter store is what the bank generates, and its key
 #      count is the denominator itscp-build reports against.
@@ -45,7 +45,7 @@ if ! "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)
     exit 1
 fi
 
-for module in test_questions test_store test_session test_realisation test_example \
+for module in test_questions test_store test_session test_realization test_example \
               test_render test_diagrams test_acceptance test_examples test_portfolio; do
     if ! "$PYTHON" "${module}.py"; then
         FAILS=$((FAILS + 1))

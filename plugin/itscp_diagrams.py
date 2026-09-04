@@ -44,9 +44,9 @@ and these documents get photocopied for audits. Colour is never load-bearing her
 figure counts as sourced is not the drawing's opinion: the caller passes the provenance that
 the answer store recorded, and an empty provenance is an unsourced figure.
 
-The realisation states obey the same rule. Each of the five carries a distinct fill, a
+The realization states obey the same rule. Each of the five carries a distinct fill, a
 distinct dash pattern and a literal word, so a photocopy still distinguishes a gap from a
-conformant component. The default is ``unknown``; a state nobody recognises is never
+conformant component. The default is ``unknown``; a state nobody recognizes is never
 conformant.
 """
 from __future__ import annotations
@@ -64,7 +64,7 @@ import math
 from dataclasses import dataclass
 from xml.sax.saxutils import escape
 
-import itscp_realisation as realisation
+import itscp_realization as realization
 import itscp_store as store
 
 # --------------------------------------------------------------------- shared drawing
@@ -348,7 +348,7 @@ TIMELINE_SUBTITLE = ("The recovery point objective is measured backwards from th
                      "Only the maximum tolerable downtime is felt by the business.")
 
 #: The four spans and the three events the timeline names. Conceptual and fixed: this
-#: drawing illustrates an order of events, so no estate changes any of these words.
+#: drawing illustrates an order of events, so no environment changes any of these words.
 DATA_AT_RISK_HEADING = "RPO, data at risk"
 RECOVERY_HEADING = "RTO"
 WORK_RECOVERY_HEADING = "WRT"
@@ -451,11 +451,11 @@ def mtd_timeline_mermaid(labels: TimelineLabels | None) -> str:
     return "\n".join(lines) + "\n"
 
 
-# ------------------------------------------------------------------ realisation states
+# ------------------------------------------------------------------ realization states
 
 @dataclass(frozen=True)
 class RealisationStyle:
-    """How one realisation state is drawn, in three channels that survive a photocopy."""
+    """How one realization state is drawn, in three channels that survive a photocopy."""
 
     fill: str
     stroke: str
@@ -463,10 +463,10 @@ class RealisationStyle:
     label: str
 
 
-#: One style per state of :mod:`itscp_realisation`. Distinct fills, distinct dash patterns
+#: One style per state of :mod:`itscp_realization`. Distinct fills, distinct dash patterns
 #: and distinct words, so that no two states differ by colour alone. ``unknown`` is first
 #: because it is the default and the one a reader meets most often.
-REALISATION_STYLES: dict[str, RealisationStyle] = {
+REALIZATION_STYLES: dict[str, RealisationStyle] = {
     "unknown": RealisationStyle("#f1f3f5", "#5c6470", "2 4", "unknown, not checked"),
     "conformant": RealisationStyle("#e3f5e8", "#0d652d", "0", "conformant, as designed"),
     "gap": RealisationStyle("#fdecea", "#a50e0e", "8 3", "gap, required and not found"),
@@ -474,41 +474,41 @@ REALISATION_STYLES: dict[str, RealisationStyle] = {
     "drift": RealisationStyle("#fef4e0", "#a15800", "10 3 2 3", "drift, found and differing"),
 }
 
-REALISATION_LEGEND_HEADING = "Realisation, derived from a read-only source"
+REALIZATION_LEGEND_HEADING = "Realization, derived from a read-only source"
 
 
 def style_for(state: str) -> RealisationStyle:
-    """How one state is drawn. A state nobody recognises is unknown, and never conformant."""
-    return REALISATION_STYLES.get(state, REALISATION_STYLES["unknown"])
+    """How one state is drawn. A state nobody recognizes is unknown, and never conformant."""
+    return REALIZATION_STYLES.get(state, REALIZATION_STYLES["unknown"])
 
 
-def realisation_mermaid(reconciliations: tuple[realisation.Reconciliation, ...]) -> str:
+def realization_mermaid(reconciliations: tuple[realization.Reconciliation, ...]) -> str:
     """Reconciled components as Mermaid, each carrying its state as a word and a stroke.
 
     The legend is always drawn, including for states nothing is currently in, because a
     reader who has never seen a drift needs to know the pattern means something.
     """
-    lines = ["flowchart TB", f'    subgraph LEGEND["{_mermaid_safe(REALISATION_LEGEND_HEADING)}"]']
-    for state, style in REALISATION_STYLES.items():
+    lines = ["flowchart TB", f'    subgraph LEGEND["{_mermaid_safe(REALIZATION_LEGEND_HEADING)}"]']
+    for state, style in REALIZATION_STYLES.items():
         lines.append(f'    KEY_{state}["{_mermaid_safe(style.label)}"]')
     lines.append("    end")
     for position, reconciliation in enumerate(reconciliations):
         lines.append(f'    N{position}["{_reconciliation_node_text(reconciliation)}"]')
     lines.extend(f"    classDef {state} fill:{style.fill},stroke:{style.stroke},"
                  f"stroke-width:2px,stroke-dasharray:{style.dashes},color:#1a1a1a"
-                 for state, style in REALISATION_STYLES.items())
-    lines.extend(f"    class KEY_{state} {state}" for state in REALISATION_STYLES)
+                 for state, style in REALIZATION_STYLES.items())
+    lines.extend(f"    class KEY_{state} {state}" for state in REALIZATION_STYLES)
     lines.extend(f"    class N{position} {style_state(reconciliation)}"
                  for position, reconciliation in enumerate(reconciliations))
     return "\n".join(lines) + "\n"
 
 
-def style_state(reconciliation: realisation.Reconciliation) -> str:
+def style_state(reconciliation: realization.Reconciliation) -> str:
     """The state this reconciliation is drawn as: its own, or unknown if it names no style."""
-    return reconciliation.state if reconciliation.state in REALISATION_STYLES else "unknown"
+    return reconciliation.state if reconciliation.state in REALIZATION_STYLES else "unknown"
 
 
-def _reconciliation_node_text(reconciliation: realisation.Reconciliation) -> str:
+def _reconciliation_node_text(reconciliation: realization.Reconciliation) -> str:
     """The identity, the state as a literal word, and what the state costs where it costs.
 
     The reconciliation's own label repeats the bare state word for the three states that

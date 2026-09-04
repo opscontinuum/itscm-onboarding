@@ -21,7 +21,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The release of each major component, and any upgrade in flight**: **[MISSING — owner: application owner]**
 - **The operating system of each tier, and what that constrains**: **[MISSING — owner: infrastructure owner]**

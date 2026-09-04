@@ -29,9 +29,9 @@ two views of one fact, and this interview is where they get reconciled.
 > **At 3am, with the primary region gone, who decides to fail over — and what do they need in
 > front of them to decide?**
 
-Everything below is that question decomposed. Most organisations have some of the pieces and
+Everything below is that question decomposed. Most organizations have some of the pieces and
 have never assembled them, so the interview frequently ends with the interviewee saying they
-had not realised nobody owned the decision.
+had not realized nobody owned the decision.
 
 ---
 
@@ -57,10 +57,10 @@ more credible list.
 
 **Two failure modes to name explicitly if you see them:**
 
-- **Nobody holds it.** Common. The organisation believes the decision would "be made by the
+- **Nobody holds it.** Common. The organization believes the decision would "be made by the
   incident team", which means it would be made by whoever felt boldest, or not at all.
 - **Everybody holds it.** Also common, and worse. Concurrent declarations by different people
-  are how an estate ends up half failed over.
+  are how an environment ends up half failed over.
 
 ### Separating deciding from doing
 
@@ -98,7 +98,7 @@ deputy is the plausible-answer failure with a rota in front of it.
 
 ### The disruption may take the people too
 
-> "If the event that takes the estate also takes your main office — does the recovery still
+> "If the event that takes the environment also takes your main office — does the recovery still
 > have the people it needs?"
 
 Then: is there anyone outside that geography who can execute, and is there a contracted vendor
@@ -123,7 +123,7 @@ Then the two questions that make the criteria operable:
 
 **The second question is the one nobody has answered.** It is the difference between a gate
 that works at 3am and one that stalls. Whichever way they answer, record the reasoning — the
-asymmetry between an unnecessary failover and a late declaration is specific to their estate
+asymmetry between an unnecessary failover and a late declaration is specific to their environment
 and their failback cost, and it must be written down where the person on the bridge will see
 it.
 
@@ -145,7 +145,7 @@ alternate contact methods per person.
 > "Where does everyone convene, and is that dependent on anything that might also be down?"
 
 A conference bridge hosted in the failed region, or an incident channel in a tool that
-authenticates through the affected estate, is a plan with a loop in it. Ask directly.
+authenticates through the affected environment, is a plan with a loop in it. Ask directly.
 
 ### What is said
 
@@ -191,9 +191,9 @@ Unknown must map to a decision. Decide it here, in daylight.
 
 > "Could the assessor be personally caught up in the event?"
 
-NIST puts personnel safety above assessment speed. In a cloud estate the safety constraint
+NIST puts personnel safety above assessment speed. In a cloud environment the safety constraint
 usually binds on the people, not the equipment, and the plan needs a hand-off that does not
-depend on the affected person recognising they should hand off.
+depend on the affected person recognizing they should hand off.
 
 ### The closed-book form
 
@@ -201,7 +201,7 @@ depend on the affected person recognising they should hand off.
 > assessor do?"
 
 Reduce the procedure to five questions answerable from memory. NIST requires assessors to
-perform without the document, and a plan stored only inside the estate it protects is a plan
+perform without the document, and a plan stored only inside the environment it protects is a plan
 with a circular dependency.
 
 ---
@@ -219,7 +219,7 @@ Then the mirror of declaration:
 > "Who says it's over? And who do they tell?"
 
 Declaration and deactivation are a matched pair. An unclosed declaration leaves the
-organisation unsure whether it is still in a disaster, which is its own kind of outage.
+organization unsure whether it is still in a disaster, which is its own kind of outage.
 
 ---
 
@@ -242,12 +242,12 @@ in `runbooks/RB-02`.
 | Thought | Reality |
 |---|---|
 | "The incident team would decide" | That is nobody. Get one name and an ordered succession |
-| "Several senior people could declare" | Concurrent declarations half-fail-over an estate. One at a time, in order |
+| "Several senior people could declare" | Concurrent declarations half-fail-over an environment. One at a time, in order |
 | "They'll assess it when it happens" | Then the activation criteria consume a number nothing produces |
 | "The alternate is listed, that's covered" | Ask whether the alternate could actually do it, or only knows who to call |
 | "Only one engineer has ever run the failback, but they're reliable" | Reliability is not availability. No deputy is a finding, at the same weight as no owner |
 | "The on-call rota is the deputy" | A rota is not a name. Ask who is on it who could actually execute this step |
 | "The roster and the succession are near enough the same" | "Near enough" is a conflict you have not looked at. Record both, name the decision owner |
 | "Thresholds are a judgement call" | Judgement at 3am is not repeatable. Get an observable number |
-| "The bridge is our usual incident channel" | Check what that channel depends on. A loop through the failed estate is not a bridge |
+| "The bridge is our usual incident channel" | Check what that channel depends on. A loop through the failed environment is not a bridge |
 | "Safety isn't relevant, it's all cloud" | The event that takes the region may take the people. Ask |

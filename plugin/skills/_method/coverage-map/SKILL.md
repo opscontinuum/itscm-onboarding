@@ -27,7 +27,7 @@ it does.
 
 ## Portfolio scope (above any single plan)
 
-Elicited once for the organisation, not once per system. Held in `portfolio.toml` rather than
+Elicited once for the organization, not once per system. Held in `portfolio.toml` rather than
 in an answer store, because a register of systems is a different shape from a set of facts
 about one.
 
@@ -39,7 +39,7 @@ about one.
 | Runtime, recovery and data dependencies between systems | `itscp-dependencies` | `portfolio.toml` |
 | Cross-system coherence: inversions, cycles, wave order | `itscp_portfolio.validate` | audit report |
 
-**A plan for one system in an estate of many is incomplete even at 100% coverage of the rows
+**A plan for one system in a portfolio of many is incomplete even at 100% coverage of the rows
 below**, because none of them can see the system's neighbours.
 
 ## Front matter
@@ -137,6 +137,6 @@ Stated so the toolkit does not imply completeness it lacks.
 | Gap | Consequence |
 |---|---|
 | No elicitation for platform types other than Oracle EBS on OCI | The runbook templates assume Oracle Data Guard and OCI replication primitives. Other stacks get the structure but must supply their own procedures |
-| No automated import of an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
+| No automated import of an existing plan | An organization with a plan in Word starts from interviews, not from its own document |
 | Discovery covers OCI only | AWS, Azure, GCP and on-premises inventories are manual |
 | Discovery does not render Appendix I | `itscp_discover_oci` writes `inventory.md`, `dr-resources.env`, `gaps.md` and `raw/`, and nothing else. The interconnection data is collected into `raw/*.json` and left unrendered, so the whole register comes from the application interview. The half discovery could have pre-filled is recalled in a meeting instead, which is where interfaces get missed |

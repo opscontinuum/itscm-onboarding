@@ -6,7 +6,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## APPENDIX J TEST AND MAINTENANCE SCHEDULE
 
-- **The date of the last end-to-end execution and who performed it**: Never, by construction. The reference plan documents a hypothetical corporation and states that it is not validated against a live estate. Its Terraform has never been applied and plan and apply were never run. Its plan-approval statement carries the date of the last drill as an unfilled placeholder, its evidence directory is a structural placeholder, and its record of changes carries no row for a drill or an event. Nobody has run it.
+- **The date of the last end-to-end execution and who performed it**: Never, by construction. The reference plan documents a hypothetical corporation and states that it is not validated against a live environment. Its Terraform has never been applied and plan and apply were never run. Its plan-approval statement carries the date of the last drill as an unfilled placeholder, its evidence directory is a structural placeholder, and its record of changes carries no row for a drill or an event. Nobody has run it.
 
 ## 5.9 Event Documentation
 
@@ -40,6 +40,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **How often the plan is exercised, in practice**: **[MISSING — owner: governance/risk contact]**

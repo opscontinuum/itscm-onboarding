@@ -13,7 +13,7 @@ the `itscp-method-answer-store` skill (where answers live). Do not start without
 
 > ### This skill builds ONE system's plan. Run `itscp-portfolio` first.
 >
-> An organisation has an estate, not a system: a core product suite, the applications reading
+> An organization has a portfolio, not a system: a core product suite, the applications reading
 > from it, the tooling those are built with, the interfaces clients push data into, and the
 > public sites fronting all of it. Building plans one at a time without a register produces
 > **N individually-plausible, collectively-impossible plans** -- an application signed at four
@@ -24,7 +24,7 @@ the `itscp-method-answer-store` skill (where answers live). Do not start without
 > targets and dependencies from the register as constraints it must honour rather than as
 > questions to re-ask.
 >
-> If the organisation genuinely has one system, say so explicitly and proceed. That is a
+> If the organization genuinely has one system, say so explicitly and proceed. That is a
 > finding worth recording, not an assumption worth making.
 
 ---
@@ -92,7 +92,7 @@ Six questions to the operator, one at a time, before anything else:
 2. Where does it run today — cloud, region, on-premises?
 3. Is there an existing plan, in any state? (If yes, read it before interviewing anyone.)
 4. Who holds each of the seven roles below, by name, and who deputises for each of them?
-5. Is this a real estate, or an exercise? (Exercises skip discovery and use placeholders.)
+5. Is this a real environment, or an exercise? (Exercises skip discovery and use placeholders.)
 6. Where should the plan repository live? Default: a new **private** repository.
 
 ### The role roster
@@ -121,7 +121,7 @@ owner has no one who can sign an MTD, and that is worth saying out loud on day o
 
 **A role with a holder and no named deputy is a finding of the same class**, not a lesser one.
 A plan whose recovery depends on one unreachable person has a single point of failure written
-into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 says team leaders
+into the plan rather than into the environment. NIST SP 800-34 Rev. 1 §3.4.6 says team leaders
 "should have a designated alternate to act as the leader if the primary leader is unavailable",
 and §4.2.1 that "a successor should be clearly identified" for whoever holds declaration
 authority. The reference example carries the gap it warns about: its
@@ -170,7 +170,7 @@ not a target to reproduce.
 **Four rules for this report.**
 
 1. **Coverage is not quality.** Always print the confidence distribution beside it. A plan at
-   90% coverage with 60% low confidence is an organisation that has guessed comprehensively.
+   90% coverage with 60% low confidence is an organization that has guessed comprehensively.
 2. **Count the denominator; never quote one.** It is the number of fields in scope for *this*
    plan, counted from that plan's answer store. The starter set is 82 fields; a plan that adds
    fields for its own tiers, processes or interfaces reports against its own total. A
@@ -210,7 +210,7 @@ repository says it in three places for good reason.
 | "Coverage is 90%, call it done" | Print the confidence split. Then decide |
 | "The file exists, so the section is complete" | Rendered is not complete. Count fields, not files |
 | "They only want the technical bits" | Then say plainly which sections of the ITSCP will be absent, and let them choose knowingly |
-| "This estate is like the reference repo, I can prefill" | The reference repository is a hypothetical corporation. It is evidence about nothing |
+| "This environment is like the reference repo, I can prefill" | The reference repository is a hypothetical corporation. It is evidence about nothing |
 | "The role has a name, the deputy can wait" | The deputy is the plan's own single-point-of-failure control. Missing deputy is a finding, reported like any other |
 | "I'll put the operator down as the deputy for now" | That is an invented name in the one place the plan is least able to tolerate one. MISSING, owner: the role holder |
 | "The lead engineer and the application owner are the same person, skip a row" | Record it as the answer. A concentration you can see is manageable; one you deleted is not |

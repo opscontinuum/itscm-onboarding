@@ -111,7 +111,7 @@ def _record_for(question: bank.Question) -> store.Record:
                             due=DEFERRAL_DATE)
     if state == "NOT_APPLICABLE":
         return store.Record(question.id, "NOT_APPLICABLE",
-                            reason="this estate has one region and no second leg to measure")
+                            reason="this environment has one region and no second leg to measure")
     answered = _answered(question, "low" if state == "LOW_CONFIDENCE" else "high")
     if state != "CONFLICT":
         return answered

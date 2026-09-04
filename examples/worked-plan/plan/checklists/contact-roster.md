@@ -21,7 +21,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 **Each vendor, what they supply, how they are reached and the reference they need**
 
-| organisation | what_they_supply | reached_by | reference_to_quote |
+| organization | what_they_supply | reached_by | reference_to_quote |
 | --- | --- | --- | --- |
 | Oracle Support, severity one | Support on the database and application stack during an incident | a fictitious placeholder in the reference plan | A customer support identifier and a service-request template pre-registered against the primary and standby databases; the identifier itself is a fictitious placeholder in the reference plan |
 | The cloud account team | Capacity and platform escalation, and the destination for procurement escalation because no procurement team is staffed for this plan | a fictitious placeholder in the reference plan | The tenancy name, itself a fictitious placeholder in the reference plan |
@@ -34,7 +34,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## 5.5 Notifications (users)
 
-- **How users are told service is restored, by whom and what the message must carry**: A service-restored notice goes to users, the business owner, and every interconnected partner who was told during activation, sent through the call tree and partner contact lists rather than through the recovered estate, and the exit checklist will not close until it has gone. What the message has to carry is not stated in the reference plan: the reference plan has a what-to-say table and it belongs to the activation notification, covering the nature of the outage, the repair estimate, the runbook step and the bridge details. There is no restoration template, nobody is named as drafting it, and the warning about possibly duplicated workflow notifications appears only as a work-recovery task and not as something the restoration message must repeat to users.
+- **How users are told service is restored, by whom and what the message must carry**: A service-restored notice goes to users, the business owner, and every interconnected partner who was told during activation, sent through the call tree and partner contact lists rather than through the recovered environment, and the exit checklist will not close until it has gone. What the message has to carry is not stated in the reference plan: the reference plan has a what-to-say table and it belongs to the activation notification, covering the nature of the outage, the repair estimate, the runbook step and the bridge details. There is no restoration template, nobody is named as drafting it, and the warning about possibly duplicated workflow notifications appears only as a work-recovery task and not as something the restoration message must repeat to users.
 
 ## References
 
@@ -46,7 +46,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The incident bridge and its dependencies**: **[MISSING — owner: DR process owner]**
 - **Each role, who holds it, how they are reached and when that was last verified**: **[MISSING — owner: DR process owner]**

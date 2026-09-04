@@ -47,7 +47,7 @@ Maximum tolerable downtime is recovery time plus work recovery time. The toolkit
 
 ## 5.10 Deactivation
 
-- **Who may deactivate the plan and on what evidence**: The same authority that declared the disaster announces the deactivation, to the same list that was notified at activation, because declaration and deactivation are a matched pair and an unclosed declaration leaves the organisation unsure whether it is still in one. What they have to see is a ten-item exit checklist, all of it true: the recovery-point attestation filed; the functional team's signature on the validation pack; users, business owner and partners notified; drill and temporary resources torn down and the posture returned to steady state; a standby existing again with its lag inside the tier recovery point; a fresh full backup of the current primary in whatever region is now primary; the protection groups re-pointed and their plans re-validated; the timing sheet and after-action narrative written to evidence; the record of changes updated with what the event taught; and the announcement itself. Anything unticked is an open disaster, whatever the dashboards say. Deactivating does not require being back in Ashburn; it requires being protected wherever you are.
+- **Who may deactivate the plan and on what evidence**: The same authority that declared the disaster announces the deactivation, to the same list that was notified at activation, because declaration and deactivation are a matched pair and an unclosed declaration leaves the organization unsure whether it is still in one. What they have to see is a ten-item exit checklist, all of it true: the recovery-point attestation filed; the functional team's signature on the validation pack; users, business owner and partners notified; drill and temporary resources torn down and the posture returned to steady state; a standby existing again with its lag inside the tier recovery point; a fresh full backup of the current primary in whatever region is now primary; the protection groups re-pointed and their plans re-validated; the timing sheet and after-action narrative written to evidence; the record of changes updated with what the event taught; and the announcement itself. Anything unticked is an open disaster, whatever the dashboards say. Deactivating does not require being back in Ashburn; it requires being protected wherever you are.
 
 ## 5.4 Recovery Declaration
 
@@ -55,7 +55,7 @@ Maximum tolerable downtime is recovery time plus work recovery time. The toolkit
 
 ## 5.5 Notifications (users)
 
-- **How users are told service is restored, by whom and what the message must carry**: A service-restored notice goes to users, the business owner, and every interconnected partner who was told during activation, sent through the call tree and partner contact lists rather than through the recovered estate, and the exit checklist will not close until it has gone. What the message has to carry is not stated in the reference plan: the reference plan has a what-to-say table and it belongs to the activation notification, covering the nature of the outage, the repair estimate, the runbook step and the bridge details. There is no restoration template, nobody is named as drafting it, and the warning about possibly duplicated workflow notifications appears only as a work-recovery task and not as something the restoration message must repeat to users.
+- **How users are told service is restored, by whom and what the message must carry**: A service-restored notice goes to users, the business owner, and every interconnected partner who was told during activation, sent through the call tree and partner contact lists rather than through the recovered environment, and the exit checklist will not close until it has gone. What the message has to carry is not stated in the reference plan: the reference plan has a what-to-say table and it belongs to the activation notification, covering the nature of the outage, the repair estimate, the runbook step and the bridge details. There is no restoration template, nobody is named as drafting it, and the warning about possibly duplicated workflow notifications appears only as a work-recovery task and not as something the restoration message must repeat to users.
 
 ## 5.6 Cleanup
 
@@ -75,7 +75,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Whether concurrent processing is performed, and the reason either way**: Not applicable — Not performed. A single EBS instance with one authoritative database cannot run production in two regions at once; a second writable copy would diverge, and reconciling it is worse than the outage. NIST does not require it, stating that information systems are not required to have concurrent processing capabilities.
 - **Each scheduled job, whether it is safe to resubmit, and what a second run does**: **[MISSING — owner: application owner]**

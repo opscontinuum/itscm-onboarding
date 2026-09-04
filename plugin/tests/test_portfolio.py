@@ -9,7 +9,7 @@ were written by different people in different weeks.
 That is what this module checks: the findings that only exist above the level of one plan.
 The sharpest is the distinction between a runtime dependency and a recovery dependency. Every
 interview asks what a system needs in order to run. Almost none ask what it needs in order to
-be recovered, which is how an organisation discovers during an invocation that its runbooks
+be recovered, which is how an organization discovers during an invocation that its runbooks
 are in the source control server that is inside the outage.
 
 Standard library only, like everything else here.
@@ -52,7 +52,7 @@ def _depends(on: str, kind: str = "runtime", criticality: str = "hard") -> portf
 
 def _portfolio(*systems: portfolio.System, **overrides) -> portfolio.Portfolio:
     fields = {
-        "organisation": "Example Corp",
+        "organization": "Example Corp",
         "waves": portfolio.DEFAULT_WAVES,
         "systems": tuple(systems),
         "tier_budget": {},
@@ -282,7 +282,7 @@ def _example_portfolio() -> None:
     loaded = portfolio.load(tomllib.loads(path.read_text()))
     assert len(loaded.systems) >= 8, (
         f"the example portfolio has only {len(loaded.systems)} systems; it is meant to show "
-        "an estate, not a system")
+        "a portfolio, not a system")
     classes = {system.system_class for system in loaded.systems}
     for expected in ("core-data", "dependent-app", "supporting-infra", "public-api",
                      "public-web"):

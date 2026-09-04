@@ -7,7 +7,7 @@
 # inversions, dependency cycles and wave ordering the individual plans cannot see.
 
 schema_version = 1
-organisation = "Example Corp"
+organization = "Example Corp"
 
 # How many systems each tier may hold. Asked in isolation every owner says
 # tier 0; the budget is what makes the ranking comparative.
@@ -122,7 +122,7 @@ rpo = "1h"
 mtd = "4h"
 wave = 1
 plan_repo = "https://github.com/example-corp/itscp-gitlab"
-notes = "Every runbook in the estate is stored here. That makes it a recovery dependency of almost everything, which is why it recovers in wave 1 rather than with the other internal tooling in wave 4."
+notes = "Every runbook in the environment is stored here. That makes it a recovery dependency of almost everything, which is why it recovers in wave 1 rather than with the other internal tooling in wave 4."
 
 [[system.depends_on]]
 on = "okta-idp"
@@ -334,7 +334,7 @@ rpo = "24h"
 mtd = "48h"
 wave = 4
 plan_repo = "https://github.com/example-corp/itscp-www-marketing"
-notes = "No hard dependency on the estate: it is statically published. The exposure is reputational, not transactional, which is why a tier 2 site sits beside tier 1 applications."
+notes = "No hard dependency on the environment: it is statically published. The exposure is reputational, not transactional, which is why a tier 2 site sits beside tier 1 applications."
 
 [[system]]
 slug = "analytics"
@@ -348,7 +348,7 @@ rpo = "24h"
 mtd = "72h"
 wave = 4
 plan_repo = ""
-notes = "In the register with no plan yet. A system the organisation knows it has and has not planned for is a finding, not an omission."
+notes = "In the register with no plan yet. A system the organization knows it has and has not planned for is a finding, not an omission."
 
 [[system.depends_on]]
 on = "hr-core"

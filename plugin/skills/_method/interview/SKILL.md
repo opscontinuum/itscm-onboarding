@@ -21,7 +21,7 @@ Systems", because the first cannot be audited and will be believed.
 > **A fact enters the answer store only when a human said it, a read-only API returned it, or
 > it is marked MISSING. There is no fourth source.**
 
-Not "inferred from context". Not "a reasonable default for an organisation of this size". Not
+Not "inferred from context". Not "a reasonable default for an organization of this size". Not
 "consistent with what they said about the other tier". If nobody said it and no API returned
 it, its status is `MISSING` and it names an owner.
 
@@ -45,7 +45,7 @@ every compliance requirement starts refuted until a quoted sentence moves it.
 | `NOT_APPLICABLE` | Genuinely does not apply to this system | The **reason**, never the interviewer's opinion alone |
 
 A field is never silently skipped. An interview that ends with forty `MISSING` fields has
-succeeded at its real job — telling the organisation what it does not know — provided every
+succeeded at its real job — telling the organization what it does not know — provided every
 one of them names an owner.
 
 ---
@@ -114,7 +114,7 @@ whenever the answer space is genuinely small and known.
 ## "I don't know" is data, and it is often the most valuable answer
 
 When an interviewee does not know, you have found something more useful than an answer: an
-organisational gap with a name on it. Capture it properly.
+organizational gap with a name on it. Capture it properly.
 
 ```
 status: MISSING
@@ -125,7 +125,7 @@ notes: "Business owner did not know whether the bank file has a hard cut-off.
 
 Then **keep going**. Do not stall the interview on one unknown, and never fill it to keep
 momentum. An interview that surfaces twelve named unknowns in an hour has done more for the
-organisation than one that produced twelve confident inventions.
+organization than one that produced twelve confident inventions.
 
 ---
 
@@ -145,7 +145,7 @@ not a rude question — it is the question that determines whether the resulting
 put in front of an auditor. Interviewees almost always answer it honestly and are usually
 relieved to be asked.
 
-Low confidence is not a failure. It is an accurate label, and it tells the drill programme
+Low confidence is not a failure. It is an accurate label, and it tells the drill program
 what to measure first.
 
 ---
@@ -167,18 +167,18 @@ means the plan ends up written in the business's own words rather than yours.
 ## Provenance on every fact
 
 Every `ANSWERED` field records where it came from. This is the direct analogue of the citation
-discipline in the reference repository, where every claim about product behaviour carries a
+discipline in the reference repository, where every claim about product behavior carries a
 source and every untraceable claim is tagged.
 
 | Provenance form | Use |
 |---|---|
 | `interview:<role>:<YYYY-MM-DD>` | A human said it. Role, not name — the store is shared |
 | `oci-discovery:<operation>` | A read-only API returned it, e.g. `oci-discovery:ListVolumeGroupReplicas` |
-| `document:<path-or-name>` | Taken from an existing document the organisation supplied |
+| `document:<path-or-name>` | Taken from an existing document the organization supplied |
 | `operator` | The person running the toolkit supplied it about themselves |
 
 There is no provenance value meaning "the assistant worked it out". If you worked it out, it
-is not a fact; it is either a `MISSING` or a clearly-labelled engineering judgement written
+is not a fact; it is either a `MISSING` or a clearly-labeled engineering judgement written
 into the generated document's *Unverified statements* section — never into the answer store.
 
 ---

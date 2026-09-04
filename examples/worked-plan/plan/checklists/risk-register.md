@@ -17,7 +17,7 @@ This document is generated from the answer store. Correct it by correcting the i
 | A4: visualization tier means the BI or reporting presentation layer | MATERIAL. If it means virtualization, that tier's design is replaced by one based on OCI VMware Solution | not stated in the reference plan | not stated in the reference plan |
 | A5: the database does not use Hybrid Columnar Compression | If it does, the standby storage must be Exadata, Oracle ZFS Storage Appliance, or Pillar Axiom FS1. Whether compressed data becomes unreadable on unsupported storage is unverified | not stated in the reference plan | not stated in the reference plan |
 | A6: cross-region traffic rides a Dynamic Routing Gateway and a Remote Peering Connection over the OCI backbone, not FastConnect and not the public internet | Changes the bandwidth guarantee and the redo transport tuning. No bandwidth guarantee or service level for the peering link was verified in this revision | not stated in the reference plan | not stated in the reference plan |
-| A7: a single production EBS instance, with no multi-org split across regions | A multi-instance estate changes the tiering map | not stated in the reference plan | not stated in the reference plan |
+| A7: a single production EBS instance, with no multi-org split across regions | A multi-instance environment changes the tiering map | not stated in the reference plan | not stated in the reference plan |
 
 
 ## Recorded for this plan
@@ -33,7 +33,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each external party, what their contract obliges, how fast, and where the contract is held**: **[MISSING — owner: governance/risk contact]**
 - **Each material assumption or design risk, its owner and its review date**: **[MISSING — owner: governance/risk contact]**

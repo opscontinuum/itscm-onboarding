@@ -1,6 +1,6 @@
 ---
 name: itscp-discover
-description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their estate actually contains, or when a hardware and software inventory or interconnection list is needed for an appendix of an IT service continuity plan.
+description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their environment actually contains, or when a hardware and software inventory or interconnection list is needed for an appendix of an IT service continuity plan.
 ---
 
 # itscp-discover
@@ -23,7 +23,7 @@ wrapper it runs behind rejects any invocation whose operation is not `list*` or 
 the call reaches the CLI. It fails closed.
 
 The reference repository's Terraform is apply-locked because authoring against a hypothetical
-estate is a different risk posture from touching a real one. This skill touches real ones. The
+environment is a different risk posture from touching a real one. This skill touches real ones. The
 guard is structural rather than a convention because a convention is one hurried edit from
 being gone.
 
@@ -34,7 +34,7 @@ that is a finding to report, not a guard to widen. Rationalisations that mean st
 |---|---|
 | "A `start` on a stopped test instance is harmless" | It is a mutation, it is billable, and it is not discovery |
 | "I'll just tag resources so they're easier to find" | Tagging is a write. Record what you found instead |
-| "The customer said I could" | They authorised a read-only inventory. Widening scope needs a new conversation |
+| "The customer said I could" | They authorized a read-only inventory. Widening scope needs a new conversation |
 | "`terraform import` is read-only" | It writes state. Emit `import` blocks for a human to run |
 
 ---
@@ -47,8 +47,8 @@ Confirm before running, and stop if any is unmet:
 2. The profile's permissions are **read-only**, or the operator has confirmed they accept
    running with wider ones. Say the risk out loud; do not assume.
 3. A named compartment (or root) to walk, and the regions in scope.
-4. Written confirmation from the operator that a tenancy walk is authorised. Enumerating a
-   production estate is a legitimate action with an audit trail; get consent on the record.
+4. Written confirmation from the operator that a tenancy walk is authorized. Enumerating a
+   production environment is a legitimate action with an audit trail; get consent on the record.
 
 ---
 
@@ -69,7 +69,7 @@ been a wasted five minutes.
 
 **Discovery is portfolio-wide; plans are per-system.** Walk the tenancy once, then
 *attribute* what you found to the systems in `portfolio.toml`. Walking once per plan
-re-reads the same estate N times and produces N inventories that disagree at the edges.
+re-reads the same environment N times and produces N inventories that disagree at the edges.
 
 Attribution is a question, not an inference:
 
@@ -109,7 +109,7 @@ resources either lives somewhere this walk did not reach, or does not exist.
 | Secrets, vault contents, key material | Never needed for a plan. A discovery tool that reads secrets becomes a credential-exfiltration tool |
 | Database contents or row counts | Out of scope; volume comes from the application owner |
 | IAM policy statements verbatim | Records *that* authority exists, not the rules. Policies are sensitive and change often |
-| Cost and billing data | Useful, but a separate authorisation. Ask before extending |
+| Cost and billing data | Useful, but a separate authorization. Ask before extending |
 
 ---
 
@@ -126,7 +126,7 @@ NOT DISCOVERED: Full Stack DR protection groups
   action: confirm with infrastructure owner during itscp-interview-infrastructure
 ```
 
-The inventory then carries a *known-incomplete* marker rather than implying the estate lacks
+The inventory then carries a *known-incomplete* marker rather than implying the environment lacks
 what the tool could not see. **Absence of evidence is not evidence of absence, and the
 inventory must say which one it is recording.** This distinction is the difference between an
 inventory an auditor can use and one that quietly misleads.
@@ -143,7 +143,7 @@ inventory an auditor can use and one that quietly misleads.
 | `discovery-output/gaps.md` | Everything NOT DISCOVERED, with the reason and who to ask |
 
 That is the whole list. `itscp_discover_oci` writes those four things and nothing else. All are
-gitignored by default, and `inventory.md` is a complete map of a production estate.
+gitignored by default, and `inventory.md` is a complete map of a production environment.
 
 Then write `discovery.*` keys into the answer store with provenance
 `oci-discovery:<operation>`, and hand `gaps.md` to `itscp-build` as interview input.
@@ -176,5 +176,5 @@ complete than it is:
   Lag comes from monitoring, not from a resource listing.
 - **What is missing.** Discovery enumerates what exists. The absence of a standby is invisible
   to it unless somebody expected one.
-- **Whether the estate matches its documentation.** That comparison is the infrastructure
+- **Whether the environment matches its documentation.** That comparison is the infrastructure
   interview's job, and it is usually where the first real finding appears.

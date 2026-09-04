@@ -42,7 +42,7 @@ def _answered(key: str = "business.mbco.tier0", **overrides) -> store.Record:
     fields = {
         "key": key,
         "status": "ANSWERED",
-        "value": "Card authorisations only, no settlement",
+        "value": "Card authorizations only, no settlement",
         "provenance": INTERVIEW,
         "confidence": "medium",
         "readback": "confirmed",
@@ -273,7 +273,7 @@ def _coverage_fixture() -> dict:
         document = store.put(document, _fixture_answer(key, confidence))
     for key in keys[14:17]:
         document = store.put(document, store.Record(
-            key, "NOT_APPLICABLE", reason="This estate has no such component."))
+            key, "NOT_APPLICABLE", reason="This environment has no such component."))
     for key in keys[17:19]:
         document = store.put(document, store.Record(
             key, "DEFERRED", owner="business owner", due="2026-10-01"))
@@ -362,10 +362,10 @@ def _every_value_shape() -> dict:
         "infra.replication", "ANSWERED",
         value=[
             {"tier": "0", "mechanism": "Data Guard", "sync": "true", "measured_lag": "0s",
-             "failover_behaviour": "automatic", "rebaseline_on_reversal": "false",
+             "failover_behavior": "automatic", "rebaseline_on_reversal": "false",
              "one_way": "false"},
             {"tier": "1", "mechanism": "volume group replication", "sync": "false",
-             "measured_lag": "11m", "failover_behaviour": "manual",
+             "measured_lag": "11m", "failover_behavior": "manual",
              "rebaseline_on_reversal": "true", "one_way": "true"},
         ],
         provenance=DISCOVERY, confidence="high"))

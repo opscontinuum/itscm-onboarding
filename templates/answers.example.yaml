@@ -2,7 +2,7 @@
 # generated plan repository. See skills/_method/answer-store.md for the rules.
 #
 # THIS FILE IS GITIGNORED IN GENERATED REPOSITORIES AND MUST STAY THAT WAY.
-# It accumulates names, phone numbers, OCIDs, MTD figures and organisational
+# It accumulates names, phone numbers, OCIDs, MTD figures and organizational
 # weak points. It is the most sensitive file the toolkit produces.
 #
 # Every field starts MISSING. A value appears only when a human said it or a
@@ -43,7 +43,7 @@ facts:
     value: null
     owner: "governance/risk contact"
     notes: "Impact level or data classification. Determines which controls are
-            mandatory. If never categorised, that is itself the finding."
+            mandatory. If never categorized, that is itself the finding."
 
   # ---- business.* — business / process owner -------------------------------
   business.processes:
@@ -139,7 +139,7 @@ facts:
   infra.replication:
     status: MISSING
     value: null          # list of {tier, mechanism, sync, measured_lag,
-                         #          failover_behaviour, rebaseline_on_reversal, one_way}
+                         #          failover_behavior, rebaseline_on_reversal, one_way}
     owner: "infrastructure owner"
     notes: "Press the re-baseline question. It is the failback cost and it is
             almost never costed."
@@ -209,7 +209,7 @@ facts:
     value: null
     owner: "DR process owner"
     notes: "Check what it depends on. A bridge that authenticates through the
-            failed estate is a plan with a loop in it."
+            failed environment is a plan with a loop in it."
 
   continuity.assessment_procedure:
     status: MISSING
@@ -244,7 +244,7 @@ facts:
     owner: "governance/risk contact"
     notes: "Frequency AND triggers AND an owner. An unowned cadence does not happen."
 
-  governance.training_programme:
+  governance.training_program:
     status: MISSING
     value: null
     owner: "governance/risk contact"

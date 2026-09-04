@@ -1,10 +1,10 @@
 """The portfolio: the register of systems, the graph between them, and the recovery order.
 
-An organisation does not have *a* system. It has a core product suite, the applications that
+An organization does not have *a* system. It has a core product suite, the applications that
 read from it, the tooling those are built and deployed with, the public interfaces clients
 push data into, and the websites that front all of it. NIST SP 800-34 Rev. 1 specifies a plan
 for *an information system*, and it is right to: an auditor asking for the identity database's
-ISCP should receive one document, not the estate. But a stack of individually correct plans is
+ISCP should receive one document, not the environment. But a stack of individually correct plans is
 not a portfolio plan, and the gap between the two is where real invocations fail.
 
 Four failures live only at this level, and none of them are visible from inside a single plan:
@@ -59,7 +59,7 @@ SCHEMA_VERSION = 1
 PORTFOLIO_FILENAME = "portfolio.toml"
 
 #: What a system *is*, which determines what questions it deserves and roughly where in the
-#: recovery order it belongs. Drawn from the shape a real estate has rather than invented:
+#: recovery order it belongs. Drawn from the shape a real environment has rather than invented:
 #: a core product suite, the applications reading from it, the tooling underneath, the
 #: public interfaces clients push into, and the sites that front them.
 SYSTEM_CLASSES: tuple[str, ...] = (
@@ -126,7 +126,7 @@ class Dependency:
 class Wave:
     """One step of the recovery order.
 
-    ``max_concurrent`` is the number of systems the organisation can actually recover at
+    ``max_concurrent`` is the number of systems the organization can actually recover at
     once in this wave. It is a statement about people far more often than about capacity,
     and it is the number that turns a wish list into a sequence.
     """
@@ -180,7 +180,7 @@ DEFAULT_WAVES: tuple[Wave, ...] = (
 class Portfolio:
     """The whole register."""
 
-    organisation: str
+    organization: str
     waves: tuple[Wave, ...] = DEFAULT_WAVES
     systems: tuple[System, ...] = ()
     #: Tier to the maximum number of systems allowed in it. Empty means nobody has set a
@@ -438,7 +438,7 @@ def _check_register_completeness(portfolio: Portfolio) -> list[Finding]:
             findings.append(Finding(
                 "no-plan", "WARNING", system.slug,
                 f"{system.slug} is in the register with no plan repository. It is a system "
-                f"the organisation knows it has and has not planned for."))
+                f"the organization knows it has and has not planned for."))
     return findings
 
 
@@ -501,7 +501,7 @@ def load(parsed: dict) -> Portfolio:
     except (KeyError, TypeError, ValueError) as bad:
         raise PortfolioError(f"the portfolio register is malformed: {bad}") from bad
     return Portfolio(
-        organisation=str(parsed.get("organisation", "")),
+        organization=str(parsed.get("organization", "")),
         waves=waves, systems=systems, tier_budget=budget)
 
 
@@ -549,7 +549,7 @@ def emit(portfolio: Portfolio) -> str:
         "# inversions, dependency cycles and wave ordering the individual plans cannot see.",
         "",
         f"schema_version = {SCHEMA_VERSION}",
-        f"organisation = {_toml_string(portfolio.organisation)}",
+        f"organization = {_toml_string(portfolio.organization)}",
         "",
     ]
 
@@ -637,7 +637,7 @@ def format_report(portfolio: Portfolio, findings) -> str:
     """The findings as text, errors first, each naming what to do about it."""
     summary = report(findings)
     lines = [
-        f"Portfolio: {portfolio.organisation}",
+        f"Portfolio: {portfolio.organization}",
         f"Systems: {len(portfolio.systems)}   "
         f"Errors: {summary.errors}   Warnings: {summary.warnings}",
     ]

@@ -6,7 +6,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## 3.5.2 Training
 
-- **The training programme, distinct from the drill programme**: **[MISSING — owner: governance/risk contact]**
+- **The training program, distinct from the drill program**: **[MISSING — owner: governance/risk contact]**
 
 ## References
 
@@ -16,6 +16,6 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
-- **The training programme, distinct from the drill programme**: **[MISSING — owner: governance/risk contact]**
+- **The training program, distinct from the drill program**: **[MISSING — owner: governance/risk contact]**

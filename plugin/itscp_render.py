@@ -29,7 +29,7 @@ The fourth kind
 approval, because a marker is neither template text nor an answer. Nothing in NIST says
 ``**[MISSING - owner: business owner]**``; filing it as structural would launder generated
 text into transcribed text, and filing it as an answer would claim somebody said it. It is
-ours, it is generated, and the document is honest only if it is labelled as such.
+ours, it is generated, and the document is honest only if it is labeled as such.
 
 What keeps the fourth kind safe is that its vocabulary is closed. An annotation is not
 composed here: :func:`annotation_of` returns ``itscp_store.status_marker`` minus the part of
@@ -110,7 +110,7 @@ GENERATED_NOTICE = ("This document is generated from the answer store. Correct i
 REFERENCES_PREAMBLE = "Sources for every value above, as recorded when the value was given."
 NO_SOURCES_YET = "No value in this document has a recorded source yet."
 UNVERIFIED_PREAMBLE = ("Engineering judgements, outstanding gaps and disagreements, "
-                       "labelled as such.")
+                       "labeled as such.")
 NOTHING_UNVERIFIED = "Every value in this document is traceable to a recorded source."
 NO_FIELDS_HERE = ("No field of the answer store is written to this document. It is part of "
                   "the plan's structure and is filled by hand or by a later phase.")
@@ -175,7 +175,7 @@ SCAFFOLD: tuple[DocumentSpec, ...] = (
     DocumentSpec("docs/00-record-of-changes.md", "Record of changes",
                  "Every revision of this plan, derived from the repository's own history."),
     DocumentSpec("docs/01-architecture.md", "Architecture",
-                 "The estate this plan recovers, and the assumptions the design rests on."),
+                 "The environment this plan recovers, and the assumptions the design rests on."),
     DocumentSpec("docs/02-mtd-tiers.md", "Maximum tolerable downtime and recovery tiers",
                  "What the business can tolerate losing, and for how long.",
                  (_MTD_TIMELINE, _TIER_LADDER)),
@@ -455,7 +455,7 @@ def _write_fields(writer: Writer, page: DocumentSpec, document: dict) -> None:
 
 
 def impact_level_of(document: dict) -> str:
-    """The categorisation this plan states about itself, or the empty string for none.
+    """The categorization this plan states about itself, or the empty string for none.
 
     Empty is the reference plan's own position and is not a defect of this function: no
     sentence anywhere in it says the system is low, moderate or high impact.
@@ -473,7 +473,7 @@ def _heading_for(question: bank.Question, impact_level: str) -> str:
     supplied the element, and ours for everything this project carries on its own account.
 
     NIST's own heading is not a constant. Its appendix letters depend on which of the three
-    sample templates applies, so the categorisation selects the letter. An uncategorised plan
+    sample templates applies, so the categorization selects the letter. An uncategorized plan
     keeps the transcribed high-impact heading, which is the superset an auditor with no
     stated level grades against. Where the selected template has no appendix for the element
     at all, the element survives and its NIST provenance does not, so it is declared ours.

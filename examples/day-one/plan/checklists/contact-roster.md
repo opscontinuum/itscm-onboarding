@@ -36,7 +36,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The call tree, its order, and the unreachable procedure**: **[MISSING — owner: DR process owner]**
 - **The incident bridge and its dependencies**: **[MISSING — owner: DR process owner]**

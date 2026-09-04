@@ -54,7 +54,7 @@ For every data tier — database, block, file, object, backup — establish:
 | Mechanism | Determines everything else |
 | Synchronous or asynchronous | Whether an RPO 0 claim is even available |
 | Measured lag today, not the target | The plan's RPO evidence |
-| Behaviour on failover | Some replicas activate to a clone; some become read-only until a resource is deleted |
+| Behavior on failover | Some replicas activate to a clone; some become read-only until a resource is deleted |
 | **Re-baseline or resume after reversal** | The failback cost, and usually a surprise |
 | One-way door? | Whether the step can be undone at all |
 
@@ -85,7 +85,7 @@ with an unexploded assumption in the middle of it.
 > RPO the business signed?"
 
 Every platform has a floor below which a standby stops functioning as one — a minimum node
-count, a minimum OCPU allocation, a licence that bills whether running or not. Establish the
+count, a minimum OCPU allocation, a license that bills whether running or not. Establish the
 floor explicitly, because the tier the business chose may be unaffordable at it, and that is a
 conversation to have now rather than at renewal.
 
@@ -107,7 +107,7 @@ decides how much of the plan is real:
 
 > "When was the last time any of this was actually executed, end to end?"
 
-"Never" is a common and acceptable answer. Record it plainly; it sets the drill programme's
+"Never" is a common and acceptable answer. Record it plainly; it sets the drill program's
 first objective and calibrates how much the current design's timings can be trusted.
 
 Then the question that turns drill history into a roster finding:
@@ -119,8 +119,8 @@ remove single points of failure. Record it against the lead engineer and their d
 
 ### 7. Alternate site and telecommunications — Appendix C (10 min)
 
-For cloud estates most of NIST's Appendix C is answered by the provider. Record which parts
-the provider owns, which the organisation owns, and which are genuinely not applicable —
+For cloud environments most of NIST's Appendix C is answered by the provider. Record which parts
+the provider owns, which the organization owns, and which are genuinely not applicable —
 each with a reason. Do not silently drop them; an auditor reads the omission as an oversight.
 
 ---
@@ -143,7 +143,7 @@ until the invocation.
 ## Output
 
 Writes `infra.*`: current-versus-intended gaps, replication matrix with lag and re-baseline
-behaviour, measured latency, standby posture and cost floor, region-locked naming, orchestration
+behavior, measured latency, standby posture and cost floor, region-locked naming, orchestration
 state, drill history, Appendix C determinations, costed options.
 
 Renders `docs/01-architecture.md`, `docs/03-replication-matrix.md`,

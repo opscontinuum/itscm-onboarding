@@ -14,7 +14,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## 3.4.1 Backup and Recovery
 
-- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behaviour, whether reversal needs a re-baseline, and whether it is one-way**: **[MISSING — owner: infrastructure owner]**
+- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way**: **[MISSING — owner: infrastructure owner]**
 
 ## Recorded for this plan
 
@@ -42,11 +42,11 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The standby region**: **[MISSING — owner: infrastructure owner]**
 - **Measured inter-region round-trip time in milliseconds**: **[MISSING — owner: lead engineer]**
-- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behaviour, whether reversal needs a re-baseline, and whether it is one-way**: **[MISSING — owner: infrastructure owner]**
+- **Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way**: **[MISSING — owner: infrastructure owner]**
 - **Storage features that constrain what the standby may be built on**: **[MISSING — owner: lead engineer]**
 - **Each decision that cannot be cheaply reversed, what reversing it costs and who may take it**: **[MISSING — owner: lead engineer]**
 - **Each backup copy, where it is held, how long it is kept and how it is retrieved**: **[MISSING — owner: infrastructure owner]**

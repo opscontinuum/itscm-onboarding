@@ -19,7 +19,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Supplied by the toolkit's method
 
-The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorises the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
+The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorizes the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
 
 
 **Each duty in a recovery, the role that holds it and the deputy behind them**
@@ -28,7 +28,7 @@ The toolkit names duties, not posts. It asks who decides to declare, who runs th
 | --- | --- | --- |
 | decides to declare | DR Commander | Deputy DR Commander |
 | runs the recovery | DR Coordinator | The Infra Manager for drill and posture actions only. No deputy is named for switchover or failback, and the roster says so and asks for one |
-| authorises the spending | not stated in the reference plan | not stated in the reference plan |
+| authorizes the spending | not stated in the reference plan | not stated in the reference plan |
 | says it is over | The DR Commander announces deactivation; the business owner accepts service restoration; the EBS functional lead signs the validation pack; Finance sign-off ends the work-recovery clock and therefore the tolerable-downtime clock | not stated in the reference plan |
 
 
@@ -49,7 +49,7 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Who could execute the plan if the disruption also removed the primary team**: **[MISSING — owner: DR process owner]**
 - **Who owns the disclosure clock when the cause is an attack, and how fast it runs**: **[MISSING — owner: governance/risk contact]**

@@ -115,7 +115,7 @@ done
     printf '| What each resource is for | The application owner (`itscp-interview-application`) |\n'
     printf '| Whether replication is current | Monitoring lag metrics, not a resource listing |\n'
     printf '| What is missing that should exist | Someone who expected it (`itscp-interview-infrastructure`) |\n'
-    printf '| Whether the estate matches its documentation | The infrastructure interview |\n'
+    printf '| Whether the environment matches its documentation | The infrastructure interview |\n'
 } >> "$OUT"
 
 printf 'wrote %s\n' "$OUT"

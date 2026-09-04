@@ -23,9 +23,9 @@ the shape, and a footnote naming what the dagger means. Three, because roughly o
 twelve has a red or green deficiency and these documents get photocopied for audits, so
 neither colour nor a single glyph is enough on its own.
 
-The realisation states are held to the same rule. Each of the five carries a distinct fill,
+The realization states are held to the same rule. Each of the five carries a distinct fill,
 a distinct dash pattern and a literal word, and the checks below assert that no two states
-are distinguishable by fill alone. The default is unknown; a state nobody recognises is
+are distinguishable by fill alone. The default is unknown; a state nobody recognizes is
 never conformant.
 """
 from __future__ import annotations
@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import itscp_diagrams as diagrams
-import itscp_realisation as realisation
+import itscp_realization as realization
 import itscp_store as store
 from harness import Section, equal
 
@@ -87,10 +87,10 @@ def main() -> None:
     section.check("a timeline with no labels says so, in the store's own words",
                   _an_unrecorded_timeline_says_so)
 
-    section.check("every realisation state has a fill", _states_have_distinct_fills)
-    section.check("every realisation state has its own dash pattern",
+    section.check("every realization state has a fill", _states_have_distinct_fills)
+    section.check("every realization state has its own dash pattern",
                   _states_have_distinct_dashes)
-    section.check("every realisation state has a literal label", _states_have_literal_labels)
+    section.check("every realization state has a literal label", _states_have_literal_labels)
     section.check("no state is distinguishable by colour alone", _colour_is_never_the_only_cue)
     section.check("an unrecognised state is unknown, never conformant",
                   _the_default_state_is_unknown)
@@ -136,14 +136,14 @@ def _labels(**overrides) -> diagrams.TimelineLabels:
     return diagrams.TimelineLabels(**fields)
 
 
-def _reconciliations() -> tuple[realisation.Reconciliation, ...]:
+def _reconciliations() -> tuple[realization.Reconciliation, ...]:
     return tuple(
-        realisation.Reconciliation(
+        realization.Reconciliation(
             identity=f"component-{position}", source="oci-discovery", state=state,
             reason="derived for this check", owner="infrastructure owner",
             consequence="the tier 0 recovery time objective",
             differing=("shape",) if state == "drift" else ())
-        for position, state in enumerate(realisation.REALISATION_STATES))
+        for position, state in enumerate(realization.REALIZATION_STATES))
 
 
 def _rects(svg: str) -> list[ElementTree.Element]:
@@ -302,14 +302,14 @@ def _the_timeline_renders_as_mermaid() -> None:
         assert text in mermaid, f"the Mermaid timeline omits {text!r}"
 
 
-# ------------------------------------------------------------------ realisation states
+# ------------------------------------------------------------------ realization states
 
 def _styles() -> dict[str, diagrams.RealisationStyle]:
-    return diagrams.REALISATION_STYLES
+    return diagrams.REALIZATION_STYLES
 
 
 def _states_have_distinct_fills() -> None:
-    equal(sorted(_styles()), sorted(realisation.REALISATION_STATES),
+    equal(sorted(_styles()), sorted(realization.REALIZATION_STATES),
           "the styled states against the states that exist")
     fills = [style.fill for style in _styles().values()]
     equal(len(set(fills)), len(fills), "the number of distinct fills")
@@ -321,7 +321,7 @@ def _states_have_distinct_dashes() -> None:
 
 
 def _states_have_literal_labels() -> None:
-    mermaid = diagrams.realisation_mermaid(_reconciliations())
+    mermaid = diagrams.realization_mermaid(_reconciliations())
     for state, style in _styles().items():
         assert style.label, f"{state} has no literal label"
         assert style.label in mermaid, f"{state} renders without its literal label"
@@ -344,7 +344,7 @@ def _the_default_state_is_unknown() -> None:
 
 
 def _reconciliations_render() -> None:
-    mermaid = diagrams.realisation_mermaid(_reconciliations())
+    mermaid = diagrams.realization_mermaid(_reconciliations())
     for reconciliation in _reconciliations():
         assert reconciliation.identity in mermaid, (
             f"{reconciliation.identity} is reconciled and does not appear")
@@ -355,7 +355,7 @@ def _reconciliations_render() -> None:
 def _mermaid_is_fence_safe() -> None:
     for mermaid in (diagrams.tier_ladder_mermaid(_tiers()),
                     diagrams.mtd_timeline_mermaid(_labels()),
-                    diagrams.realisation_mermaid(_reconciliations())):
+                    diagrams.realization_mermaid(_reconciliations())):
         assert "`" not in mermaid, (
             "a backtick in Mermaid source closes the fence around it and spills the "
             "diagram into the document as text")

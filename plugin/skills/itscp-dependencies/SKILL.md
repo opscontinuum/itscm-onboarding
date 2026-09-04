@@ -107,7 +107,7 @@ would still be impossible; you would have deleted the finding rather than the pr
 ## What to record
 
 Per edge: `on`, `kind`, `criticality`, and a note saying *what breaks* without it. The note is
-what survives a re-organisation; the slug is just a pointer.
+what survives a re-organization; the slug is just a pointer.
 
 Keep `soft` honest. "Degraded but functional" must mean somebody can still do their job, not
 that the system technically starts. If the answer is "it comes up but nobody can use it",

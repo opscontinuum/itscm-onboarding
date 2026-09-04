@@ -14,7 +14,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Recorded for this plan
 
-- **How long this organisation actually takes to produce a repair estimate**: **[MISSING — owner: DR process owner]**
+- **How long this organization actually takes to produce a repair estimate**: **[MISSING — owner: DR process owner]**
 
 ## References
 
@@ -25,6 +25,6 @@ Sources for every value above, as recorded when the value was given.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
-- **How long this organisation actually takes to produce a repair estimate**: **[MISSING — owner: DR process owner]**
+- **How long this organization actually takes to produce a repair estimate**: **[MISSING — owner: DR process owner]**

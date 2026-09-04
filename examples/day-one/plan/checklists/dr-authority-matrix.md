@@ -7,7 +7,7 @@ This document is generated from the answer store. Correct it by correcting the i
 ## Recorded for this plan
 
 - **Each period when failing over costs more than the outage, and who decides during it**: **[MISSING — owner: business owner]**
-- **Who may authorise a failover inside a freeze period, and on what evidence**: **[MISSING — owner: business owner]**
+- **Who may authorize a failover inside a freeze period, and on what evidence**: **[MISSING — owner: business owner]**
 
 ## 4.2.1 Activation Criteria and Procedure
 
@@ -27,10 +27,10 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each period when failing over costs more than the outage, and who decides during it**: **[MISSING — owner: business owner]**
-- **Who may authorise a failover inside a freeze period, and on what evidence**: **[MISSING — owner: business owner]**
+- **Who may authorize a failover inside a freeze period, and on what evidence**: **[MISSING — owner: business owner]**
 - **The single individual with declaration authority, and their named deputy**: **[MISSING — owner: DR process owner]**
 - **The time budget for the declaration decision**: **[MISSING — owner: DR process owner]**
 - **How the point of no return is calculated rather than what it is today**: **[MISSING — owner: DR process owner]**

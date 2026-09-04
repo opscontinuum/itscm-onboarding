@@ -1,6 +1,6 @@
 ---
 name: itscp-interview-governance
-description: Use when a continuity plan needs approval, a review and maintenance cadence, a risk register, or a training and exercise programme, when a system's security categorization or impact level must be established for a plan, or when someone asks what evidence an auditor will want for contingency planning.
+description: Use when a continuity plan needs approval, a review and maintenance cadence, a risk register, or a training and exercise program, when a system's security categorization or impact level must be established for a plan, or when someone asks what evidence an auditor will want for contingency planning.
 ---
 
 # itscp-interview-governance
@@ -13,7 +13,7 @@ categorization the scope statement depends on.
 **Read first:** the `itscp-method-interview` skill. Run last — governance signs off on what
 the other interviews produced.
 
-**Interviewee:** governance, risk, audit, or compliance. In a smaller organisation this may be
+**Interviewee:** governance, risk, audit, or compliance. In a smaller organization this may be
 the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that
 should be stated rather than discovered at audit.
 
@@ -25,7 +25,7 @@ should be stated rather than discovered at audit.
 
 **A design describes what would happen. A plan is a design somebody has committed to.** The
 difference is a signature, a review date, and a trained population. An unsigned, unreviewed,
-untrained document is a design, however good it is — and the organisation will believe it has
+untrained document is a design, however good it is — and the organization will believe it has
 a plan.
 
 Open by saying this. It reframes the session from paperwork into the thing that makes the
@@ -51,16 +51,16 @@ absence, which is precisely when nobody notices.
 
 > "Has anything like this been signed before? Can I see it?"
 
-An existing signed plan, however stale, tells you the organisation's real cadence and the real
+An existing signed plan, however stale, tells you the organization's real cadence and the real
 signing chain. It is usually more informative than the answer to the previous question.
 
 ### 2. Categorization and scope (10 min)
 
-> "Has this system been formally categorised — an impact level, a data classification, a
+> "Has this system been formally categorized — an impact level, a data classification, a
 > regulatory regime it falls under?"
 
 This determines which controls are mandatory rather than advisable, and it belongs in the
-plan's scope statement. If it has never been categorised, that is a `MISSING` with an owner
+plan's scope statement. If it has never been categorized, that is a `MISSING` with an owner
 and it is worth flagging as a prerequisite: several plan requirements are conditioned on it.
 
 Also establish any regulatory obligation with its own clock — breach notification windows,
@@ -115,7 +115,7 @@ Material assumptions and design risks are, by this point, scattered across the o
 interviews. Consolidate them into an owned register: each risk with an owner, likelihood,
 impact and treatment.
 
-> "Where do risks like this normally live in your organisation, and who reviews them?"
+> "Where do risks like this normally live in your organization, and who reviews them?"
 
 Prefer plugging into the existing risk process over creating a parallel one. A register only
 this plan reads is a register nobody reads.
@@ -130,7 +130,7 @@ the cloud provider commits to in a regional event, and whether anyone has read i
 ## Output
 
 Writes `governance.*`: signing authority and attestation, existing approvals, categorization
-and regulatory obligations, review cadence with triggers and owner, training programme and
+and regulatory obligations, review cadence with triggers and owner, training program and
 evidence method, exercise tiers and evidence retention, finding-to-change route, risk register,
 vendor agreements.
 

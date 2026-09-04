@@ -9,7 +9,7 @@ One file per plan: `.itscm/answers.yaml` in the generated repository. Every inte
 it, every interview appends to it, and every generated document renders from it.
 
 **It is gitignored by default and must stay that way.** It accumulates names, phone numbers,
-OCIDs, MTD figures, incident narratives and organisational weak points. It is the most
+OCIDs, MTD figures, incident narratives and organizational weak points. It is the most
 sensitive file the toolkit produces.
 
 ---
@@ -171,6 +171,6 @@ Coverage is `ANSWERED + NOT_APPLICABLE` over total fields in scope. `itscp-build
 per section and refuses to claim a section complete below 100%.
 
 **Coverage is not quality.** A store at 100% coverage where two thirds of the fields are
-`confidence: low` describes an organisation that has guessed comprehensively. Report the
-confidence distribution alongside coverage, always, and let the drill programme aim at the
+`confidence: low` describes an organization that has guessed comprehensively. Report the
+confidence distribution alongside coverage, always, and let the drill program aim at the
 low-confidence figures first.

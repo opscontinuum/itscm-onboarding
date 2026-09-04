@@ -1,7 +1,7 @@
-"""Realisation: whether the estate the plan describes is the estate that exists.
+"""Realization: whether the environment the plan describes is the environment that exists.
 
 Orthogonal to provenance, and never folded into it. Provenance answers who said it.
-Realisation answers whether it is there. The two are independent, and the dangerous
+Realization answers whether it is there. The two are independent, and the dangerous
 combination is a fact that is perfectly attributed and describes something absent.
 
 The case that motivates the module: a design calls for two additional racks in the standby
@@ -28,14 +28,14 @@ The state is always derived, never asserted. :class:`Reconciliation` cannot be c
 without a reason, so there is no way to write down "this is conformant" without saying what
 made it so.
 
-The reconciliation is modelled once and generally, over a named source. Oracle Cloud
+The reconciliation is modeled once and generally, over a named source. Oracle Cloud
 discovery and a ServiceNow CMDB have the same three-way shape (in the source and not in the
 plan, in the plan and not the source, in both but differing), so a second source is a member
 of :data:`SOURCES` and an implementation of the observation, not a second copy of this logic.
 
 **Separability.** This axis is additive beyond reproducing the reference plan, which carries
-no realisation marking. Nothing here is imported by :mod:`itscp_store`, the ledger is its own
-file, and ``test_realisation`` proves the answer store's bytes are unchanged by a
+no realization marking. Nothing here is imported by :mod:`itscp_store`, the ledger is its own
+file, and ``test_realization`` proves the answer store's bytes are unchanged by a
 reconciliation running. Exact reproduction of the reference plan cannot break because of
 anything in this module.
 """
@@ -61,14 +61,14 @@ from itscp_store import StoreError, ValidationError, toml_value
 
 SCHEMA_VERSION = 1
 
-#: The ledger's filename, deliberately not the answer store's. Realisation is a different
-#: question about the same estate and belongs in a different file, so a plan that does not
+#: The ledger's filename, deliberately not the answer store's. Realization is a different
+#: question about the same environment and belongs in a different file, so a plan that does not
 #: use it has no trace of it.
-LEDGER_FILENAME = "realisation.toml"
+LEDGER_FILENAME = "realization.toml"
 
 #: ``unknown`` is first because it is the default, and the ordering is the one a reader wants:
 #: not checked, checked and fine, then the three ways it can be wrong.
-REALISATION_STATES: tuple[str, ...] = ("unknown", "conformant", "gap", "shadow", "drift")
+REALIZATION_STATES: tuple[str, ...] = ("unknown", "conformant", "gap", "shadow", "drift")
 
 _STATE_DESCRIPTIONS: dict[str, str] = {
     "unknown": "Not checked. No source has looked, or the plan states no requirement.",
@@ -81,7 +81,7 @@ _STATE_DESCRIPTIONS: dict[str, str] = {
              "that is hardest to see, because the component is present.",
 }
 
-#: Read-only sources that can observe an estate. Adding one is adding a member here and a
+#: Read-only sources that can observe an environment. Adding one is adding a member here and a
 #: collector that produces :class:`SourceObservation`; the reconciliation below is unchanged.
 SOURCES: tuple[str, ...] = ("oci-discovery", "servicenow-cmdb")
 
@@ -137,7 +137,7 @@ class SourceObservation:
     """What one read-only source reports about one identity, and when it looked.
 
     ``observed_at`` matters as much as ``observed``: a reconciliation against a walk from
-    three months ago is a reconciliation against a memory of the estate.
+    three months ago is a reconciliation against a memory of the environment.
     """
 
     source: str
@@ -171,13 +171,13 @@ class Reconciliation:
     differing: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        if self.state not in REALISATION_STATES:
+        if self.state not in REALIZATION_STATES:
             raise ValidationError(
-                f"{self.identity}: state must be one of {', '.join(REALISATION_STATES)}; "
+                f"{self.identity}: state must be one of {', '.join(REALIZATION_STATES)}; "
                 f"got {self.state!r}")
         if not self.reason:
             raise ValidationError(
-                f"{self.identity}: a realisation state carries the reason it was derived. "
+                f"{self.identity}: a realization state carries the reason it was derived. "
                 f"A state with no reason is an assertion, and this axis has none.")
 
     @property
@@ -288,7 +288,7 @@ def reconcile_all(requirements, observations) -> tuple[Reconciliation, ...]:
 # --------------------------------------------------------------------------- the ledger
 
 def new_ledger(system_name: str) -> dict:
-    """An empty realisation ledger for one system."""
+    """An empty realization ledger for one system."""
     return {
         "meta": {"schema_version": SCHEMA_VERSION, "system_name": system_name},
         "reconciliations": (),
@@ -321,12 +321,12 @@ def emit(ledger: dict) -> str:
 
 
 def _ledger_notice() -> tuple[str, ...]:
-    legend = tuple(f"  {state}: {state_description(state)}" for state in REALISATION_STATES)
+    legend = tuple(f"  {state}: {state_description(state)}" for state in REALIZATION_STATES)
     return (
-        "Realisation: whether the estate the plan describes is the estate that exists.",
+        "Realization: whether the environment the plan describes is the environment that exists.",
         "",
         "Derived, never asserted. Every state below carries the reason it was derived and",
-        "the observation date it rests on. Generated by itscp_realisation.emit; editing a",
+        "the observation date it rests on. Generated by itscp_realization.emit; editing a",
         "state here has no effect, because the next reconciliation recomputes it.",
         "",
         "States:",

@@ -50,7 +50,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each work-recovery activity, its duration, and whether it runs in parallel with bring-up**: **[MISSING — owner: application owner]**
 - **Whether concurrent processing is performed, and the reason either way**: **[MISSING — owner: application owner]**

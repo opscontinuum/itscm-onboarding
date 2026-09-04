@@ -20,7 +20,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **Each validation check, its duration and its owner**: **[MISSING — owner: application owner]**
 - **Each data validation check, what it proves and who signs it off**: **[MISSING — owner: application owner]**

@@ -30,7 +30,7 @@ No value in this document has a recorded source yet.
 
 ### Unverified statements
 
-Engineering judgements, outstanding gaps and disagreements, labelled as such.
+Engineering judgements, outstanding gaps and disagreements, labeled as such.
 
 - **The date of the last end-to-end execution and who performed it**: **[MISSING — owner: lead engineer]**
 - **How a real event is written up, by whom, and where the record goes**: **[MISSING — owner: governance/risk contact]**

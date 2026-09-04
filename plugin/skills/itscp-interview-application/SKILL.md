@@ -47,11 +47,11 @@ supposed to exist.
 |---|---|
 | System name, and what the business calls it | Both. The ITSCP is read by both audiences |
 | Version and platform | Determines which recovery procedures apply at all |
-| System owner, and the authorising official if one exists | §2.1; the reassessment decision at Reconstitution |
-| Data classification / impact level, if categorised | NIST ISCP §1.2 scope in the crosswalk; drives which controls are required |
+| System owner, and the authorizing official if one exists | §2.1; the reassessment decision at Reconstitution |
+| Data classification / impact level, if categorized | NIST ISCP §1.2 scope in the crosswalk; drives which controls are required |
 | User population — who, how many, where | Notification scope; the load a recovered system must carry |
 
-If the system has never been formally categorised, that is a `MISSING` with the governance
+If the system has never been formally categorized, that is a `MISSING` with the governance
 owner named, not a value you assign.
 
 ### 2. Architecture as the application sees it (20 min)
