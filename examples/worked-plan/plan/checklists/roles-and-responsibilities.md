@@ -1,0 +1,55 @@
+# Roles and responsibilities
+
+Who does what during a recovery, and who does it when they are away.
+
+This document is generated from the answer store. Correct it by correcting the interview, not by editing this file.
+
+## 2.3 Roles and Responsibilities
+
+
+**The ordered line of succession and what each hand-off waits for**
+
+| order | role | passes_after |
+| --- | --- | --- |
+| 1 | DR Commander | nothing; this is the first holder |
+| 2 | Deputy DR Commander | 10 minutes unreachable by both contact methods |
+| 3 | CIO | 10 minutes unreachable |
+| 4 | Duty executive on rota | 15 minutes unreachable |
+
+
+## Supplied by the toolkit's method
+
+The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorises the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
+
+
+**Each duty in a recovery, the role that holds it and the deputy behind them**
+
+| duty | held_by | deputy |
+| --- | --- | --- |
+| decides to declare | DR Commander | Deputy DR Commander |
+| runs the recovery | DR Coordinator | The Infra Manager for drill and posture actions only. No deputy is named for switchover or failback, and the roster says so and asks for one |
+| authorises the spending | not stated in the reference plan | not stated in the reference plan |
+| says it is over | The DR Commander announces deactivation; the business owner accepts service restoration; the EBS functional lead signs the validation pack; Finance sign-off ends the work-recovery clock and therefore the tolerable-downtime clock | not stated in the reference plan |
+
+
+## 3.4.6 Roles and Responsibilities
+
+- **Who could execute the plan if the disruption also removed the primary team**: **[MISSING — owner: DR process owner]**
+
+## Recorded for this plan
+
+- **Who owns the disclosure clock when the cause is an attack, and how fast it runs**: **[MISSING — owner: governance/risk contact]**
+
+## References
+
+Sources for every value above, as recorded when the value was given.
+
+- **The ordered line of succession and what each hand-off waits for**, recorded by document:oci-itscp/checklists/roles-and-responsibilities.md
+- **Each duty in a recovery, the role that holds it and the deputy behind them**, recorded by document:oci-itscp/checklists/roles-and-responsibilities.md
+
+### Unverified statements
+
+Engineering judgements, outstanding gaps and disagreements, labelled as such.
+
+- **Who could execute the plan if the disruption also removed the primary team**: **[MISSING — owner: DR process owner]**
+- **Who owns the disclosure clock when the cause is an attack, and how fast it runs**: **[MISSING — owner: governance/risk contact]**
