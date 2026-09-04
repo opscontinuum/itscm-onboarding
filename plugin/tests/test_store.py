@@ -24,12 +24,18 @@ from harness import Section, equal
 INTERVIEW = "interview:business-owner:2026-09-02"
 DISCOVERY = "oci-discovery:ListVolumeGroupReplicas"
 
-#: A coverage fixture whose percentage is not a whole number, so a rounding bug shows up.
-#: 17 of 37 is 45.94 per cent: floors to 45, rounds to 46. itscp-build's own illustration
-#: prints 46 for these figures, which is the bug this check exists to keep out of the code.
+#: The coverage fixture answers a fixed number of fields, whatever size the bank is, so the
+#: denominator is counted rather than restated. Restating it made every question added to the
+#: bank a failing arithmetic check in a test about statuses.
 FIXTURE_COVERED = 17
-FIXTURE_TOTAL = 37
-FIXTURE_PERCENT = 45
+FIXTURE_TOTAL = len(store.bank.QUESTIONS)
+
+#: The floor-versus-round case, kept as its own arithmetic rather than borrowed from the
+#: fixture: 17 of 37 is 45.94 per cent, which floors to 45 and rounds to 46. itscp-build's
+#: own illustration prints 46 for these figures, which is the bug this check keeps out.
+ROUNDING_CASE_COVERED = 17
+ROUNDING_CASE_TOTAL = 37
+ROUNDING_CASE_FLOOR = 45
 
 
 def _answered(key: str = "business.mbco.tier0", **overrides) -> store.Record:
@@ -159,6 +165,13 @@ def main() -> None:
         "readback must be one of")
 
     section.rejects(
+        "an enum value the question does not offer is refused",
+        lambda: store.validate(store.Record(
+            "business.tier_signoff", "ANSWERED", value="mostly signed",
+            provenance=INTERVIEW, confidence="high", readback="confirmed")),
+        "is not one of the options")
+
+    section.rejects(
         "a conflict with one source is refused",
         lambda: store.validate(_answered(conflict=store.Conflict(
             "24h", INTERVIEW, "business owner", "Same speaker, so not a conflict"))),
@@ -272,7 +285,8 @@ def _coverage_fixture() -> dict:
 def _fixture_answer(key: str, confidence: str) -> store.Record:
     question = store.bank.BY_ID[key]
     return store.Record(
-        key, "ANSWERED", value="stated", provenance=INTERVIEW, confidence=confidence,
+        key, "ANSWERED", value=question.options[0] if question.options else "stated",
+        provenance=INTERVIEW, confidence=confidence,
         mechanism="stated mechanism" if question.mechanism_required else "",
         readback="confirmed" if question.readback_required else "not_required")
 
@@ -288,10 +302,15 @@ def _coverage_counts() -> None:
 
 
 def _coverage_never_rounds_up() -> None:
-    coverage = store.coverage(_coverage_fixture())
-    equal(coverage.percent, FIXTURE_PERCENT, "17 of 37 floored")
-    assert f"{FIXTURE_COVERED}/{FIXTURE_TOTAL} fields ({FIXTURE_PERCENT}%)" in coverage.report(), (
-        f"the report line does not show {FIXTURE_PERCENT} per cent:\n{coverage.report()}"
+    coverage = store.Coverage(
+        total=ROUNDING_CASE_TOTAL, answered=ROUNDING_CASE_COVERED, not_applicable=0,
+        deferred=0, missing=ROUNDING_CASE_TOTAL - ROUNDING_CASE_COVERED,
+        confidence=dict.fromkeys(store.bank.CONFIDENCES, 0), scope="all")
+    equal(coverage.percent, ROUNDING_CASE_FLOOR, "17 of 37 floored")
+    expected = (f"{ROUNDING_CASE_COVERED}/{ROUNDING_CASE_TOTAL} fields "
+                f"({ROUNDING_CASE_FLOOR}%)")
+    assert expected in coverage.report(), (
+        f"the report line does not show {ROUNDING_CASE_FLOOR} per cent:\n{coverage.report()}"
     )
 
 

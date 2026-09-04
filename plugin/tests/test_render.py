@@ -56,6 +56,13 @@ def main() -> None:
     section.check("an empty store produces no answer segments", _empty_store_answers_nothing)
     section.check("structural text comes from the declared corpus", _structural_is_corpus)
     section.check("NIST headings render verbatim", _nist_headings_are_verbatim)
+    section.check("method text is structural, never an answer", _method_text_is_structural)
+    section.check("a method field is headed as the toolkit's own", _method_is_headed_as_ours)
+    section.check("appendix letters follow the categorisation", _lettering_follows_the_level)
+    section.check("an appendix the low template lacks is declared ours",
+                  _an_absent_appendix_is_declared_ours)
+    section.check("an uncategorised plan keeps the transcribed heading",
+                  _no_level_keeps_the_transcribed_heading)
     section.check("answer text comes from the store", _answers_come_from_the_store)
     section.check("markup contains no letter and no digit", _markup_has_no_content)
     section.check("annotations come from a closed vocabulary", _annotations_are_closed)
@@ -126,6 +133,103 @@ def _nist_headings_are_verbatim() -> None:
     for heading in cited:
         assert heading in bank.NIST_CORPUS, f"{heading!r} is not a transcribed NIST heading"
         assert heading in corpus, f"{heading!r} is cited by the bank but never rendered"
+
+
+def _method_questions() -> list[bank.Question]:
+    return [question for question in bank.QUESTIONS
+            if question.structural_provenance == "method"]
+
+
+def _method_text_is_structural() -> None:
+    """Templated text the toolkit supplies is in the corpus, and never in an answer segment.
+
+    This is the whole of the fourth class's guarantee. Method content is neither elicited nor
+    transcribed, so a reader has to be able to tell it from both, and the one way it could be
+    mistaken for something a customer said is by arriving as an answer segment.
+    """
+    corpus = render.structural_corpus()
+    statements = {question.method_statement for question in _method_questions()}
+    assert statements, "nothing is classified method, so the class guarantees nothing"
+    for statement in statements:
+        assert statement in corpus, f"method text is in no corpus: {statement!r}"
+    for segment in _of_kind(_scripted(), "answer"):
+        assert segment.text not in statements, (
+            f"method text rendered as an answer, which says a customer supplied it: "
+            f"{segment.text!r}")
+
+
+def _method_is_headed_as_ours() -> None:
+    """A method field sits under its own heading, distinct from ours and from NIST's."""
+    assert render.METHOD_HEADING != render.OURS_HEADING, (
+        "method and ours share a heading, so a reader cannot tell the toolkit's own approach "
+        "from a field this plan simply recorded")
+    assert render.METHOD_HEADING not in bank.NIST_CORPUS, (
+        "the method heading is a transcribed NIST heading, which claims NIST supplied it")
+    rendered = _scripted()
+    for question in _method_questions():
+        text = _text_for(rendered, question.id)
+        assert render.METHOD_HEADING in text, (
+            f"{question.id} is method and its document never says so")
+        assert question.method_statement in text, (
+            f"{question.id} is method and the text the toolkit supplies is not rendered")
+
+
+#: A field whose NIST element is an appendix that both templates carry, at different
+#: letters. Named rather than searched for, so a bank edit that drops it fails loudly.
+_APPENDIX_FIELD = "app.interconnections"
+
+#: A field whose NIST element the low-impact template has no appendix for at all.
+_ABSENT_AT_LOW_IMPACT = "infra.standby_region"
+
+
+def _categorised(level: str) -> dict:
+    """The scripted store with an impact level recorded against it."""
+    return store.put(scripted_answers.scripted_document(), store.Record(
+        bank.IMPACT_LEVEL_KEY, "ANSWERED", value=level, confidence="high",
+        readback="confirmed",
+        provenance=f"interview:governance-risk-contact:{scripted_answers.INTERVIEW_DATE}"))
+
+
+def _lettering_follows_the_level() -> None:
+    """The letter in front of an appendix is a function of the categorisation.
+
+    NIST's low-impact template omits one appendix and letters everything after it one lower.
+    A plan that prints a constant letter is right for at most one of the two schemes, and the
+    coverage map this bank was built against was wrong about six of them.
+    """
+    for level, expected in (("low", "APPENDIX H INTERCONNECTIONS TABLE"),
+                            ("moderate", "APPENDIX I INTERCONNECTIONS TABLE"),
+                            ("high", "APPENDIX I INTERCONNECTIONS TABLE")):
+        text = _text_for(_rendered(_categorised(level)), _APPENDIX_FIELD)
+        assert expected in text, (
+            f"at {level} impact the interconnections table should head {expected!r} and "
+            f"does not")
+
+
+def _an_absent_appendix_is_declared_ours() -> None:
+    """The low template has no alternate-storage appendix, so the plan claims none."""
+    text = _text_for(_rendered(_categorised("low")), _ABSENT_AT_LOW_IMPACT)
+    absent = "APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"
+    assert absent not in text, (
+        f"a low-impact plan heads a section {absent!r}, which is an appendix NIST's "
+        f"low-impact template does not have")
+    assert render.OURS_HEADING in text, (
+        "the element survives the categorisation but its NIST provenance does not, so it "
+        "has to be declared ours rather than quietly kept under a heading NIST never wrote")
+
+
+def _no_level_keeps_the_transcribed_heading() -> None:
+    """Uncategorised, the plan keeps the heading the bank transcribed and claims nothing more.
+
+    The reference plan's own compliance skill audits an uncategorised plan against the
+    high-impact template as the superset. Rendering the transcribed heading is that rule.
+    """
+    question = bank.BY_ID[_APPENDIX_FIELD]
+    uncategorised = store.put(scripted_answers.scripted_document(), store.Record(
+        bank.IMPACT_LEVEL_KEY, "MISSING", owner="governance/risk contact"))
+    text = _text_for(_rendered(uncategorised), _APPENDIX_FIELD)
+    assert question.nist_heading in text, (
+        f"with no impact level recorded the plan should keep {question.nist_heading!r}")
 
 
 def _answers_come_from_the_store() -> None:

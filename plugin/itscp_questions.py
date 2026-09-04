@@ -10,9 +10,10 @@ Read alongside:
   the seven-role owner vocabulary.
 * ``skills/_method/interview-method.md`` for the Iron Rule, the status lattice, the confidence
   rubric and the closed provenance list.
-* ``docs/ITIL-GROUNDING.md`` §4 for the three-class structural-provenance partition that
+* ``docs/ITIL-GROUNDING.md`` §4 for the structural-provenance partition that
   :attr:`Question.structural_provenance` implements, and the rule that ``crosswalk`` may
-  never justify a field on its own.
+  never justify a field on its own. §4.3 recommended three classes; §4.3a records the fourth,
+  ``method``, and why the three did not cover the toolkit's own templated content.
 
 The module holds no behaviour beyond lookup. Validation lives in ``itscp_store``; rendering
 lives in a module this one knows nothing about.
@@ -84,9 +85,11 @@ ROLES: tuple[str, ...] = (
 #: Every legal ``owner`` value: the seven roles and the deputy of each.
 OWNER_VOCABULARY: tuple[str, ...] = ROLES + tuple(f"{role} deputy" for role in ROLES)
 
-#: The three structural-provenance classes of ``docs/ITIL-GROUNDING.md`` §4.3. There is no
-#: fourth class, and ``crosswalk`` is annotation only: see :data:`CROSSWALK_NEVER_JUSTIFIES`.
-STRUCTURAL_PROVENANCE: tuple[str, ...] = ("nist", "ours", "crosswalk")
+#: The structural-provenance classes: the three of ``docs/ITIL-GROUNDING.md`` §4.3 and the
+#: fourth of §4.3a. ``crosswalk`` is annotation only, see :data:`CROSSWALK_NEVER_JUSTIFIES`;
+#: ``method`` is the toolkit's own templated content, see
+#: :data:`METHOD_IS_NEVER_A_CUSTOMER_CLAIM`.
+STRUCTURAL_PROVENANCE: tuple[str, ...] = ("nist", "ours", "crosswalk", "method")
 
 #: The load-bearing rule of §4.3, stated once so the test that enforces it can quote it.
 CROSSWALK_NEVER_JUSTIFIES = (
@@ -96,6 +99,21 @@ CROSSWALK_NEVER_JUSTIFIES = (
     "requirements into a generated plan."
 )
 
+#: The rule of §4.3a, stated once so the tests and the renderer can both quote it.
+#:
+#: ``ours`` and ``method`` are near neighbours and the difference is the whole point of
+#: splitting them. ``ours`` means this project chose to carry an element no standard gives it
+#: a slot for, and the answer in that element still came from an interview. ``method`` means
+#: the toolkit supplied the words. A reader who cannot tell the two apart cannot tell what
+#: the customer actually said, which is the failure the whole partition exists to prevent.
+METHOD_IS_NEVER_A_CUSTOMER_CLAIM = (
+    "Method content is templated text the toolkit supplies. It must be identifiable as the "
+    "toolkit's in the rendered document, and it may never be presented as something a "
+    "customer said. It renders as structural text under its own heading and never as an "
+    "answer, because an answer segment is the claim that a person or a read-only API "
+    "produced the words."
+)
+
 #: The two markers §4.3 permits on an ITIL or ISO term, and never an unmarked ITIL claim.
 #: ``[glossary]`` for the six terms quotable from the one readable source; the other for
 #: everything else, which may be used but never quoted.
@@ -103,8 +121,8 @@ CROSSWALK_MARKERS: tuple[str, ...] = ("[glossary]", "(practice guide; not verifi
 
 #: Answer kinds.
 #:
-#: ``rows`` is a list of maps, which the emitter writes as a TOML array of tables; there are
-#: exactly seven of them and :func:`row_questions` returns them.
+#: ``rows`` is a list of maps, which the emitter writes as a TOML array of tables.
+#: :func:`row_questions` returns them; their number is counted there and never quoted here.
 #:
 #: ``narrative`` is a multi-paragraph answer and is a first-class value, not a long ``text``.
 #: The reference plan this toolkit has to reproduce is mostly narrative: design rationale,
@@ -115,9 +133,9 @@ CROSSWALK_MARKERS: tuple[str, ...] = ("[glossary]", "(practice guide; not verifi
 #: addition is a read-back: see :attr:`Question.readback_required`.
 #: Six further kinds come from surveying the reference plan this toolkit has to reproduce.
 #: That survey found 51 distinct value shapes across its 30 files and 6,481 lines; 25 fitted
-#: the nine kinds above and the other 26 collapsed into these six families. No starter
-#: question uses them yet, because the questions that would are still being recovered from
-#: the original interview. They are declared here so that adding those questions is data:
+#: the nine kinds above and the other 26 collapsed into these six families. ``code`` is in
+#: use, on the question that asks for the recovery procedure at the level of what is actually
+#: typed. The other five are declared so that adding the questions that need them is data:
 #:
 #: ``code``
 #:     An exact-fidelity block: shell, SQL, a configuration stanza, Terraform, a formula
@@ -146,6 +164,11 @@ KINDS: tuple[str, ...] = (
     "text", "narrative", "duration", "number", "currency", "enum", "list", "rows", "date",
     "code", "diagram", "citation", "blank", "range", "reference",
 )
+
+#: The kinds that yield a figure, and therefore the kinds that owe a mechanism. Named here
+#: rather than repeated at each use, because the set is the definition of "a figure" and the
+#: store, the bank and the tests all have to agree on it.
+FIGURE_KINDS: tuple[str, ...] = ("duration", "number", "currency")
 
 #: How a narrative answer came to be attributable. Recorded on the record, not only in the
 #: session transcript, because the renderer reads the store and never sees the transcript: if
@@ -183,6 +206,20 @@ class Question:
     own note says a number without a mechanism is a guess wearing a suit; the store rejects
     an ANSWERED value on one of these fields with no ``mechanism``.
 
+    ``mechanism_prompt`` is the paired question that produces what the flag demands. The flag
+    alone can only refuse a figure that arrived without an explanation; it cannot elicit one,
+    because nothing asks. The follow-up sits on the same record as the figure it explains,
+    which is where the store keeps the mechanism, so the two cannot be separated by an edit
+    to one of them. ``mechanism_required`` and a non-empty ``mechanism_prompt`` are the same
+    condition, and a test asserts it in both directions.
+
+    ``figure_columns`` is the table-shaped form of that pairing: it maps a column holding a
+    target or a threshold to the column that says what breaks against it. It is declarative
+    rather than inferred, because a column name does not say whether a duration in it is a
+    target somebody has to meet or an elapsed time somebody measured. Only the first owes an
+    explanation, and inventing one for the second would fill a plan with cells nobody can
+    answer.
+
     ``seedable`` is the answer to picoagent's open question 5. True means discovery may
     prefill the field and the interview reads it back for correction rather than asking
     cold; the prefill carries provenance ``oci-discovery:<seed_operation>``. False means the
@@ -190,8 +227,14 @@ class Question:
     never in ``value``.
 
     ``structural_provenance`` is the §4.3 class. ``nist`` fields carry the verbatim NIST
-    heading in ``nist_heading``; ``ours`` fields carry the empty string and claim nothing.
-    ``crosswalk`` is legal in the enum and illegal on a question, which is the point of it.
+    heading in ``nist_heading``; ``ours`` and ``method`` fields carry the empty string and
+    claim nothing. ``crosswalk`` is legal in the enum and illegal on a question, which is the
+    point of it.
+
+    ``method_statement`` carries the templated text a ``method`` field's element consists of,
+    and is empty on every other class. The text lives in the bank rather than in the renderer
+    because the renderer may only write strings a corpus already holds, and because an
+    element the toolkit supplies has to be readable beside the question that parameterises it.
     """
 
     id: str
@@ -212,12 +255,15 @@ class Question:
     provenance_required: bool = True
     confidence_required: bool = True
     mechanism_required: bool = False
+    mechanism_prompt: str = ""
+    figure_columns: dict[str, str] = field(default_factory=dict)
     readback_required: bool = False
     seedable: bool = False
     seed_operation: str = ""
     nist_heading: str = ""
     nist_source: str = ""
     crosswalk_note: str = ""
+    method_statement: str = ""
 
 
 # --------------------------------------------------------------- transcribed NIST headings
@@ -229,7 +275,8 @@ class Question:
 # disagreement is recorded in NIST_DISCREPANCIES.
 
 #: Appendix A.3, Sample Template for High-Impact Systems. The moderate template (A.2) shares
-#: this lettering; the low template (A.1) has no Appendix F and letters G through L one lower.
+#: this lettering; the low template (A.1) has no Appendix F and letters G through M one
+#: lower, which :func:`_low_impact_headings` derives rather than restating.
 NIST_A3_HEADINGS: tuple[str, ...] = (
     "Plan Approval",
     "1. Introduction",
@@ -274,6 +321,85 @@ NIST_A3_HEADINGS: tuple[str, ...] = (
     "APPENDIX M DOCUMENT CHANGE PAGE",
 )
 
+#: The impact levels FIPS PUB 199 defines, and the three sample templates NIST publishes one
+#: for each of: A.1 low, A.2 moderate, A.3 high.
+IMPACT_LEVELS: tuple[str, ...] = ("low", "moderate", "high")
+
+#: The key the categorisation is recorded under. Named once, because the lettering, the
+#: renderer and the tests all have to read the same field.
+IMPACT_LEVEL_KEY = "system.impact_level"
+
+_APPENDIX = "APPENDIX "
+
+#: The one appendix the low-impact template does not have. Everything after it in A.2 and A.3
+#: letters one lower in A.1, and that single omission is the whole of the difference between
+#: the two lettering schemes. Recorded in :data:`NIST_DISCREPANCIES` under "App. C" ("NIST
+#: letters this F in the moderate and high templates and omits it entirely from the low
+#: template") and under "App. K" ("K is right only for the low-impact template").
+ABSENT_FROM_THE_LOW_TEMPLATE = "ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"
+
+
+def _appendix_title(heading: str) -> str:
+    """The words after ``APPENDIX <letter> ``, or the empty string for a section heading."""
+    if not heading.startswith(_APPENDIX):
+        return ""
+    return heading.split(" ", 2)[2]
+
+
+def _low_impact_headings() -> tuple[str, ...]:
+    """A.1's headings, derived from A.3's rather than transcribed a second time.
+
+    Derived because the difference between the two templates is one omission and a shift,
+    and a second transcription would be a second thing to keep right. The section headings
+    are identical in all three templates, so only the appendices move.
+    """
+    headings: list[str] = []
+    letter = ord("A")
+    for heading in NIST_A3_HEADINGS:
+        title = _appendix_title(heading)
+        if not title:
+            headings.append(heading)
+        elif title != ABSENT_FROM_THE_LOW_TEMPLATE:
+            headings.append(f"{_APPENDIX}{chr(letter)} {title}")
+            letter += 1
+    return tuple(headings)
+
+
+#: Appendix A.1, Sample Template for Low-Impact Systems. Runs A to L.
+NIST_A1_HEADINGS: tuple[str, ...] = _low_impact_headings()
+
+_APPENDIX_TITLES: frozenset[str] = frozenset(
+    title for title in map(_appendix_title, NIST_A3_HEADINGS) if title)
+
+
+def heading_in_scheme(nist_heading: str, impact_level: str) -> str:
+    """The heading this element carries in the template ``impact_level`` selects.
+
+    A section heading is returned unchanged: NIST numbers 1.1 to 5.10 the same way in all
+    three templates. An appendix is re-lettered, and comes back as the empty string when the
+    selected template has no appendix for it at all, which for the low-impact template is
+    exactly one element.
+
+    Raises rather than defaulting when the level is not one of the three. An uncategorised
+    system has no template, and picking one on its behalf is the guess the toolkit exists to
+    refuse; the caller decides what an unstated categorisation renders as.
+    """
+    if impact_level not in IMPACT_LEVELS:
+        raise ValueError(
+            f"{impact_level!r} is not one of {', '.join(IMPACT_LEVELS)}. The appendix letter "
+            f"is a function of the categorisation, and a system nobody has categorised has "
+            f"no letter rather than a default one."
+        )
+    title = _appendix_title(nist_heading)
+    if not title:
+        return nist_heading
+    if title not in _APPENDIX_TITLES:
+        raise ValueError(f"{title!r} is not an appendix of any of NIST's three templates")
+    scheme = NIST_A1_HEADINGS if impact_level == "low" else NIST_A3_HEADINGS
+    lettered = [heading for heading in scheme if _appendix_title(heading) == title]
+    return lettered[0] if lettered else ""
+
+
 #: Headings from the body chapters, used where NIST places an element in the guidance rather
 #: than in the plan template. A field justified from here is still ``nist``, but the coverage
 #: map's claim that the structure follows "Appendix A and 4.1-4.5" does not reach it, so the
@@ -302,7 +428,8 @@ NIST_CHAPTER_HEADINGS: tuple[str, ...] = (
 #: Every heading a ``nist`` question may cite. A test asserts membership, which is the
 #: mechanically-checkable form of claim 1 in ``docs/ITIL-GROUNDING.md`` §4.3: no heading
 #: exists whose provenance is an unread standard.
-NIST_CORPUS: frozenset[str] = frozenset(NIST_A3_HEADINGS) | frozenset(NIST_CHAPTER_HEADINGS)
+NIST_CORPUS: frozenset[str] = (frozenset(NIST_A3_HEADINGS) | frozenset(NIST_A1_HEADINGS)
+                               | frozenset(NIST_CHAPTER_HEADINGS))
 
 
 @dataclass(frozen=True)
@@ -515,6 +642,47 @@ DISCREPANCY_KINDS: tuple[str, ...] = (
 # carried a note; the line wrapping is the YAML's, the words are not changed. Questions the
 # YAML left unannotated carry guidance written here.
 
+#: The templated text of the ``method`` elements. Each is the toolkit's own approach, stated
+#: once here so that the questions which parameterise it and the documents which render it
+#: quote the same words. None of it is elicited and none of it is transcribed from anything;
+#: see :data:`METHOD_IS_NEVER_A_CUSTOMER_CLAIM`.
+_MTD_DECOMPOSITION = (
+    "Maximum tolerable downtime is recovery time plus work recovery time. The toolkit "
+    "decomposes it that way so that a recovery which meets its technical target and still "
+    "misses what the business can tolerate is visible on paper rather than at four in the "
+    "morning."
+)
+
+_POSTURE_MODEL = (
+    "A standby is held in one of a small number of postures, and the posture is a decision "
+    "about cost against readiness rather than a property of the estate. The toolkit asks "
+    "what is done to the standby when nothing is happening, what is done when there is "
+    "warning, and who may change it. A posture nobody may change is a cost nobody may "
+    "reduce; a posture anybody may change is a recovery nobody can rely on."
+)
+
+_ONE_WAY_DOOR = (
+    "Some decisions in a continuity design cost a change ticket to undo and some cannot be "
+    "undone at all without rebuilding from nothing. The toolkit separates the two and costs "
+    "the second kind before it is taken, because otherwise the moment a one-way door is "
+    "noticed is the moment somebody has already walked through it to save money."
+)
+
+_DRILL_LEVELS = (
+    "An exercise proves one of three things and rarely all three: that the plan reads "
+    "correctly, that the steps run, or that the business can work afterwards. The toolkit "
+    "asks which level each exercise reaches and what it therefore leaves unproven, because a "
+    "plan whose only evidence is a reading has never been shown to work."
+)
+
+_DUTY_CROSSWALK = (
+    "The toolkit names duties, not posts. It asks who decides to declare, who runs the "
+    "recovery, who authorises the spending and who says it is over, and it maps those "
+    "answers onto the roles this plan already uses. A standard's own post names are supplied "
+    "by the standard and never by the person being interviewed, because a question that "
+    "names a post supplies the answer it was asked to elicit."
+)
+
 _BIA = "SP 800-34 Rev. 1 Appendix A.3 heading, and Appendix B Sample BIA"
 _A3 = "SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems"
 _CH3 = "SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process"
@@ -555,6 +723,90 @@ QUESTIONS: tuple[Question, ...] = (
         crosswalk_note="ISO 22301 uses a different categorisation vocabulary "
                        "(practice guide; not verified)",
     ),
+    Question(
+        "system.impact_level", "system", "1.2", "1.2 Scope",
+        "README.md, docs/02-mtd-tiers.md, docs/07-standards-alignment.md",
+        "Of low, moderate and high, which one is this system's availability impact? Not what "
+        "you would choose today: what is written down. If nothing is, say so and we record "
+        "that.",
+        "The assigned availability impact level, which selects the template this plan is "
+        "graded against",
+        "governance/risk contact", "nist", kind="enum", options=IMPACT_LEVELS,
+        readback_required=True,
+        guidance="Three answers are legal and 'nobody ever assigned one' is not among them: "
+                 "an uncategorised system leaves this MISSING with the governance contact "
+                 "owing it, which is the honest record and the finding an auditor wants. The "
+                 "answer decides which of NIST's three sample templates the plan is graded "
+                 "against, and therefore what letter each of its appendices carries. "
+                 "Uncategorised, the plan keeps the high-impact lettering, because that "
+                 "template is the superset and an auditor with no stated level grades "
+                 "against it.",
+        nist_heading="1.2 Scope", nist_source=_A3,
+    ),
+    Question(
+        "system.assumptions", "system", "1.3", "1.3 Assumptions",
+        "docs/01-architecture.md, checklists/risk-register.md",
+        "What are we taking as read about this estate that I have not asked you about "
+        "directly? Take them one at a time, and for each one tell me what changes if it "
+        "turns out to be wrong.",
+        "Each stated assumption, what breaks if it is wrong, who confirms it and by when",
+        "lead engineer", "nist", kind="rows",
+        columns=("assumption", "impact_if_wrong", "owner", "confirm_by"),
+        readback_required=True,
+        guidance="An assumption is a fact nobody confirmed, so every row here is a question "
+                 "somebody did not get asked. Read each one back. The owner and the date are "
+                 "not decoration: a table of unowned assumptions is a list of things that "
+                 "will still be assumptions at the next review, and one of them will be the "
+                 "one that was wrong.",
+        nist_heading="1.3 Assumptions", nist_source=_A3,
+    ),
+    Question(
+        "system.component_terms", "system", "2.1", "2.1 System description",
+        "docs/01-architecture.md",
+        "You used a few words for parts of this that could mean more than one thing. Tell me "
+        "what each of them means here, in your words, before I draw anything.",
+        "The words this organisation uses for its own components, and what each one means",
+        "application owner", "ours", kind="narrative", readback_required=True,
+        guidance="One word that means two things is the cheapest catastrophic mistake in a "
+                 "continuity design: a whole section gets written for the wrong layer and "
+                 "reads perfectly well. Ask before drawing, not after. If they cannot say, "
+                 "that is a MISSING with the application owner's name on it, not a guess.",
+    ),
+    Question(
+        "system.releases", "system", "2.1", "2.1 System description",
+        "docs/01-architecture.md, docs/11-inventory.md",
+        "What release is the application on, exactly, and what release is the database? If "
+        "you are part way through an upgrade, tell me both.",
+        "The release of each major component, and any upgrade in flight",
+        "application owner", "nist", readback_required=True,
+        guidance="Say the numbers back. This is the fact most often carried as an assumption "
+                 "and it changes recovery mechanics more than almost anything else. A "
+                 "half-finished upgrade is the answer that matters most and the one people "
+                 "forget to mention.",
+        nist_heading="2.1 System Description", nist_source=_A3,
+    ),
+    Question(
+        "system.operating_systems", "system", "2.1", "2.1 System description",
+        "docs/01-architecture.md, docs/11-inventory.md",
+        "What does each tier run on? And if any of it is a platform your recovery scripts "
+        "would have to be written differently for, say so now.",
+        "The operating system of each tier, and what that constrains",
+        "infrastructure owner", "nist", readback_required=True,
+        guidance="Decides what language every recovery script is written in, and therefore "
+                 "who can run it at three in the morning. Read it back.",
+        nist_heading="2.1 System Description", nist_source=_A3,
+    ),
+    Question(
+        "system.instances", "system", "2.1", "2.1 System description",
+        "docs/01-architecture.md, docs/02-mtd-tiers.md",
+        "Is this one production instance, or several? Separate ledgers, separate legal "
+        "entities, anything split across sites?",
+        "Whether the production estate is one instance or several, and how they are split",
+        "application owner", "nist", kind="narrative", readback_required=True,
+        guidance="A second instance nobody mentioned changes the tier map, the recovery "
+                 "order and the cost. Ask it early and read the answer back.",
+        nist_heading="2.1 System Description", nist_source=_A3,
+    ),
     # ------------------------------------------------------ business.* - business owner
     Question(
         "business.processes", "business", "App. K", "K. Business impact analysis",
@@ -580,6 +832,9 @@ QUESTIONS: tuple[Question, ...] = (
         "Maximum tolerable downtime for the tier 0 processes",
         "business owner", "nist", kind="duration", unit="hours",
         mechanism_required=True, readback_required=True,
+        mechanism_prompt="What happens at that hour that does not happen at the hour before "
+                         "it? Name the deadline, the cut-off, the batch that has to run, or "
+                         "the person who picks up the phone.",
         guidance="A number without a mechanism is a guess wearing a suit.",
         nist_heading="3.2.1 Determine Business Processes and Recovery Criticality",
         nist_source=_BIA,
@@ -594,6 +849,8 @@ QUESTIONS: tuple[Question, ...] = (
         "Recovery point objective for the tier 0 processes",
         "business owner", "nist", kind="duration", unit="minutes",
         mechanism_required=True, readback_required=True,
+        mechanism_prompt="What is in those minutes that nobody could rebuild from anywhere "
+                         "else, and who finds out first that it is gone?",
         guidance="Elicited as: if we lost 15 minutes, who redoes the work, and can they?",
         nist_heading="3.2.1 Determine Business Processes and Recovery Criticality",
         nist_source=_BIA,
@@ -617,7 +874,10 @@ QUESTIONS: tuple[Question, ...] = (
         "paper, and how long could they keep that up?",
         "Each process, the workaround used, and how long it is sustainable",
         "business owner", "nist", kind="rows",
-        columns=("process", "workaround", "sustainable_for"),
+        columns=("process", "workaround", "sustainable_for", "what_fails_first"),
+        figure_columns={"sustainable_for": "what_fails_first"},
+        mechanism_prompt="When each of those workarounds runs out, what is the first thing "
+                         "that fails, and who notices it?",
         guidance="Appendix E. Ask about the last real outage, not the hypothetical one.",
         nist_heading="APPENDIX D ALTERNATE PROCESSING PROCEDURES", nist_source=_A3,
     ),
@@ -631,6 +891,84 @@ QUESTIONS: tuple[Question, ...] = (
         options=("signed", "not signed", "signed with exceptions"),
         readback_required=True,
         guidance="Signed, or explicitly recorded as not signed and who owes it.",
+    ),
+    Question(
+        "business.tier_targets", "business", "App. K", "K. Business impact analysis",
+        "docs/02-mtd-tiers.md",
+        "For each recovery tier you have: how long may it be down in total, how long may the "
+        "technical recovery take, how long does the business need afterwards before it can "
+        "work, and how much data may be lost? And what is the least service that still counts "
+        "as trading?",
+        "Per tier: maximum tolerable downtime, recovery time, work recovery time, recovery "
+        "point and the minimum service that counts as trading",
+        "business owner", "method", kind="rows",
+        columns=("tier", "mtd", "rto", "wrt", "rpo", "minimum_service",
+                 "what_breaks_at_the_mtd"),
+        figure_columns={"mtd": "what_breaks_at_the_mtd"},
+        mechanism_prompt="For each tier, what happens at that hour and not the hour before "
+                         "it? Name the deadline, the cut-off or the person who calls.",
+        method_statement=_MTD_DECOMPOSITION, readback_required=True,
+        guidance="One table, filled a row at a time, and the last column is the one that "
+                 "makes the rest worth having. A tier ladder of round numbers with nothing "
+                 "behind them is the single most common defect in a continuity plan: it "
+                 "reads as a measurement and it is a preference. Do not accept a figure "
+                 "until the row beside it says what it collides with.",
+    ),
+    Question(
+        "business.tier_assignment", "business", "App. K", "K. Business impact analysis",
+        "docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md",
+        "I am going to read you back what this system does. Sort each one into the tiers we "
+        "just defined, and argue with me where it does not fit.",
+        "Each business process, the tier it is assigned to, and the argument for it",
+        "business owner", "nist", kind="rows",
+        columns=("process", "tier", "rationale"),
+        guidance="The impact question asks what stops. This one asks the business to commit. "
+                 "They are different sessions and people answer them differently: 'it is "
+                 "critical' survives the first and does not survive the second. Record the "
+                 "argument, not just the letter, because the argument is what gets "
+                 "re-examined when the cost lands.",
+        nist_heading="3.2.3 Identify System Resource Recovery Priorities", nist_source=_CH3,
+        crosswalk_note="ITIL calls this session a business impact analysis [glossary]",
+    ),
+    Question(
+        "business.freeze_periods", "business", "Beyond NIST",
+        "Periods when recovery is more expensive than the outage",
+        "checklists/dr-authority-matrix.md, docs/08-phase-activation.md",
+        "Are there weeks in the year when failing over would be worse than staying down? "
+        "Period close, year end, a filing deadline?",
+        "Each period when failing over costs more than the outage, and who decides during it",
+        "business owner", "ours", kind="rows",
+        columns=("period", "why", "who_decides"), readback_required=True,
+        guidance="Nobody volunteers this and everybody has one. It changes the activation "
+                 "criteria for a fortnight a quarter, which is when the plan is most likely "
+                 "to be used and least likely to have been read.",
+    ),
+    Question(
+        "business.freeze_override_authority", "business", "Beyond NIST",
+        "Periods when recovery is more expensive than the outage",
+        "checklists/dr-authority-matrix.md",
+        "If we were inside one of those periods and had to fail over anyway, who is allowed "
+        "to say yes, and what do they need in front of them first?",
+        "Who may authorise a failover inside a freeze period, and on what evidence",
+        "business owner", "ours", readback_required=True,
+        guidance="A freeze with no override is a plan that stops working four weeks a year. "
+                 "Name one individual and what they need to see; 'the board' is nobody at "
+                 "two in the morning.",
+    ),
+    Question(
+        "business.reconstruction_effort", "business", "Beyond NIST",
+        "Minimum business continuity objective per tier",
+        "docs/02-mtd-tiers.md, checklists/manual-workarounds.md",
+        "If we lost the work from the last few minutes before the failure, how long would it "
+        "take to put it back, and who would be doing it?",
+        "How long rebuilding the lost work takes, and who does it",
+        "business owner", "ours", kind="duration", unit="hours", mechanism_required=True,
+        mechanism_prompt="What are they rebuilding it from, and what happens if that source "
+                         "went down with everything else?",
+        guidance="This is the recovery point objective turned into work recovery time, which "
+                 "is the half of the sum that never gets costed. If the source they would "
+                 "rebuild from is inside the failed estate, the answer is not a duration, it "
+                 "is a design finding.",
     ),
     # ------------------------------------------------------ app.* - application owner
     Question(
@@ -675,8 +1013,9 @@ QUESTIONS: tuple[Question, ...] = (
         "happen? Which of those can run while we are still bringing things up?",
         "Each work-recovery activity, its duration, and whether it runs in parallel with "
         "bring-up",
-        "application owner", "ours", kind="rows",
+        "application owner", "method", kind="rows",
         columns=("activity", "duration", "parallel_with_bringup"),
+        method_statement=_MTD_DECOMPOSITION,
         guidance="The parallel/serial flag decides whether the MTD is achievable.",
     ),
     Question(
@@ -689,6 +1028,76 @@ QUESTIONS: tuple[Question, ...] = (
         guidance="Usually NOT_APPLICABLE. NIST does not require it; the plan must still "
                  "address it, with the reason.",
         nist_heading="5.1 Concurrent Processing", nist_source=_A3,
+    ),
+    Question(
+        "app.recovery_procedures", "app", "4.2", "4.2 Recovery procedures",
+        "runbooks/RB-02-failover.md, runbooks/RB-01-switchover.md",
+        "Talk me through the recovery as if I were doing it and you were not there. Give me "
+        "the commands, in order, exactly as you would type them.",
+        "The recovery procedure at the level of what is actually typed, in order",
+        "lead engineer", "nist", kind="code", readback_required=True,
+        guidance="Reproduced byte for byte or not at all. A paraphrased command is worse than "
+                 "no command, because it looks runnable. Where a step is a decision rather "
+                 "than a keystroke, say so in the block; where a step needs a value nobody "
+                 "has yet, leave the placeholder visible rather than inventing one. Read the "
+                 "block back to them before it is written down.",
+        nist_heading="4.2 Recovery Procedures", nist_source=_A3,
+    ),
+    Question(
+        "app.validation_data_tests", "app", "5.2", "5.2 Validation data testing",
+        "checklists/validation-pack.md, docs/10-phase-reconstitution.md",
+        "Once it is back up, how would you satisfy yourself that the data is right, as "
+        "opposed to the system being up? Who is the person whose word settles it?",
+        "Each data validation check, what it proves and who signs it off",
+        "application owner", "nist", kind="rows",
+        columns=("check", "what_it_proves", "who_signs"),
+        guidance="Not the same as the functional pack, and the difference is the point. A "
+                 "database opening read-write proves the system is up. Only somebody who "
+                 "runs the process can say the data is right, so the signature column names "
+                 "a person's role and never the infrastructure team.",
+        nist_heading="5.2 Validation Data Testing", nist_source=_A3,
+    ),
+    Question(
+        "app.interface_landing", "app", "Beyond NIST",
+        "Interface landing and replication of inbound data",
+        "docs/12-interconnections.md",
+        "Today, before we change anything: where do inbound files from other systems land, "
+        "and does anything read them from somewhere that is not replicated?",
+        "Where inbound interface data lands today and whether that location is replicated",
+        "lead engineer", "ours", kind="narrative", readback_required=True,
+        guidance="Ask what it is, not what it should be. The recommended pattern is easy to "
+                 "write and useless without the current state beside it, and a design "
+                 "proposal in a description's clothes is how a plan ends up recovering an "
+                 "estate nobody has.",
+    ),
+    Question(
+        "app.unsafe_reruns", "app", "Beyond NIST",
+        "Interface landing and replication of inbound data",
+        "runbooks/RB-02-failover.md, docs/10-phase-reconstitution.md",
+        "After a failover, which scheduled jobs would be dangerous to run again, and which "
+        "are safe to just resubmit?",
+        "Each scheduled job, whether it is safe to resubmit, and what a second run does",
+        "application owner", "ours", kind="rows",
+        columns=("job", "safe_to_resubmit", "what_happens_if_it_runs_twice"),
+        enum_columns={"safe_to_resubmit": ("safe", "unsafe", "nobody knows")},
+        guidance="'Nobody knows' is a legal answer and a useful one: it is the list somebody "
+                 "has to work through before the next drill. A job that pays suppliers twice "
+                 "is a worse outage than the one that caused the failover.",
+    ),
+    Question(
+        "app.reconfiguration_duration", "app", "Beyond NIST",
+        "Measured durations on the recovery critical path",
+        "docs/09-phase-recovery.md, runbooks/RB-01-switchover.md",
+        "Has anyone ever timed the full reconfiguration of the application tier after a move, "
+        "start to finish? What did it come out at?",
+        "How long a full application-tier reconfiguration takes, measured",
+        "lead engineer", "ours", kind="duration", unit="hours", mechanism_required=True,
+        mechanism_prompt="Was that timed on a rehearsal or estimated from experience? And "
+                         "what is the longest it has ever taken?",
+        guidance="This figure usually carries the plan's whole design argument and usually "
+                 "arrives as a range somebody remembers. If it has never been timed, record "
+                 "that: an untimed step on the critical path is the reason the recovery "
+                 "misses its target by an afternoon.",
     ),
     # ------------------------------------- infra.* - infrastructure owner and discovery
     Question(
@@ -725,6 +1134,8 @@ QUESTIONS: tuple[Question, ...] = (
         "reading the published figure? What did it come out at, and when?",
         "Measured inter-region round-trip time in milliseconds",
         "lead engineer", "ours", kind="number", unit="ms", mechanism_required=True,
+        mechanism_prompt="What was running when it was measured, and at what time of day? "
+                         "And at what figure would this design stop working?",
         guidance="Measured, not published. A synchronous design over an unmeasured link has "
                  "an unexploded assumption in the middle of it.",
     ),
@@ -736,8 +1147,11 @@ QUESTIONS: tuple[Question, ...] = (
         "Per tier: the replication mechanism, whether it is synchronous, measured lag, "
         "failover behaviour, whether reversal needs a re-baseline, and whether it is one-way",
         "infrastructure owner", "nist", kind="rows",
-        columns=("tier", "mechanism", "sync", "measured_lag", "failover_behaviour",
-                 "rebaseline_on_reversal", "one_way"),
+        columns=("tier", "mechanism", "sync", "measured_lag", "what_breaks_at_that_lag",
+                 "failover_behaviour", "rebaseline_on_reversal", "one_way"),
+        figure_columns={"measured_lag": "what_breaks_at_that_lag"},
+        mechanism_prompt="For each tier, at what lag would you stop trusting the standby, "
+                         "and what is the first thing that breaks when it reaches that?",
         seedable=True, seed_operation="ListVolumeGroupReplicas",
         guidance="Press the re-baseline question. It is the failback cost and it is almost "
                  "never costed.",
@@ -750,6 +1164,8 @@ QUESTIONS: tuple[Question, ...] = (
         "not the average.",
         "The monthly standby cost floor",
         "infrastructure owner", "ours", kind="currency", mechanism_required=True,
+        mechanism_prompt="What is in that figure and what is not? Name the lines it covers, "
+                         "and say what would have to be switched off to make it smaller.",
         guidance="The tier the business chose may be unaffordable at the floor. Now is when "
                  "that conversation is cheap.",
     ),
@@ -772,6 +1188,147 @@ QUESTIONS: tuple[Question, ...] = (
                  "duration in the plan can be trusted. Record who ran it, too: one name "
                  "means the runbook has an availability requirement on a person.",
         nist_heading="APPENDIX J TEST AND MAINTENANCE SCHEDULE", nist_source=_A3,
+    ),
+    Question(
+        "infra.availability_domains", "infra", "2.1", "2.1 System description",
+        "docs/01-architecture.md",
+        "Within each region, which availability domains is this spread across, and where does "
+        "anything that arbitrates between the two regions sit?",
+        "The availability domains in use, and where any arbitrator sits",
+        "infrastructure owner", "nist",
+        seedable=True, seed_operation="ListAvailabilityDomains",
+        guidance="Discovery can name these, so read them back rather than asking cold. The "
+                 "arbitrator is the half people forget: one that sits in the primary region "
+                 "is a vote that is always lost at exactly the moment it is needed.",
+        nist_heading="2.1 System Description", nist_source=_A3,
+    ),
+    Question(
+        "infra.inter_region_transport", "infra", "Beyond NIST",
+        "Cost model and posture economics", "docs/01-architecture.md",
+        "How does traffic get between the two regions today? A dedicated circuit, the "
+        "provider's own backbone, or the public internet? And is there a bandwidth commitment "
+        "anywhere in writing?",
+        "How the two regions are joined and what is committed in writing",
+        "infrastructure owner", "ours", kind="narrative", readback_required=True,
+        guidance="Press on the writing. A replication design rests on this link, and 'it has "
+                 "always been fine' is a measurement of the past. If nothing is committed, "
+                 "that is a risk register row with an owner, not a footnote.",
+    ),
+    Question(
+        "infra.storage_constraints", "infra", "Beyond NIST",
+        "Cost model and posture economics",
+        "docs/03-replication-matrix.md, docs/05-cost-and-teardown.md",
+        "Does the data use any storage feature that only works on particular hardware? "
+        "Compression, encryption at a layer below the database, anything the standby would "
+        "have to match?",
+        "Storage features that constrain what the standby may be built on",
+        "lead engineer", "ours", kind="narrative", readback_required=True,
+        guidance="A single feature here can rule out the cheap standby entirely, and it is "
+                 "usually discovered after the budget is signed. Read the answer back and "
+                 "record who confirmed it.",
+    ),
+    Question(
+        "infra.shared_storage", "infra", "2.1", "2.1 System description",
+        "docs/01-architecture.md",
+        "What sits on shared storage that more than one node needs, and what protocol do "
+        "those nodes speak to it?",
+        "What lives on shared storage and how it is reached",
+        "infrastructure owner", "nist", kind="narrative", readback_required=True,
+        guidance="This decides a real fork in the recovery design and is usually answered by "
+                 "whoever is in the room rather than by whoever knows. Ask for the protocol, "
+                 "not the product.",
+        nist_heading="2.1 System Description", nist_source=_A3,
+    ),
+    Question(
+        "infra.standby_posture", "infra", "Beyond NIST",
+        "Cost model and posture economics",
+        "runbooks/RB-05-replication-lifecycle.md, docs/05-cost-and-teardown.md",
+        "What do you do to the standby when nothing is happening? Leave it running, stop "
+        "things, scale something down? And who is allowed to change that?",
+        "The standby's steady-state posture and who may change it",
+        "infrastructure owner", "method", kind="narrative", readback_required=True,
+        method_statement=_POSTURE_MODEL,
+        guidance="Two answers, and the second one matters more. A posture with no named owner "
+                 "gets changed by whoever is looking at the bill that month, which is how a "
+                 "standby quietly stops being one.",
+    ),
+    Question(
+        "infra.warned_posture_time", "infra", "Beyond NIST",
+        "Cost model and posture economics", "runbooks/RB-05-replication-lifecycle.md",
+        "When you get warning, a storm track or an announced maintenance window, is there a "
+        "readier state you move to? How long does getting there take?",
+        "How long it takes to move the standby to its warned state",
+        "infrastructure owner", "ours", kind="duration", unit="hours",
+        mechanism_required=True,
+        mechanism_prompt="What does that state cost while you are holding it, and what "
+                         "decides when you come back down from it?",
+        guidance="Most estates have no warned state and have never been asked for one. "
+                 "NOT_APPLICABLE with a reason is a good answer here; silence is not.",
+    ),
+    Question(
+        "infra.silent_failures", "infra", "Beyond NIST", "Alert catalogue",
+        "docs/04-monitoring.md",
+        "What has broken before without anyone noticing until it mattered?",
+        "The failures this estate does not notice, and what would have shown them",
+        "lead engineer", "ours", kind="narrative", readback_required=True,
+        guidance="Ask it exactly like that and then stop talking. It is the question that "
+                 "produces the alert catalogue, and it produces it as a story about something "
+                 "that already happened rather than as a list of metrics somebody invented.",
+    ),
+    Question(
+        "infra.irreversible_choices", "infra", "Beyond NIST",
+        "Reversibility and one-way doors", "docs/03-replication-matrix.md",
+        "Which of the choices in this design could you undo next week, and which could you "
+        "not undo at all without starting again? What would undoing each one cost?",
+        "Each decision that cannot be cheaply reversed, what reversing it costs and who may "
+        "take it",
+        "lead engineer", "method", kind="rows",
+        columns=("decision", "cost_to_reverse", "who_may_take_it"),
+        method_statement=_ONE_WAY_DOOR,
+        guidance="Deleting a replication relationship to save money is the one everybody "
+                 "finds by doing it. Ask whether it has happened here; a scar is worth more "
+                 "than a warning.",
+    ),
+    Question(
+        "infra.licensing", "infra", "Beyond NIST",
+        "Cost model and posture economics", "docs/05-cost-and-teardown.md",
+        "Which optional features is the standby entitled to use? And do you have that in "
+        "writing rather than in somebody's memory of a call?",
+        "Each optional feature the design needs, whether it is licensed and where that is "
+        "recorded",
+        "infrastructure owner", "ours", kind="rows",
+        columns=("feature", "licensed", "where_it_is_recorded"),
+        enum_columns={"licensed": ("yes", "no", "nobody knows")},
+        readback_required=True,
+        guidance="The line item most often discovered late, and the one the plan is least "
+                 "likely to ask about. 'Nobody knows' is the most useful answer in the "
+                 "column and belongs in the risk register the same day.",
+    ),
+    Question(
+        "infra.offsite_storage", "infra", "5.7", "5.7 Offsite data storage",
+        "docs/03-replication-matrix.md",
+        "Where do the backups live, how long are they kept, and what would you actually do to "
+        "get one back? If none of it is physical, say so.",
+        "Each backup copy, where it is held, how long it is kept and how it is retrieved",
+        "infrastructure owner", "nist", kind="rows",
+        columns=("copy", "where_it_is_held", "retention", "how_it_is_retrieved"),
+        guidance="NOT_APPLICABLE with a reason is a legitimate and common answer where "
+                 "nothing is on physical media, and it is a better answer than an invented "
+                 "courier. What is never legitimate is leaving retention blank: a retention "
+                 "shorter than the records the business has to keep is a finding on its own.",
+        nist_heading="5.7 Offsite Data Storage", nist_source=_A3,
+    ),
+    Question(
+        "infra.post_recovery_backup", "infra", "5.8", "5.8 Data backup",
+        "docs/10-phase-reconstitution.md, docs/03-replication-matrix.md",
+        "Once you are running in the other region, what protects you? When does the first "
+        "backup of the new primary happen, and who checks that it did?",
+        "How the recovered system is protected again, when, and who confirms it",
+        "infrastructure owner", "nist", kind="narrative", readback_required=True,
+        guidance="The step most likely to be missed, because the system is up and everyone "
+                 "goes home. Until this is done a second event is unrecoverable, so the "
+                 "answer needs a name and a time attached to it, not an intention.",
+        nist_heading="5.8 Data Backup", nist_source=_A3,
     ),
     # ------------------------------------------------ continuity.* - DR process owner
     Question(
@@ -818,6 +1375,8 @@ QUESTIONS: tuple[Question, ...] = (
         "The time budget for the declaration decision",
         "DR process owner", "ours", kind="duration", unit="minutes",
         mechanism_required=True,
+        mechanism_prompt="What is happening to the outage while that decision is being "
+                         "taken, and what stops being recoverable once the budget is spent?",
         guidance="Deciding is on the recovery critical path and is almost never budgeted. "
                  "Whatever the number is, it comes out of the MTD.",
     ),
@@ -880,6 +1439,158 @@ QUESTIONS: tuple[Question, ...] = (
         guidance="Declaration and deactivation are a matched pair.",
         nist_heading="5.10 Deactivation", nist_source=_A3,
     ),
+    Question(
+        "continuity.contact_roster", "continuity", "App. A", "A. Personnel contact list",
+        "checklists/contact-roster.md",
+        "For every role we have named: who holds it, how do I reach them out of hours, and "
+        "when did anyone last ring that number and get an answer?",
+        "Each role, who holds it, how they are reached and when that was last verified",
+        "DR process owner", "nist", kind="rows",
+        columns=("role", "held_by", "reached_by", "last_verified"),
+        readback_required=True,
+        guidance="The one file that must never be committed to a shared repository, and the "
+                 "one that is useless if it is out of date. Press on the last column: a "
+                 "roster nobody has rung is a list of numbers, not a call tree. A role with "
+                 "no holder is a gap with a name on it and belongs here as MISSING rather "
+                 "than being quietly left out.",
+        nist_heading="APPENDIX A PERSONNEL CONTACT LIST", nist_source=_A3,
+    ),
+    Question(
+        "continuity.vendor_contacts", "continuity", "App. B", "B. Vendor contact list",
+        "checklists/contact-roster.md",
+        "Which outside organisations would you have to call during this, how do you reach "
+        "them out of hours, and what reference do they need you to quote before they will "
+        "help?",
+        "Each vendor, what they supply, how they are reached and the reference they need",
+        "DR process owner", "nist", kind="rows",
+        columns=("organisation", "what_they_supply", "reached_by", "reference_to_quote"),
+        guidance="The reference column is the one that saves an hour. A support contract "
+                 "number stored only inside the system being recovered is not a contract "
+                 "number. Ask where a printed copy lives.",
+        nist_heading="APPENDIX B VENDOR CONTACT LIST", nist_source=_A3,
+    ),
+    Question(
+        "continuity.vendor_obligations", "continuity", "Beyond NIST",
+        "Vendor obligations during a recovery", "checklists/contact-roster.md, "
+        "checklists/risk-register.md",
+        "Is anyone outside this organisation contracted to do part of this if you cannot? "
+        "What does the contract actually oblige them to do, and how fast?",
+        "Each external party, what their contract obliges, how fast, and where the contract "
+        "is held",
+        "governance/risk contact", "ours", kind="rows",
+        columns=("organisation", "what_the_contract_obliges", "response_time",
+                 "where_the_contract_is_held"),
+        guidance="Not a NIST appendix: the templates have no heading for this and the "
+                 "coverage map invented one. It is still worth asking, because a recovery "
+                 "that assumes a vendor will help is a recovery resting on goodwill. If the "
+                 "answer is that nobody has read the contract, record that.",
+    ),
+    Question(
+        "continuity.decision_and_recovery_roles", "continuity", "2.3",
+        "2.3 Roles and responsibilities", "checklists/roles-and-responsibilities.md",
+        "Who decides to declare, who runs the recovery, who authorises spending, and who says "
+        "it is over? Take them one at a time, and tell me where the same person appears "
+        "twice.",
+        "Each duty in a recovery, the role that holds it and the deputy behind them",
+        "DR process owner", "method", kind="rows",
+        columns=("duty", "held_by", "deputy"),
+        enum_columns={"duty": ("decides to declare", "runs the recovery",
+                               "authorises the spending", "says it is over")},
+        method_statement=_DUTY_CROSSWALK, readback_required=True,
+        guidance="Four duties, asked separately, because asking for one job title gets you "
+                 "one name and hides the overlap. Where the same role holds two of them, say "
+                 "so out loud and ask what they put down to do the other. Deciding whether "
+                 "the repair estimate beats the remaining budget and running the storage "
+                 "sequence are not the same work and cannot be done at the same minute.",
+    ),
+    Question(
+        "continuity.people_unavailable", "continuity", "2.3",
+        "2.3 Roles and responsibilities", "checklists/roles-and-responsibilities.md",
+        "If whatever caused this also took your people, one office or one time zone, who is "
+        "left who could execute this, and where are they?",
+        "Who could execute the plan if the disruption also removed the primary team",
+        "DR process owner", "nist", kind="narrative", readback_required=True,
+        guidance="Almost never asked and almost never has an answer. 'Nobody' is the correct "
+                 "answer where it is true, and it belongs in the plan as a named hole rather "
+                 "than being filled in by whoever is drafting.",
+        nist_heading="3.4.6 Roles and Responsibilities", nist_source=_CH3,
+    ),
+    Question(
+        "continuity.assessment_calibration", "continuity", "3.3", "3.3 Outage assessment",
+        "checklists/outage-assessment.md",
+        "Last time something broke badly, how long was it before anyone could say how long it "
+        "would take to fix?",
+        "How long this organisation actually takes to produce a repair estimate",
+        "DR process owner", "ours", kind="duration", unit="minutes",
+        mechanism_required=True,
+        mechanism_prompt="What were they waiting on for that long, and is that thing any "
+                         "faster now?",
+        guidance="Calibrates the assessment budget against what this organisation can do "
+                 "rather than against what the plan would like. If the honest answer is two "
+                 "hours, a ten-minute assessment step is fiction and the plan should say so.",
+    ),
+    Question(
+        "continuity.declaration_threshold_rule", "continuity", "3.1",
+        "3.1 Activation criteria and procedure; who may activate",
+        "checklists/dr-authority-matrix.md",
+        "Should the point at which you stop waiting be a fixed number of hours, or should it "
+        "be worked out from how much of the tolerable downtime is left at that moment?",
+        "How the point of no return is calculated rather than what it is today",
+        "DR process owner", "ours", kind="narrative", readback_required=True,
+        guidance="The default action when nobody can estimate is a separate field and this "
+                 "is the rule behind it. A fixed threshold ages badly; one computed from what "
+                 "is left of the budget survives a change to the tier. Ask which they want "
+                 "and write down why.",
+    ),
+    Question(
+        "continuity.data_loss_gate", "continuity", "3.1",
+        "3.1 Activation criteria and procedure; who may activate",
+        "checklists/dr-authority-matrix.md",
+        "If you came up having lost more data than the tier allows, does downstream "
+        "processing stay stopped until somebody clears it, or does it run?",
+        "What happens to downstream processing when the recovery point was missed",
+        "DR process owner", "ours", kind="narrative", readback_required=True,
+        guidance="Decide it in daylight. In the event this is asked of whoever is nearest, "
+                 "at speed, and the wrong answer pays somebody twice or fails to pay them at "
+                 "all. Name who clears it.",
+    ),
+    Question(
+        "continuity.recovery_declaration", "continuity", "5.4", "5.4 Recovery declaration",
+        "docs/10-phase-reconstitution.md",
+        "Who tells the business it is recovered, and what do they have to have seen before "
+        "they are allowed to say it?",
+        "Who declares recovery complete and the evidence they need first",
+        "DR process owner", "nist", kind="narrative", readback_required=True,
+        guidance="Distinct from standing the plan down. This is the moment users are told "
+                 "they may work, and the evidence for it is the validation pack rather than "
+                 "the infrastructure being green.",
+        nist_heading="5.4 Recovery Declaration", nist_source=_A3,
+    ),
+    Question(
+        "continuity.user_notification", "continuity", "5.5", "5.5 Notification (users)",
+        "checklists/contact-roster.md, docs/10-phase-reconstitution.md",
+        "How do users find out they can work again? Who sends it, through what, and what does "
+        "it have to tell them?",
+        "How users are told service is restored, by whom and what the message must carry",
+        "DR process owner", "nist", kind="narrative", readback_required=True,
+        guidance="Ask what the message has to say, not just who sends it. Users coming back "
+                 "to a system that lost fifteen minutes of work need to be told that, and a "
+                 "channel that runs through the recovered estate is a channel with a loop "
+                 "in it.",
+        nist_heading="5.5 Notifications (users)", nist_source=_A3,
+    ),
+    Question(
+        "continuity.cleanup", "continuity", "5.6", "5.6 Cleanup",
+        "docs/10-phase-reconstitution.md",
+        "Once it is over, what has to be taken down or put back? And what is the thing you "
+        "would most regret leaving running?",
+        "What is dismantled after the event, and who is responsible for each of it",
+        "DR process owner", "nist", kind="narrative", readback_required=True,
+        guidance="The second half of the question finds the expensive one. Ask also what must "
+                 "deliberately not be torn down: the replication that was rebuilt is the "
+                 "thing most often cleaned up by somebody tidying.",
+        nist_heading="5.6 Cleanup", nist_source=_A3,
+    ),
     # ---------------------------------------- governance.* - governance / risk / audit
     Question(
         "governance.signing_authority", "governance", "Plan Approval",
@@ -933,6 +1644,97 @@ QUESTIONS: tuple[Question, ...] = (
         guidance="Material assumptions and design risks, owned and reviewed rather than "
                  "scattered.",
     ),
+    Question(
+        "governance.event_documentation", "governance", "5.9", "5.9 Event documentation",
+        "docs/00-record-of-changes.md, runbooks/RB-04-dr-drill.md",
+        "After a real event, who writes down what happened, what goes in it, and where does "
+        "it end up? And has that ever actually been done here?",
+        "How a real event is written up, by whom, and where the record goes",
+        "governance/risk contact", "nist", kind="narrative", readback_required=True,
+        guidance="A drill report and an event report are different documents and most "
+                 "organisations have neither. Ask the last part plainly: if it has never been "
+                 "done, the answer is what the plan should say, not an intention dressed as "
+                 "a procedure.",
+        nist_heading="5.9 Event Documentation", nist_source=_A3,
+    ),
+    Question(
+        "governance.associated_plans", "governance", "App. K",
+        "K. Associated plans and procedures", "docs/07-standards-alignment.md, README.md",
+        "What other plans does this one lean on or feed into? Anything for the building, for "
+        "a security incident, for the wider business?",
+        "Each related plan, who owns it and how it relates to this one",
+        "governance/risk contact", "nist", kind="rows",
+        columns=("plan", "owner", "how_it_relates"),
+        guidance="A continuity plan that assumes a facilities plan exists, and a facilities "
+                 "plan that assumes this one does, is a pair of documents each waiting for "
+                 "the other. Naming the owner is what makes the assumption checkable.",
+        nist_heading="APPENDIX K ASSOCIATED PLANS AND PROCEDURES", nist_source=_A3,
+    ),
+    Question(
+        "governance.drill_cadence", "governance", "App. J",
+        "J. Test, training and exercise documentation", "runbooks/RB-04-dr-drill.md",
+        "How often will you actually exercise this? Not what the policy says: what you will "
+        "fund and staff.",
+        "How often the plan is exercised, in practice",
+        "governance/risk contact", "nist", kind="duration", unit="months",
+        mechanism_required=True,
+        mechanism_prompt="What would have to happen for one to be skipped, and who notices "
+                         "when it is?",
+        guidance="Two questions in one and the second is the real one. A stricter cadence "
+                 "than the organisation will fund is worse than an honest looser one, "
+                 "because the plan then documents a control that does not run and an "
+                 "auditor will find the gap rather than the intention.",
+        nist_heading="3.5 Plan Testing, Training, and Exercises (TT&E)", nist_source=_CH3,
+    ),
+    Question(
+        "governance.drill_levels", "governance", "Beyond NIST",
+        "Drill levels and what each proves",
+        "docs/06-test-environments.md, runbooks/RB-04-dr-drill.md",
+        "For each exercise you run: does it prove the plan reads correctly, that the steps "
+        "run, or that the business can work afterwards? And what does it leave unproven?",
+        "Each exercise level, what it proves and what it does not",
+        "governance/risk contact", "method", kind="rows",
+        columns=("level", "what_it_proves", "what_it_does_not_prove"),
+        method_statement=_DRILL_LEVELS,
+        guidance="The last column is the one that gets argued about, which is why it is a "
+                 "column. An organisation whose only evidence is a reading has a plan nobody "
+                 "has run, and it will believe otherwise until this table is filled in.",
+    ),
+    Question(
+        "governance.availability_boundary", "governance", "Beyond NIST",
+        "Plan review and maintenance cadence", "docs/07-standards-alignment.md",
+        "Who owns keeping this available day to day, and who owns getting it back after a "
+        "disaster? Same person, or different?",
+        "Where day-to-day availability ends and continuity begins, and who owns each side",
+        "governance/risk contact", "ours", kind="narrative", readback_required=True,
+        guidance="The boundary most plans raise against themselves and never close. Where it "
+                 "is the same person, ask what they stop doing during a recovery; where it "
+                 "is two, ask who decides which one a given incident is.",
+    ),
+    Question(
+        "governance.plan_custody", "governance", "Plan Approval", "Plan Approval statement",
+        "docs/00-plan-approval.md",
+        "Where will the signed copy of this plan live? And where will it live when the thing "
+        "holding it is the thing that is down?",
+        "Where the approved plan is held, and where it is held when the estate is unavailable",
+        "signing authority", "ours", kind="narrative", readback_required=True,
+        guidance="A plan readable only from the system it recovers is a plan nobody can read "
+                 "when they need it. The second half of the question is the whole question; "
+                 "ask it separately and wait.",
+    ),
+    Question(
+        "governance.breach_disclosure_clock", "governance", "Beyond NIST",
+        "Risk register", "checklists/roles-and-responsibilities.md, "
+        "docs/08-phase-activation.md",
+        "If the cause turns out to be an attack rather than a failure, who has to be told, "
+        "how fast, and whose job is that clock? Name the role, not the department.",
+        "Who owns the disclosure clock when the cause is an attack, and how fast it runs",
+        "governance/risk contact", "ours", kind="narrative", readback_required=True,
+        guidance="A recovery driven by an attack is not only a continuity event, and this "
+                 "plan has no authority over the disclosure clock. Record who does. An "
+                 "unowned regulatory clock is the one gap in a continuity plan that costs "
+                 "money after the service is back.",
+    ),
     # ---------------------------------------- discovery.* - written only by itscp-discover
     Question(
         "discovery.completed", "discovery", "App. H",
@@ -948,10 +1750,10 @@ QUESTIONS: tuple[Question, ...] = (
 )
 
 
-#: The starter field set, and the denominator ``itscp-build`` reports against today. It is a
-#: subset of the bank, not the whole of it: the bank grows as elicitation gets more complete,
-#: and ``itscp-build`` rule 2 already says a plan reports against its own counted total
-#: rather than a quoted one. ``templates/answers.example.toml`` emits exactly these.
+#: The starter field set, and the denominator ``itscp-build`` reports against today. It is
+#: every question in the bank: a plan that adds fields for its own tiers, processes or
+#: interfaces reports against its own counted total, which is ``itscp-build`` rule 2.
+#: ``plugin/answers.example.toml`` emits exactly these.
 STARTER_KEYS: tuple[str, ...] = tuple(question.id for question in QUESTIONS)
 
 BY_ID: dict[str, Question] = {question.id: question for question in QUESTIONS}

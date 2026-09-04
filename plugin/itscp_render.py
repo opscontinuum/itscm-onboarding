@@ -7,9 +7,10 @@ built so that it *cannot* produce a fifth:
 
 ``Segment("structural", ...)``
     A heading transcribed from NIST SP 800-34 Rev. 1, a phrase the question bank already
-    carries, or boilerplate this project declares as its own. :func:`structural_corpus`
-    enumerates every legal string, and ``tests/test_render`` asserts membership rather than
-    trusting the renderer to have been careful.
+    carries, the templated text of a ``method`` element, or boilerplate this project declares
+    as its own. :func:`structural_corpus` enumerates every legal string, and
+    ``tests/test_render`` asserts membership rather than trusting the renderer to have been
+    careful.
 ``Segment("answer", ...)``
     A value a person or a read-only API recorded, stringified and nothing more.
 ``Segment("markup", ...)``
@@ -84,6 +85,13 @@ MARKUP_ONLY = re.compile(r"^[^0-9A-Za-z]*$")
 #: document this project invented and which part follows the standard.
 OURS_HEADING = "Recorded for this plan"
 
+#: The heading a ``method`` field carries. Distinct from :data:`OURS_HEADING` because the two
+#: classes differ in who supplied the words, which is exactly what a reader has to be able to
+#: see: under ours the element is this project's and the answer is the interviewee's; under
+#: this heading the words below it are the toolkit's, and the answer parameterises them.
+#: See ``itscp_questions.METHOD_IS_NEVER_A_CUSTOMER_CLAIM``.
+METHOD_HEADING = "Supplied by the toolkit's method"
+
 #: The two sections ``repo-scaffold`` says every generated document carries. Not optional.
 REFERENCES_HEADING = "References"
 UNVERIFIED_HEADING = "Unverified statements"
@@ -112,7 +120,7 @@ MECHANISM = "mechanism"
 #: Boilerplate this project declares as its own. Every string the renderer writes as
 #: structural text is either here, in the question bank, or a transcribed NIST heading.
 BOILERPLATE: tuple[str, ...] = (
-    OURS_HEADING, REFERENCES_HEADING, UNVERIFIED_HEADING, GENERATED_NOTICE,
+    OURS_HEADING, METHOD_HEADING, REFERENCES_HEADING, UNVERIFIED_HEADING, GENERATED_NOTICE,
     REFERENCES_PREAMBLE, NO_SOURCES_YET, UNVERIFIED_PREAMBLE, NOTHING_UNVERIFIED,
     NO_FIELDS_HERE, RECORDED_BY, MECHANISM,
 )
@@ -284,12 +292,15 @@ def structural_corpus() -> frozenset[str]:
 
     Three sources and no fourth: the transcribed NIST headings, the phrases the question
     bank already carries, and the boilerplate this project declares in :data:`BOILERPLATE`
-    and :data:`SCAFFOLD`.
+    and :data:`SCAFFOLD`. A ``method`` element's templated text is one of the bank's phrases,
+    which is why it lives in the bank and not here.
     """
     corpus = set(BOILERPLATE) | set(bank.NIST_CORPUS)
     for question in bank.QUESTIONS:
         corpus.add(question.records)
         corpus.update(question.columns)
+        corpus.add(question.method_statement)
+    corpus.discard("")
     for page in SCAFFOLD:
         corpus.update((page.title, page.purpose))
         corpus.update(text for figure in page.figures
@@ -434,17 +445,46 @@ def _write_fields(writer: Writer, page: DocumentSpec, document: dict) -> None:
         writer.structural(NO_FIELDS_HERE)
         writer.markup("\n")
         return
+    impact_level = impact_level_of(document)
     heading = ""
     for question in questions:
-        if _heading_for(question) != heading:
-            heading = _heading_for(question)
+        if _heading_for(question, impact_level) != heading:
+            heading = _heading_for(question, impact_level)
             _write_heading(writer, "\n## ", heading)
         _write_field(writer, question, store.record(document, question.id))
 
 
-def _heading_for(question: bank.Question) -> str:
-    """The heading a field sits under: NIST's own where the bank cites one, ours otherwise."""
-    return question.nist_heading or OURS_HEADING
+def impact_level_of(document: dict) -> str:
+    """The categorisation this plan states about itself, or the empty string for none.
+
+    Empty is the reference plan's own position and is not a defect of this function: no
+    sentence anywhere in it says the system is low, moderate or high impact.
+    """
+    stored = store.record(document, bank.IMPACT_LEVEL_KEY)
+    if stored is None or stored.status != "ANSWERED":
+        return ""
+    return str(stored.value)
+
+
+def _heading_for(question: bank.Question, impact_level: str) -> str:
+    """The heading a field sits under, which is its structural-provenance class made visible.
+
+    NIST's own heading where the bank cites one, the method heading where the toolkit
+    supplied the element, and ours for everything this project carries on its own account.
+
+    NIST's own heading is not a constant. Its appendix letters depend on which of the three
+    sample templates applies, so the categorisation selects the letter. An uncategorised plan
+    keeps the transcribed high-impact heading, which is the superset an auditor with no
+    stated level grades against. Where the selected template has no appendix for the element
+    at all, the element survives and its NIST provenance does not, so it is declared ours.
+    """
+    if question.structural_provenance == "method":
+        return METHOD_HEADING
+    if not question.nist_heading:
+        return OURS_HEADING
+    if not impact_level:
+        return question.nist_heading
+    return bank.heading_in_scheme(question.nist_heading, impact_level) or OURS_HEADING
 
 
 def _write_field(writer: Writer, question: bank.Question, stored: Record | None) -> None:
@@ -454,6 +494,7 @@ def _write_field(writer: Writer, question: bank.Question, stored: Record | None)
     plan whose business impact analysis silently degrades to pipe characters is worse than
     one that never had the table.
     """
+    _write_method_statement(writer, question)
     if question.columns and _is_answered(stored):
         _write_table_field(writer, question, stored)
         return
@@ -464,6 +505,18 @@ def _write_field(writer: Writer, question: bank.Question, stored: Record | None)
         writer.answer(stored.value)
     writer.annotate(stored)
     writer.markup("\n")
+
+
+def _write_method_statement(writer: Writer, question: bank.Question) -> None:
+    """The templated text a method element consists of, as structural text and nothing else.
+
+    Written before the field it frames, so the answer below it reads as a parameter of a
+    stated approach rather than as a claim the interviewee made about the approach itself.
+    """
+    if not question.method_statement:
+        return
+    writer.structural(question.method_statement)
+    writer.markup("\n\n")
 
 
 def _write_table_field(writer: Writer, question: bank.Question, stored: Record) -> None:

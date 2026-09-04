@@ -3,11 +3,17 @@
 The bank is the schema. Every rule the store enforces at write time rests on the bank being
 internally consistent, so these run first and the rest of the suite assumes them.
 
-The check that matters most over time is :func:`_crosswalk_never_justifies`. The three-class
-partition of ``docs/ITIL-GROUNDING.md`` section 4.3 is only worth having if the forbidden
-class is mechanically forbidden, and a future edit that classifies a field ``crosswalk``
-would otherwise be a silent route for an unread paywalled standard to introduce a required
-field.
+The check that matters most over time is :func:`_crosswalk_never_justifies`. The partition
+of ``docs/ITIL-GROUNDING.md`` section 4.3, extended here by a fourth class, is only worth
+having if the forbidden class is mechanically forbidden, and a future edit that classifies a
+field ``crosswalk`` would otherwise be a silent route for an unread paywalled standard to
+introduce a required field.
+
+The second-most load bearing group is the mechanism pairing. ``mechanism_required`` on its
+own can only ever *reject* a figure that arrived without an explanation; it cannot elicit
+one, because nothing asks. The checks below make the pairing structural: a question yields a
+figure exactly when it is mechanism-required, and a mechanism-required question carries the
+follow-up that asks what breaks, on the same record as the figure it explains.
 """
 from __future__ import annotations
 
@@ -20,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank
 from harness import Section, equal
 
-EXPECTED_STARTER_KEYS = 37
+EXPECTED_STARTER_KEYS = 82
 #: The seven fields ``templates/answers.example.yaml`` annotates ``# list of {...}``. Named
 #: rather than counted, so a rename cannot silently satisfy the check.
 YAML_LIST_FIELDS = (
@@ -33,15 +39,83 @@ YAML_LIST_FIELDS = (
     "continuity.succession",
 )
 
-#: One field beyond those seven is modelled as rows here and was a bare ``value: null`` in the
-#: YAML: ``governance.risk_register``. A register with an owner and a review date per row is
-#: rows; prose that lists risks is not a register. Recorded as a deliberate deviation rather
-#: than left to be discovered as an off-by-one in the emitted example.
-DELIBERATE_EXTRA_ROW_FIELDS = ("governance.risk_register",)
+#: Every other field modelled as rows, named rather than counted so that a question cannot
+#: become a table by accident. ``governance.risk_register`` was a bare ``value: null`` in the
+#: YAML; a register with an owner and a review date per row is rows, and prose that lists
+#: risks is not a register. The rest arrived with the questions recovered from the reference
+#: plan, where the same content is carried as a table in the plan itself.
+DELIBERATE_EXTRA_ROW_FIELDS = (
+    "governance.risk_register",
+    "system.assumptions",
+    "business.tier_targets",
+    "business.tier_assignment",
+    "business.freeze_periods",
+    "app.validation_data_tests",
+    "app.unsafe_reruns",
+    "infra.irreversible_choices",
+    "infra.licensing",
+    "infra.offsite_storage",
+    "continuity.contact_roster",
+    "continuity.vendor_contacts",
+    "continuity.vendor_obligations",
+    "continuity.decision_and_recovery_roles",
+    "governance.associated_plans",
+    "governance.drill_levels",
+)
+
+#: The plan rows that had no question at all, as the NIST headings a question now has to
+#: cite. Nine were named in the brief; three more turned up in the same sweep and are here
+#: because the reference plan carries content for each of them and nothing elicited it.
+NIST_ROWS_THAT_OWED_A_QUESTION = (
+    "1.3 Assumptions",
+    "4.2 Recovery Procedures",
+    "5.2 Validation Data Testing",
+    "5.4 Recovery Declaration",
+    "5.5 Notifications (users)",
+    "5.6 Cleanup",
+    "5.7 Offsite Data Storage",
+    "5.8 Data Backup",
+    "5.9 Event Documentation",
+    "APPENDIX A PERSONNEL CONTACT LIST",
+    "APPENDIX B VENDOR CONTACT LIST",
+    "APPENDIX K ASSOCIATED PLANS AND PROCEDURES",
+)
+
+#: The tenth row of the brief's nine, which cannot be named by a NIST heading because it has
+#: none: ``NIST_DISCREPANCIES`` records that no appendix of vendor SLAs and reciprocal
+#: agreements exists in any of the three templates, and reclassifies the row ours.
+VENDOR_OBLIGATIONS_KEY = "continuity.vendor_obligations"
+
+#: The platform facts the reference plan carries as unconfirmed assumptions. Every one of
+#: them is something a person knows and nobody was asked to confirm, which is how a human
+#: fact ends up in an assumption table. Each is read back before it is written down.
+ASSUMPTION_BEARING = (
+    "system.assumptions",
+    "system.component_terms",
+    "system.releases",
+    "system.operating_systems",
+    "system.instances",
+    "infra.inter_region_transport",
+    "infra.storage_constraints",
+    "infra.shared_storage",
+)
+
+#: The columns an assumption row carries beyond the assumption itself. A flag on an
+#: unconfirmed fact says it is unconfirmed; these say who closes it and by when.
+ASSUMPTION_COLUMNS = ("owner", "confirm_by")
+
+#: The role question. NIST's own template names posts, and a customer does not know them; a
+#: question that asks who the ISCP Director is teaches the interviewee the answer.
+ROLE_CROSSWALK_KEY = "continuity.decision_and_recovery_roles"
+
+#: Words that would mean the question had asked for a post rather than for a duty.
+POSTS_NOBODY_SHOULD_BE_ASKED_FOR = ("Director", "Coordinator", "ISCP")
 
 #: Fields ``docs`` and the brief name as load bearing: they are asked independently, and a
 #: discovery value that disagrees becomes a conflict rather than a value.
 NEVER_SEEDABLE = (
+    "system.impact_level",
+    "business.tier_targets",
     "business.mtd.tier0",
     "business.rpo.tier0",
     "business.mbco.tier0",
@@ -84,11 +158,16 @@ def main() -> None:
     section.check("every kind is a known kind", _every_question(
         lambda question: _assert_in(question.kind, bank.KINDS, "kind"), "kind"))
 
-    section.check("every structural provenance is one of the three classes", _every_question(
+    section.check("every structural provenance is one of the four classes", _every_question(
         lambda question: _assert_in(
             question.structural_provenance, bank.STRUCTURAL_PROVENANCE,
             "structural_provenance"),
         "provenance class"))
+
+    section.check("method is the fourth class and is in use", _method_is_a_class_in_use)
+
+    section.check("every method field carries the text the toolkit supplies", _every_question(
+        _method_supplies_its_own_text, "method statement"))
 
     section.check("no field is justified by the crosswalk class", _every_question(
         _crosswalk_never_justifies, "crosswalk rule"))
@@ -99,8 +178,8 @@ def main() -> None:
     section.check("every nist field cites a transcribed heading", _every_question(
         _nist_heading_is_transcribed, "nist heading"))
 
-    section.check("no ours field claims a nist heading", _every_question(
-        _ours_claims_nothing, "ours claims nothing"))
+    section.check("only a nist field claims a nist heading", _every_question(
+        _only_nist_claims_a_nist_heading, "claims nothing"))
 
     section.check("no field opts out of provenance", _every_question(
         lambda question: _assert(question.provenance_required,
@@ -109,6 +188,12 @@ def main() -> None:
 
     section.check("mechanism is required exactly where a figure is", _every_question(
         _mechanism_attaches_to_a_figure, "mechanism"))
+
+    section.check("every figure question carries the paired follow-up", _every_question(
+        _figures_are_paired_with_a_mechanism_prompt, "mechanism pairing"))
+
+    section.check("a table of figures pairs each figure with the column that explains it",
+                  _every_question(_figure_columns_name_their_explanation, "figure columns"))
 
     section.check("read-back is required for every narrative", _every_question(
         _narrative_requires_readback, "read-back"))
@@ -139,6 +224,25 @@ def main() -> None:
     section.check("lookup by id finds every question", _lookup_round_trips)
 
     section.check("every discrepancy has a known kind", _discrepancy_kinds_are_closed)
+
+    section.check("every plan row that owed a question has one", _the_owed_rows_are_covered)
+
+    section.check("an assumption is read back, owned and dated", _assumptions_are_read_back)
+
+    section.check("the role question asks for duties, not for NIST's posts",
+                  _the_role_question_asks_for_duties)
+
+    section.check("the bank asks which impact level was assigned", _the_bank_asks_for_a_level)
+
+    section.check("the moderate and high templates letter to M", _moderate_and_high_lettering)
+
+    section.check("the low template omits one appendix and letters one lower",
+                  _low_impact_lettering)
+
+    section.check("only the appendices re-letter", _only_the_appendices_move)
+
+    section.check("an unstated impact level is refused, never guessed",
+                  _an_unknown_level_is_refused)
 
     section.finish()
 
@@ -181,20 +285,105 @@ def _nist_heading_is_transcribed(question) -> None:
     assert question.nist_source, "classified nist but names no source location"
 
 
-def _ours_claims_nothing(question) -> None:
-    if question.structural_provenance != "ours":
+def _only_nist_claims_a_nist_heading(question) -> None:
+    """``ours`` and ``method`` both claim no standards provenance, so neither cites one."""
+    if question.structural_provenance == "nist":
         return
     assert not question.nist_heading, (
-        f"classified ours but claims NIST heading {question.nist_heading!r}"
+        f"classified {question.structural_provenance!r} but claims NIST heading "
+        f"{question.nist_heading!r}"
+    )
+
+
+def _method_is_a_class_in_use() -> None:
+    """The fourth class exists, and something is actually classified by it.
+
+    A class nobody uses is a claim in a tuple. The posture model, the decomposition of
+    maximum tolerable downtime and the one-way-door rule are the toolkit's own approach:
+    neither elicited from anybody nor transcribed from anything, and the reference plan
+    carries all three with no provenance a reader can check.
+    """
+    equal(len(bank.STRUCTURAL_PROVENANCE), 4, "the structural-provenance classes")
+    _assert_in("method", bank.STRUCTURAL_PROVENANCE, "the fourth class")
+    counts = bank.structural_provenance_counts()
+    assert counts["method"], (
+        "method is declared and nothing is classified by it, so the class is a word in a "
+        "tuple rather than a partition of the bank"
+    )
+
+
+def _method_supplies_its_own_text(question) -> None:
+    """Method content is text the toolkit supplies, so the bank has to carry the text."""
+    if question.structural_provenance == "method":
+        assert question.method_statement.strip(), (
+            "classified method and supplies no text; method means the toolkit brought the "
+            "element, and an element nobody wrote down cannot be shown to a reader as ours"
+        )
+        return
+    assert not question.method_statement, (
+        f"supplies method text without being classified method: "
+        f"{question.method_statement!r}"
     )
 
 
 def _mechanism_attaches_to_a_figure(question) -> None:
-    if not question.mechanism_required:
+    """A figure and a demand for its mechanism are the same thing, in both directions.
+
+    The reverse direction is the one that matters. Checking only that mechanism_required
+    implies a figure lets a new duration question ship without the flag, and a duration with
+    no mechanism is the defect the flag exists to catch.
+    """
+    if question.mechanism_required:
+        assert question.kind in bank.FIGURE_KINDS, (
+            f"mechanism_required on a {question.kind!r} field; a mechanism explains a figure"
+        )
+    if question.kind in bank.FIGURE_KINDS:
+        assert question.mechanism_required, (
+            f"kind is {question.kind!r} and nothing demands the mechanism behind the figure"
+        )
+
+
+def _figures_are_paired_with_a_mechanism_prompt(question) -> None:
+    """The pairing, stated as a property of the record rather than as interviewer habit.
+
+    A mechanism the store demands and no question asks for is a rule that can only refuse an
+    answer. The follow-up lives on the same record as the figure because that is where the
+    store keeps the mechanism.
+    """
+    wants_a_mechanism = question.mechanism_required or bool(question.figure_columns)
+    if not wants_a_mechanism:
+        assert not question.mechanism_prompt, (
+            f"carries a mechanism follow-up but yields no figure: "
+            f"{question.mechanism_prompt!r}"
+        )
         return
-    assert question.kind in ("duration", "number", "currency"), (
-        f"mechanism_required on a {question.kind!r} field; a mechanism explains a figure"
+    assert question.mechanism_prompt.strip(), (
+        "yields a figure and asks nothing about what breaks; mechanism_required can refuse "
+        "an answer but only a question can elicit one"
     )
+    assert "?" in question.mechanism_prompt, (
+        f"the mechanism follow-up asks nothing: {question.mechanism_prompt!r}"
+    )
+    assert question.mechanism_prompt != question.prompt, (
+        "the mechanism follow-up repeats the question that produced the figure"
+    )
+
+
+def _figure_columns_name_their_explanation(question) -> None:
+    """A figure in a table is still a figure, so its row carries the cell that explains it."""
+    if not question.figure_columns:
+        return
+    assert question.kind == "rows", (
+        f"figure_columns on a {question.kind!r} field; only a table has columns"
+    )
+    for figure, explanation in question.figure_columns.items():
+        assert figure in question.columns, f"figure column {figure!r} is not a column"
+        assert explanation in question.columns, (
+            f"the column said to explain {figure!r} is not a column: {explanation!r}"
+        )
+        assert explanation != figure, (
+            f"{figure!r} is said to explain itself, which explains nothing"
+        )
 
 
 def _narrative_requires_readback(question) -> None:
@@ -264,6 +453,131 @@ def _lookup_round_trips() -> None:
     for question in bank.QUESTIONS:
         equal(bank.question(question.id), question, f"lookup of {question.id}")
     assert bank.question("nonexistent.key") is None, "lookup invented a question"
+
+
+#: Where the coverage map's appendix lettering came apart, restated as the two anchors the
+#: derivation has to reproduce. Both are already recorded in ``bank.NIST_DISCREPANCIES``: the
+#: business impact analysis is Appendix K in the low template and L in the other two, and the
+#: document change page is L in the low template and M in the other two.
+_LOW_ANCHORS = (
+    ("BUSINESS IMPACT ANALYSIS", "APPENDIX K BUSINESS IMPACT ANALYSIS"),
+    ("DOCUMENT CHANGE PAGE", "APPENDIX L DOCUMENT CHANGE PAGE"),
+    ("ASSOCIATED PLANS AND PROCEDURES", "APPENDIX J ASSOCIATED PLANS AND PROCEDURES"),
+    ("INTERCONNECTIONS TABLE", "APPENDIX H INTERCONNECTIONS TABLE"),
+)
+
+_HIGH_ANCHORS = (
+    ("BUSINESS IMPACT ANALYSIS", "APPENDIX L BUSINESS IMPACT ANALYSIS"),
+    ("DOCUMENT CHANGE PAGE", "APPENDIX M DOCUMENT CHANGE PAGE"),
+    ("ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS",
+     "APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"),
+    ("INTERCONNECTIONS TABLE", "APPENDIX I INTERCONNECTIONS TABLE"),
+)
+
+_ABSENT_FROM_THE_LOW_TEMPLATE = "ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"
+
+
+def _the_bank_asks_for_a_level() -> None:
+    """The letter is a function of the categorisation, so the categorisation is elicited.
+
+    The reference plan never states one, and its own compliance skill says a plan that states
+    none has that row REFUTED. A toolkit whose appendix lettering depends on an answer nobody
+    is asked for would reproduce that.
+    """
+    question = bank.BY_ID[bank.IMPACT_LEVEL_KEY]
+    equal(question.kind, "enum", f"kind of {bank.IMPACT_LEVEL_KEY}")
+    equal(question.options, bank.IMPACT_LEVELS, "the levels offered")
+    assert question.readback_required, (
+        "the impact level decides which template the plan is graded against and is not "
+        "written down without being said back")
+
+
+def _lettering_matches(anchors, impact_level: str) -> None:
+    for title, expected in anchors:
+        equal(bank.heading_in_scheme(f"APPENDIX ? {title}", impact_level), expected,
+              f"{title} at {impact_level} impact")
+
+
+def _moderate_and_high_lettering() -> None:
+    for impact_level in ("moderate", "high"):
+        _lettering_matches(_HIGH_ANCHORS, impact_level)
+
+
+def _low_impact_lettering() -> None:
+    _lettering_matches(_LOW_ANCHORS, "low")
+    equal(bank.heading_in_scheme(f"APPENDIX F {_ABSENT_FROM_THE_LOW_TEMPLATE}", "low"), "",
+          "the appendix the low template does not have")
+
+
+def _only_the_appendices_move() -> None:
+    """A section number is the same in all three templates; only the letters shift."""
+    for heading in bank.NIST_A3_HEADINGS:
+        if heading.startswith("APPENDIX "):
+            continue
+        equal(bank.heading_in_scheme(heading, "low"), heading, f"{heading} at low impact")
+
+
+def _an_unknown_level_is_refused() -> None:
+    for level in ("", "medium", "LOW"):
+        try:
+            bank.heading_in_scheme("APPENDIX L BUSINESS IMPACT ANALYSIS", level)
+        except ValueError:
+            continue
+        raise AssertionError(
+            f"lettered an appendix at impact level {level!r}; an uncategorised system has no "
+            f"template, and picking one silently is the guess the toolkit exists to refuse")
+
+
+def _the_owed_rows_are_covered() -> None:
+    """Every plan row the bank could not fill, now filled.
+
+    A row of the plan with no question behind it is a section the toolkit will render as a
+    heading with nothing under it, or worse, a section somebody fills in by hand and nobody
+    can trace. The reference plan carries content for every row named here.
+    """
+    cited = {question.nist_heading for question in bank.QUESTIONS if question.nist_heading}
+    uncited = [heading for heading in NIST_ROWS_THAT_OWED_A_QUESTION if heading not in cited]
+    assert not uncited, f"plan rows still with no question: {uncited}"
+    vendors = bank.BY_ID[VENDOR_OBLIGATIONS_KEY]
+    equal(vendors.structural_provenance, "ours", f"class of {VENDOR_OBLIGATIONS_KEY}")
+
+
+def _assumptions_are_read_back() -> None:
+    """An assumption is a human fact nobody confirmed, so confirming it is the whole fix.
+
+    The reference plan's seven material assumptions are all things a person knows: which
+    release, which operating system, one instance or several, how the two regions are joined.
+    They became assumptions because the interview never said them back. A flag marking them
+    unconfirmed is not the fix; a read-back, an owner and a date are.
+    """
+    for key in ASSUMPTION_BEARING:
+        assert bank.BY_ID[key].readback_required, (
+            f"{key} carries a fact that ends up in an assumption table and is written down "
+            f"without being said back")
+    columns = bank.BY_ID["system.assumptions"].columns
+    for column in ASSUMPTION_COLUMNS:
+        assert column in columns, (
+            f"an assumption row has no {column!r} column, so the gap is flagged and unowned")
+
+
+def _the_role_question_asks_for_duties() -> None:
+    """Ask who decides and who recovers. Never ask a customer to name an ISCP Director.
+
+    The post names belong to NIST's template, not to the organisation being interviewed.
+    Putting one in the question supplies the answer, and the plan then records a role the
+    customer heard from us rather than the one they actually have.
+    """
+    question = bank.BY_ID[ROLE_CROSSWALK_KEY]
+    equal(question.structural_provenance, "method", f"class of {ROLE_CROSSWALK_KEY}")
+    asked = f"{question.prompt} {question.guidance}"
+    for post in POSTS_NOBODY_SHOULD_BE_ASKED_FOR:
+        assert post not in asked, (
+            f"the question puts {post!r} in front of the interviewee, which supplies the "
+            f"answer it is meant to elicit")
+    duties = question.enum_columns.get("duty", ())
+    assert len(duties) > 1, (
+        "the question offers no duty vocabulary, so nothing distinguishes who decides from "
+        "who recovers")
 
 
 def _discrepancy_kinds_are_closed() -> None:

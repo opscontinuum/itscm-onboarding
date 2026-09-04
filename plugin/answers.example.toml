@@ -36,6 +36,64 @@ owner = "business owner"
 status = "MISSING"
 owner = "governance/risk contact"
 
+# system.impact_level - asked of the governance/risk contact
+# Three answers are legal and 'nobody ever assigned one' is not among them: an
+# uncategorised system leaves this MISSING with the governance contact owing it, which
+# is the honest record and the finding an auditor wants. The answer decides which of
+# NIST's three sample templates the plan is graded against, and therefore what letter
+# each of its appendices carries. Uncategorised, the plan keeps the high-impact
+# lettering, because that template is the superset and an auditor with no stated level
+# grades against it.
+# Read this back and get a yes before recording it.
+[facts."system.impact_level"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# system.assumptions - asked of the lead engineer
+# An assumption is a fact nobody confirmed, so every row here is a question somebody
+# did not get asked. Read each one back. The owner and the date are not decoration: a
+# table of unowned assumptions is a list of things that will still be assumptions at
+# the next review, and one of them will be the one that was wrong.
+# Read this back and get a yes before recording it.
+[facts."system.assumptions"]
+status = "MISSING"
+owner = "lead engineer"
+
+# system.component_terms - asked of the application owner
+# One word that means two things is the cheapest catastrophic mistake in a continuity
+# design: a whole section gets written for the wrong layer and reads perfectly well.
+# Ask before drawing, not after. If they cannot say, that is a MISSING with the
+# application owner's name on it, not a guess.
+# Read this back and get a yes before recording it.
+[facts."system.component_terms"]
+status = "MISSING"
+owner = "application owner"
+
+# system.releases - asked of the application owner
+# Say the numbers back. This is the fact most often carried as an assumption and it
+# changes recovery mechanics more than almost anything else. A half-finished upgrade
+# is the answer that matters most and the one people forget to mention.
+# Read this back and get a yes before recording it.
+[facts."system.releases"]
+status = "MISSING"
+owner = "application owner"
+
+# system.operating_systems - asked of the infrastructure owner
+# Decides what language every recovery script is written in, and therefore who can run
+# it at three in the morning. Read it back.
+# Read this back and get a yes before recording it.
+[facts."system.operating_systems"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# system.instances - asked of the application owner
+# A second instance nobody mentioned changes the tier map, the recovery order and the
+# cost. Ask it early and read the answer back.
+# Read this back and get a yes before recording it.
+[facts."system.instances"]
+status = "MISSING"
+owner = "application owner"
+
 # business.processes - asked of the business owner
 # The BIA's first step. Ask about impact at each horizon separately; people answer 'it
 # is critical' to the general question and give you something usable when the horizon
@@ -46,7 +104,10 @@ owner = "business owner"
 
 # business.mtd.tier0 - asked of the business owner
 # A number without a mechanism is a guess wearing a suit.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What happens at that hour that does not happen at the hour before it? Name the
+# deadline, the cut-off, the batch that has to run, or the person who picks up the
+# phone.
 # Read this back and get a yes before recording it.
 [facts."business.mtd.tier0"]
 status = "MISSING"
@@ -54,7 +115,9 @@ owner = "business owner"
 
 # business.rpo.tier0 - asked of the business owner
 # Elicited as: if we lost 15 minutes, who redoes the work, and can they?
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is in those minutes that nobody could rebuild from anywhere else, and who finds
+# out first that it is gone?
 # Read this back and get a yes before recording it.
 [facts."business.rpo.tier0"]
 status = "MISSING"
@@ -69,6 +132,9 @@ owner = "business owner"
 
 # business.workarounds - asked of the business owner
 # Appendix E. Ask about the last real outage, not the hypothetical one.
+# The figure needs its mechanism beside it. Ask:
+# When each of those workarounds runs out, what is the first thing that fails, and who
+# notices it?
 [facts."business.workarounds"]
 status = "MISSING"
 owner = "business owner"
@@ -77,6 +143,57 @@ owner = "business owner"
 # Signed, or explicitly recorded as not signed and who owes it.
 # Read this back and get a yes before recording it.
 [facts."business.tier_signoff"]
+status = "MISSING"
+owner = "business owner"
+
+# business.tier_targets - asked of the business owner
+# One table, filled a row at a time, and the last column is the one that makes the
+# rest worth having. A tier ladder of round numbers with nothing behind them is the
+# single most common defect in a continuity plan: it reads as a measurement and it is
+# a preference. Do not accept a figure until the row beside it says what it collides
+# with.
+# The figure needs its mechanism beside it. Ask:
+# For each tier, what happens at that hour and not the hour before it? Name the
+# deadline, the cut-off or the person who calls.
+# Read this back and get a yes before recording it.
+[facts."business.tier_targets"]
+status = "MISSING"
+owner = "business owner"
+
+# business.tier_assignment - asked of the business owner
+# The impact question asks what stops. This one asks the business to commit. They are
+# different sessions and people answer them differently: 'it is critical' survives the
+# first and does not survive the second. Record the argument, not just the letter,
+# because the argument is what gets re-examined when the cost lands.
+[facts."business.tier_assignment"]
+status = "MISSING"
+owner = "business owner"
+
+# business.freeze_periods - asked of the business owner
+# Nobody volunteers this and everybody has one. It changes the activation criteria for
+# a fortnight a quarter, which is when the plan is most likely to be used and least
+# likely to have been read.
+# Read this back and get a yes before recording it.
+[facts."business.freeze_periods"]
+status = "MISSING"
+owner = "business owner"
+
+# business.freeze_override_authority - asked of the business owner
+# A freeze with no override is a plan that stops working four weeks a year. Name one
+# individual and what they need to see; 'the board' is nobody at two in the morning.
+# Read this back and get a yes before recording it.
+[facts."business.freeze_override_authority"]
+status = "MISSING"
+owner = "business owner"
+
+# business.reconstruction_effort - asked of the business owner
+# This is the recovery point objective turned into work recovery time, which is the
+# half of the sum that never gets costed. If the source they would rebuild from is
+# inside the failed estate, the answer is not a duration, it is a design finding.
+# The figure needs its mechanism beside it. Ask:
+# What are they rebuilding it from, and what happens if that source went down with
+# everything else?
+[facts."business.reconstruction_effort"]
 status = "MISSING"
 owner = "business owner"
 
@@ -115,6 +232,54 @@ owner = "application owner"
 status = "MISSING"
 owner = "application owner"
 
+# app.recovery_procedures - asked of the lead engineer
+# Reproduced byte for byte or not at all. A paraphrased command is worse than no
+# command, because it looks runnable. Where a step is a decision rather than a
+# keystroke, say so in the block; where a step needs a value nobody has yet, leave the
+# placeholder visible rather than inventing one. Read the block back to them before it
+# is written down.
+# Read this back and get a yes before recording it.
+[facts."app.recovery_procedures"]
+status = "MISSING"
+owner = "lead engineer"
+
+# app.validation_data_tests - asked of the application owner
+# Not the same as the functional pack, and the difference is the point. A database
+# opening read-write proves the system is up. Only somebody who runs the process can
+# say the data is right, so the signature column names a person's role and never the
+# infrastructure team.
+[facts."app.validation_data_tests"]
+status = "MISSING"
+owner = "application owner"
+
+# app.interface_landing - asked of the lead engineer
+# Ask what it is, not what it should be. The recommended pattern is easy to write and
+# useless without the current state beside it, and a design proposal in a
+# description's clothes is how a plan ends up recovering an estate nobody has.
+# Read this back and get a yes before recording it.
+[facts."app.interface_landing"]
+status = "MISSING"
+owner = "lead engineer"
+
+# app.unsafe_reruns - asked of the application owner
+# 'Nobody knows' is a legal answer and a useful one: it is the list somebody has to
+# work through before the next drill. A job that pays suppliers twice is a worse
+# outage than the one that caused the failover.
+[facts."app.unsafe_reruns"]
+status = "MISSING"
+owner = "application owner"
+
+# app.reconfiguration_duration - asked of the lead engineer
+# This figure usually carries the plan's whole design argument and usually arrives as
+# a range somebody remembers. If it has never been timed, record that: an untimed step
+# on the critical path is the reason the recovery misses its target by an afternoon.
+# The figure needs its mechanism beside it. Ask:
+# Was that timed on a rehearsal or estimated from experience? And what is the longest
+# it has ever taken?
+[facts."app.reconfiguration_duration"]
+status = "MISSING"
+owner = "lead engineer"
+
 # infra.primary_region - asked of the infrastructure owner
 # Discovery can name this, so it is read back for correction rather than asked cold. A
 # correction is itself worth having: it usually means something moved and nobody
@@ -133,7 +298,9 @@ owner = "infrastructure owner"
 # infra.measured_rtt_ms - asked of the lead engineer
 # Measured, not published. A synchronous design over an unmeasured link has an
 # unexploded assumption in the middle of it.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What was running when it was measured, and at what time of day? And at what figure
+# would this design stop working?
 [facts."infra.measured_rtt_ms"]
 status = "MISSING"
 owner = "lead engineer"
@@ -141,6 +308,9 @@ owner = "lead engineer"
 # infra.replication - asked of the infrastructure owner
 # Press the re-baseline question. It is the failback cost and it is almost never
 # costed.
+# The figure needs its mechanism beside it. Ask:
+# For each tier, at what lag would you stop trusting the standby, and what is the
+# first thing that breaks when it reaches that?
 [facts."infra.replication"]
 status = "MISSING"
 owner = "infrastructure owner"
@@ -148,7 +318,9 @@ owner = "infrastructure owner"
 # infra.standby_cost_floor - asked of the infrastructure owner
 # The tier the business chose may be unaffordable at the floor. Now is when that
 # conversation is cheap.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is in that figure and what is not? Name the lines it covers, and say what would
+# have to be switched off to make it smaller.
 [facts."infra.standby_cost_floor"]
 status = "MISSING"
 owner = "infrastructure owner"
@@ -167,6 +339,102 @@ owner = "infrastructure owner"
 [facts."infra.last_end_to_end_execution"]
 status = "MISSING"
 owner = "lead engineer"
+
+# infra.availability_domains - asked of the infrastructure owner
+# Discovery can name these, so read them back rather than asking cold. The arbitrator
+# is the half people forget: one that sits in the primary region is a vote that is
+# always lost at exactly the moment it is needed.
+[facts."infra.availability_domains"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.inter_region_transport - asked of the infrastructure owner
+# Press on the writing. A replication design rests on this link, and 'it has always
+# been fine' is a measurement of the past. If nothing is committed, that is a risk
+# register row with an owner, not a footnote.
+# Read this back and get a yes before recording it.
+[facts."infra.inter_region_transport"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.storage_constraints - asked of the lead engineer
+# A single feature here can rule out the cheap standby entirely, and it is usually
+# discovered after the budget is signed. Read the answer back and record who confirmed
+# it.
+# Read this back and get a yes before recording it.
+[facts."infra.storage_constraints"]
+status = "MISSING"
+owner = "lead engineer"
+
+# infra.shared_storage - asked of the infrastructure owner
+# This decides a real fork in the recovery design and is usually answered by whoever
+# is in the room rather than by whoever knows. Ask for the protocol, not the product.
+# Read this back and get a yes before recording it.
+[facts."infra.shared_storage"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.standby_posture - asked of the infrastructure owner
+# Two answers, and the second one matters more. A posture with no named owner gets
+# changed by whoever is looking at the bill that month, which is how a standby quietly
+# stops being one.
+# Read this back and get a yes before recording it.
+[facts."infra.standby_posture"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.warned_posture_time - asked of the infrastructure owner
+# Most estates have no warned state and have never been asked for one. NOT_APPLICABLE
+# with a reason is a good answer here; silence is not.
+# The figure needs its mechanism beside it. Ask:
+# What does that state cost while you are holding it, and what decides when you come
+# back down from it?
+[facts."infra.warned_posture_time"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.silent_failures - asked of the lead engineer
+# Ask it exactly like that and then stop talking. It is the question that produces the
+# alert catalogue, and it produces it as a story about something that already happened
+# rather than as a list of metrics somebody invented.
+# Read this back and get a yes before recording it.
+[facts."infra.silent_failures"]
+status = "MISSING"
+owner = "lead engineer"
+
+# infra.irreversible_choices - asked of the lead engineer
+# Deleting a replication relationship to save money is the one everybody finds by
+# doing it. Ask whether it has happened here; a scar is worth more than a warning.
+[facts."infra.irreversible_choices"]
+status = "MISSING"
+owner = "lead engineer"
+
+# infra.licensing - asked of the infrastructure owner
+# The line item most often discovered late, and the one the plan is least likely to
+# ask about. 'Nobody knows' is the most useful answer in the column and belongs in the
+# risk register the same day.
+# Read this back and get a yes before recording it.
+[facts."infra.licensing"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.offsite_storage - asked of the infrastructure owner
+# NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on
+# physical media, and it is a better answer than an invented courier. What is never
+# legitimate is leaving retention blank: a retention shorter than the records the
+# business has to keep is a finding on its own.
+[facts."infra.offsite_storage"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.post_recovery_backup - asked of the infrastructure owner
+# The step most likely to be missed, because the system is up and everyone goes home.
+# Until this is done a second event is unrecoverable, so the answer needs a name and a
+# time attached to it, not an intention.
+# Read this back and get a yes before recording it.
+[facts."infra.post_recovery_backup"]
+status = "MISSING"
+owner = "infrastructure owner"
 
 # continuity.declaration_authority - asked of the DR process owner
 # Exactly one individual, and one named deputy. Not 'the incident team', which is
@@ -195,7 +463,9 @@ owner = "DR process owner"
 # continuity.decision_time_budget - asked of the DR process owner
 # Deciding is on the recovery critical path and is almost never budgeted. Whatever the
 # number is, it comes out of the MTD.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is happening to the outage while that decision is being taken, and what stops
+# being recoverable once the budget is spent?
 [facts."continuity.decision_time_budget"]
 status = "MISSING"
 owner = "DR process owner"
@@ -242,6 +512,108 @@ owner = "DR process owner"
 status = "MISSING"
 owner = "DR process owner"
 
+# continuity.contact_roster - asked of the DR process owner
+# The one file that must never be committed to a shared repository, and the one that
+# is useless if it is out of date. Press on the last column: a roster nobody has rung
+# is a list of numbers, not a call tree. A role with no holder is a gap with a name on
+# it and belongs here as MISSING rather than being quietly left out.
+# Read this back and get a yes before recording it.
+[facts."continuity.contact_roster"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.vendor_contacts - asked of the DR process owner
+# The reference column is the one that saves an hour. A support contract number stored
+# only inside the system being recovered is not a contract number. Ask where a printed
+# copy lives.
+[facts."continuity.vendor_contacts"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.vendor_obligations - asked of the governance/risk contact
+# Not a NIST appendix: the templates have no heading for this and the coverage map
+# invented one. It is still worth asking, because a recovery that assumes a vendor
+# will help is a recovery resting on goodwill. If the answer is that nobody has read
+# the contract, record that.
+[facts."continuity.vendor_obligations"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# continuity.decision_and_recovery_roles - asked of the DR process owner
+# Four duties, asked separately, because asking for one job title gets you one name
+# and hides the overlap. Where the same role holds two of them, say so out loud and
+# ask what they put down to do the other. Deciding whether the repair estimate beats
+# the remaining budget and running the storage sequence are not the same work and
+# cannot be done at the same minute.
+# Read this back and get a yes before recording it.
+[facts."continuity.decision_and_recovery_roles"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.people_unavailable - asked of the DR process owner
+# Almost never asked and almost never has an answer. 'Nobody' is the correct answer
+# where it is true, and it belongs in the plan as a named hole rather than being
+# filled in by whoever is drafting.
+# Read this back and get a yes before recording it.
+[facts."continuity.people_unavailable"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.assessment_calibration - asked of the DR process owner
+# Calibrates the assessment budget against what this organisation can do rather than
+# against what the plan would like. If the honest answer is two hours, a ten-minute
+# assessment step is fiction and the plan should say so.
+# The figure needs its mechanism beside it. Ask:
+# What were they waiting on for that long, and is that thing any faster now?
+[facts."continuity.assessment_calibration"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.declaration_threshold_rule - asked of the DR process owner
+# The default action when nobody can estimate is a separate field and this is the rule
+# behind it. A fixed threshold ages badly; one computed from what is left of the
+# budget survives a change to the tier. Ask which they want and write down why.
+# Read this back and get a yes before recording it.
+[facts."continuity.declaration_threshold_rule"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.data_loss_gate - asked of the DR process owner
+# Decide it in daylight. In the event this is asked of whoever is nearest, at speed,
+# and the wrong answer pays somebody twice or fails to pay them at all. Name who
+# clears it.
+# Read this back and get a yes before recording it.
+[facts."continuity.data_loss_gate"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.recovery_declaration - asked of the DR process owner
+# Distinct from standing the plan down. This is the moment users are told they may
+# work, and the evidence for it is the validation pack rather than the infrastructure
+# being green.
+# Read this back and get a yes before recording it.
+[facts."continuity.recovery_declaration"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.user_notification - asked of the DR process owner
+# Ask what the message has to say, not just who sends it. Users coming back to a
+# system that lost fifteen minutes of work need to be told that, and a channel that
+# runs through the recovered estate is a channel with a loop in it.
+# Read this back and get a yes before recording it.
+[facts."continuity.user_notification"]
+status = "MISSING"
+owner = "DR process owner"
+
+# continuity.cleanup - asked of the DR process owner
+# The second half of the question finds the expensive one. Ask also what must
+# deliberately not be torn down: the replication that was rebuilt is the thing most
+# often cleaned up by somebody tidying.
+# Read this back and get a yes before recording it.
+[facts."continuity.cleanup"]
+status = "MISSING"
+owner = "DR process owner"
+
 # governance.signing_authority - asked of the signing authority
 # The signatory and the alternate signatory. A plan that can only be approved by one
 # reachable person cannot be reapproved after a material change while they are away.
@@ -274,6 +646,69 @@ owner = "governance/risk contact"
 # governance.risk_register - asked of the governance/risk contact
 # Material assumptions and design risks, owned and reviewed rather than scattered.
 [facts."governance.risk_register"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.event_documentation - asked of the governance/risk contact
+# A drill report and an event report are different documents and most organisations
+# have neither. Ask the last part plainly: if it has never been done, the answer is
+# what the plan should say, not an intention dressed as a procedure.
+# Read this back and get a yes before recording it.
+[facts."governance.event_documentation"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.associated_plans - asked of the governance/risk contact
+# A continuity plan that assumes a facilities plan exists, and a facilities plan that
+# assumes this one does, is a pair of documents each waiting for the other. Naming the
+# owner is what makes the assumption checkable.
+[facts."governance.associated_plans"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.drill_cadence - asked of the governance/risk contact
+# Two questions in one and the second is the real one. A stricter cadence than the
+# organisation will fund is worse than an honest looser one, because the plan then
+# documents a control that does not run and an auditor will find the gap rather than
+# the intention.
+# The figure needs its mechanism beside it. Ask:
+# What would have to happen for one to be skipped, and who notices when it is?
+[facts."governance.drill_cadence"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.drill_levels - asked of the governance/risk contact
+# The last column is the one that gets argued about, which is why it is a column. An
+# organisation whose only evidence is a reading has a plan nobody has run, and it will
+# believe otherwise until this table is filled in.
+[facts."governance.drill_levels"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.availability_boundary - asked of the governance/risk contact
+# The boundary most plans raise against themselves and never close. Where it is the
+# same person, ask what they stop doing during a recovery; where it is two, ask who
+# decides which one a given incident is.
+# Read this back and get a yes before recording it.
+[facts."governance.availability_boundary"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.plan_custody - asked of the signing authority
+# A plan readable only from the system it recovers is a plan nobody can read when they
+# need it. The second half of the question is the whole question; ask it separately
+# and wait.
+# Read this back and get a yes before recording it.
+[facts."governance.plan_custody"]
+status = "MISSING"
+owner = "signing authority"
+
+# governance.breach_disclosure_clock - asked of the governance/risk contact
+# A recovery driven by an attack is not only a continuity event, and this plan has no
+# authority over the disclosure clock. Record who does. An unowned regulatory clock is
+# the one gap in a continuity plan that costs money after the service is back.
+# Read this back and get a yes before recording it.
+[facts."governance.breach_disclosure_clock"]
 status = "MISSING"
 owner = "governance/risk contact"
 

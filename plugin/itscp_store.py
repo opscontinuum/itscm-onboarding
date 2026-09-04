@@ -267,6 +267,11 @@ def _validate_question_requirements(record: Record, question: bank.Question) -> 
                  "get a yes; a draft nobody confirmed is not an answer they gave.")
     if question.confidence_required:
         _require(record.confidence, record.key, "requires a confidence.")
+    if question.options:
+        _require(record.value in question.options, record.key,
+                 f"{record.value!r} is not one of the options this question offers: "
+                 f"{', '.join(question.options)}. An option list that binds nothing is "
+                 f"documentation, and a value outside it is one the plan cannot act on.")
 
 
 def _validate_conflict(record: Record) -> None:
@@ -508,8 +513,9 @@ def _header() -> str:
 def _comment_block(question: bank.Question) -> list[str]:
     lines = [f"# {question.id} - asked of the {question.owner_role}"]
     lines.extend(_wrapped_comment(question.guidance))
-    if question.mechanism_required:
-        lines.append("# A figure here needs the mechanism beside it.")
+    if question.mechanism_prompt:
+        lines.append("# The figure needs its mechanism beside it. Ask:")
+        lines.extend(_wrapped_comment(question.mechanism_prompt))
     if question.readback_required:
         lines.append("# Read this back and get a yes before recording it.")
     return lines

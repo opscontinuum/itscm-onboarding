@@ -304,17 +304,29 @@ def _claim_lines(text: str) -> list[str]:
 
 # --------------------------------------------------- 3. byte-similarity, sourced tier
 
-def _cited_headings() -> list[str]:
-    return sorted({question.nist_heading for question in bank.QUESTIONS
-                   if question.nist_heading})
+def _cited_headings(document: dict) -> list[str]:
+    """Every NIST heading the bank cites, lettered as this plan's categorisation letters it.
+
+    The appendix letters are not constants: NIST's low-impact template omits one appendix and
+    letters the rest one lower. An element the selected template has no appendix for comes
+    back empty and is dropped, because the plan declares it ours rather than quoting a
+    heading the template does not carry.
+    """
+    impact_level = render.impact_level_of(document)
+    headings = set()
+    for question in bank.QUESTIONS:
+        if not question.nist_heading:
+            continue
+        headings.add(bank.heading_in_scheme(question.nist_heading, impact_level)
+                     if impact_level else question.nist_heading)
+    return sorted(heading for heading in headings if heading)
 
 
 def _byte_similarity_on_nist() -> None:
     """Where the plan quotes NIST, it quotes NIST exactly, and as a heading rather than prose."""
-    rendered = _headings_of("\n".join(page.text
-                                      for page in render.render(scripted_answers
-                                                                .scripted_document())))
-    for heading in _cited_headings():
+    document = scripted_answers.scripted_document()
+    rendered = _headings_of("\n".join(page.text for page in render.render(document)))
+    for heading in _cited_headings(document):
         assert heading in bank.NIST_CORPUS, (
             f"{heading!r} is cited as NIST's and is not in the transcribed corpus")
         assert heading in rendered, (
@@ -334,7 +346,7 @@ def _report_reference_similarity(section: Section) -> None:
     for document in sorted(REFERENCE_PLAN.rglob("*.md")):
         if ".claude" not in document.parts:
             found |= _headings_of(document.read_text(encoding="utf-8"))
-    cited = _cited_headings()
+    cited = _cited_headings(store.new_document(""))
     matched = sum(heading in found for heading in cited)
     section.note(f"reference plan, test 3: {matched}/{len(cited)} of the NIST headings this "
                  f"bank cites appear verbatim as headings ({_percent(matched, len(cited))}%)")
