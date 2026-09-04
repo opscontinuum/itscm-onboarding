@@ -8,8 +8,8 @@ description: Use when someone needs an IT service continuity plan (ITSCP) for an
 The orchestrator. It never interviews anybody. It decides **what happens next**, dispatches
 the skill that does it, and reports coverage honestly.
 
-**Read first:** `skills/_method/coverage-map.md` (what a complete plan contains),
-`skills/_method/answer-store.md` (where answers live). Do not start without both.
+**Read first:** the `itscp-method-coverage-map` skill (what a complete plan contains) and
+the `itscp-method-answer-store` skill (where answers live). Do not start without both.
 
 ---
 
@@ -146,8 +146,8 @@ Lowest confidence:  business.rpo.tier0 (low) - no measurement, no mechanism give
 Next:               itscp-interview-infrastructure (infrastructure owner, ~90 min)
 ```
 
-The figures above are worked against the starter field set in
-`templates/answers.example.yaml`, which is 37 fields. They are an illustration of the shape,
+The figures above are worked against the starter field set described by the
+`itscp-method-answer-store` skill, which is 37 fields. They are an illustration of the shape,
 not a target to reproduce.
 
 **Four rules for this report.**
@@ -167,8 +167,8 @@ not a target to reproduce.
 
 ## Generating the repository
 
-The generated repository follows `templates/repo-scaffold.md`, which is a single file: the
-tree it describes and the rendering-rules table beneath it. Rendering rules:
+The generated repository follows the `itscp-method-repo-scaffold` skill: the tree it
+describes and the rendering-rules table beneath it. Rendering rules:
 
 - A `MISSING` field renders as a visible marker with its owner:
   `**[MISSING — owner: Head of Finance Systems]**`. Never blank, never a plausible default.

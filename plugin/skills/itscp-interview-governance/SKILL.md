@@ -10,7 +10,7 @@ it, what evidence exists, and which risks are owned. Produces the approval state
 review cadence, Appendix J test/training/exercise documentation, the risk register, and the
 categorization the scope statement depends on.
 
-**Read first:** `skills/_method/interview-method.md`. Run last — governance signs off on what
+**Read first:** the `itscp-method-interview` skill. Run last — governance signs off on what
 the other interviews produced.
 
 **Interviewee:** governance, risk, audit, or compliance. In a smaller organisation this may be

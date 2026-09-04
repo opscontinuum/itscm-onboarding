@@ -1,3 +1,8 @@
+---
+name: itscp-method-repo-scaffold
+description: The directory tree itscp-build generates, which skill fills each file, and the rendering rules for MISSING fields, low-confidence values and the References and Unverified statements sections. Read before creating or filling a plan repository.
+---
+
 # Generated repository scaffold
 
 The tree `itscp-build` creates, and which skill fills each file. Structure follows the

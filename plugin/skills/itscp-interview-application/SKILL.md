@@ -9,7 +9,7 @@ The system as the people who run it understand it. Produces §2.1 System Descrip
 interconnections, Appendix F the validation test plan, and the work recovery time activities
 that decide whether the MTD is achievable at all.
 
-**Read first:** `skills/_method/interview-method.md`.
+**Read first:** the `itscp-method-interview` skill.
 
 **Interviewee:** the application owner — whoever is accountable for the application working,
 not for the infrastructure under it. In an ERP context this is usually the functional lead or
