@@ -20,6 +20,7 @@ Two examples, one generator:
 """
 from __future__ import annotations
 
+import re
 import sys
 import tempfile
 import tomllib
@@ -51,8 +52,13 @@ STARTER_STORE = _ROOT / "plugin" / "answers.example.toml"
 #: without a test edit, and the terms of the exception cannot quietly go missing.
 EXCEPTION_TERMS: tuple[str, ...] = ("hypothetical", "oci-itscp", "never")
 
-#: Shapes that would mean a real identifier reached a committed file.
-FORBIDDEN_IDENTIFIERS: tuple[str, ...] = ("ocid1.", "@", "http://", "https://")
+#: Shapes that would mean a real identifier reached a committed file. Shapes rather than
+#: characters: the reference plan writes a masked database connect string, which contains an
+#: at sign and is not an address, and refusing the character would refuse the procedure.
+FORBIDDEN_IDENTIFIERS: tuple[str, ...] = ("ocid1.", "http://", "https://")
+
+#: An electronic mail address, which is the shape the at sign is actually being watched for.
+EMAIL_SHAPE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 
 #: The only provenance class a derivation from a document may write. An ``interview:``
 #: provenance here would be the store claiming a conversation that did not happen, which is
@@ -139,6 +145,9 @@ def _worked_has_no_identifiers() -> None:
     for forbidden in FORBIDDEN_IDENTIFIERS:
         assert forbidden not in text, (
             f"the worked store contains {forbidden!r}, which looks like a real identifier")
+    found = EMAIL_SHAPE.search(text)
+    assert found is None, (
+        f"the worked store contains {found.group()!r}, which is shaped like an address")
 
 
 def _worked_cites_documents() -> None:
