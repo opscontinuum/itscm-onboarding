@@ -13,6 +13,39 @@ application suite at a time, for as many as you serve.
 
 ---
 
+## An estate, not a system
+
+An organisation does not have *a* system. It has a core product suite, the applications that
+read from it, the tooling those are built and deployed with, the interfaces clients push data
+into, and the public sites fronting all of it.
+
+Planning them one at a time produces **N individually-plausible, collectively-impossible
+plans.** The order management application is signed at four hours. The identity database it
+cannot authenticate without is signed at eight. Both documents are internally coherent, both
+were written by different people in different weeks, and nothing inside either can see it.
+
+So the toolkit starts above the plans. `itscp-portfolio` registers every system, ranks the
+tiers against each other and fixes the recovery order; `itscp-dependencies` maps what each
+system needs — including what it needs in order to be **recovered**, as distinct from what it
+needs to run. Then a plan is built per system, in wave order, against those constraints.
+
+```bash
+python3 plugin/itscp_portfolio.py portfolio.toml   # 0 clean, 1 warnings, 2 errors
+```
+
+Four failures exist only at this level and are all checked mechanically:
+
+| Finding | What it catches |
+|---|---|
+| `rto-inversion` | A system claiming to be back before something it cannot run without |
+| `recovery-cycle` | The runbooks are in the source control server that is inside the outage |
+| `wave-inversion` | A dependency scheduled to recover after its dependant |
+| `undeclared-shared-service` | Four systems hard-depend on it and it is classed as an ordinary app |
+
+`plugin/portfolio.example.toml` is a fourteen-system estate in that shape — identity and
+network, secrets and recovery tooling, a core HR suite, dependent applications, a client
+ingest API, a public site — with the recovery order that follows from it.
+
 ## What it is
 
 A picoagent plugin: twelve skills, a read-only discovery walk, and a sequenced guide.
@@ -29,6 +62,8 @@ output says so, by name.
 
 | Skill | Interviews | Produces |
 |---|---|---|
+| [`itscp-portfolio`](plugin/skills/itscp-portfolio/SKILL.md) | enterprise architect / CIO | The system register, comparative tiering, recovery waves |
+| [`itscp-dependencies`](plugin/skills/itscp-dependencies/SKILL.md) | application + infrastructure owners | Runtime, recovery and data dependencies; the coherence checks |
 | [`itscp-build`](plugin/skills/itscp-build/SKILL.md) | nobody — it sequences | Phase order, coverage reporting, repository generation |
 | [`itscp-discover`](plugin/skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, resource file, gap list |
 | [`itscp-interview-business`](plugin/skills/itscp-interview-business/SKILL.md) | business / process owner | Appendix K BIA, MTD tiers, MBCO, Appendix E workarounds |

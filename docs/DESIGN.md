@@ -109,6 +109,40 @@ numbers most likely to be wrong, in the document most likely to be believed.
 
 ---
 
+## Decision 8 — The portfolio is a register, not an answer store
+
+Added after the single-system assumption was challenged. Organisations have estates: a core
+suite, its dependants, the tooling underneath, public ingest interfaces, public sites.
+
+**A register of systems is a different shape from a set of facts about one system.** The
+answer store holds facts with provenance, confidence and a status per field. The register
+holds rows with edges between them, and the interesting questions about it are graph
+questions — is anything scheduled before its dependency, does anything need itself to be
+recovered. So it is a separate file (`portfolio.toml`) with a separate module, rather than a
+namespace inside a store whose validation rules are about attribution.
+
+**Rejected — one plan per organisation with system annexes.** Simplest for a small estate,
+unreadable past ten systems, and an auditor asking for one system's ISCP receives the whole
+portfolio. NIST's artefact is system-level and staying aligned with that is worth more than
+the convenience.
+
+**Rejected — inferring dependencies from discovery.** Network reachability is not dependency;
+two systems in the same subnet may have nothing to do with each other, and the load-bearing
+edges (a runbook location, a federated console login) leave no trace in a resource listing at
+all. Dependencies are elicited, like everything else.
+
+The distinction between a **runtime** and a **recovery** dependency is the part of this that
+earns its place. Every toolkit asks what a system needs to run. The failure that strands a
+real invocation is the runbook stored in the source control server that is inside the outage,
+and only the second question finds it.
+
+**Not yet implemented: shared-fact inheritance.** The infrastructure owner, the regions and
+the provider contract are portfolio facts, and each per-system store still holds its own copy.
+The register is the right home for them, but the store's validation is built around one
+document per system and changing that safely is a larger change than the register itself. The
+skills currently instruct the interviewer to carry the answer across with its original
+provenance intact. Stated here rather than left as a surprise.
+
 ## Known limitations
 
 | Limitation | Why it stands |
@@ -118,11 +152,13 @@ numbers most likely to be wrong, in the document most likely to be believed.
 | No import of an existing plan | An organisation with a plan in Word starts from interviews. Parsing arbitrary prose into an attributed store is a harder problem than it appears, and getting it wrong reintroduces the exact failure mode above |
 | Terraform generation not attempted | Discovery emits an inventory and a resource file. Producing working infrastructure code for an arbitrary estate is where scope would explode, and it is not needed to produce a plan |
 | Not yet run end to end against a real estate | The largest limitation. The first real engagement will change this design |
+| Portfolio-scope facts are duplicated per system | See Decision 8. The register knows them; the stores do not read from it yet |
 
 ## Open questions
 
-1. **Multi-suite organisations.** One inventory shared across many plans, or one per plan?
-   Currently one per plan, which duplicates discovery output.
+1. **Wave membership when a system spans two.** A suite whose database belongs in the core
+   wave and whose reporting tier belongs in the last one is currently one row, forced into
+   one wave. Splitting it into two registered systems works and may be the honest answer.
 2. **Re-interviewing cadence.** The store has no notion of a fact going stale. A contact roster
    is stale in six months; an architecture decision is not.
 3. **Who runs the interviews.** The skills assume an operator conducting them with an agent's

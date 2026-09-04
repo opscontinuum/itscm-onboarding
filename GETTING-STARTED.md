@@ -59,7 +59,40 @@ Four things, and the last is the one people skip.
 
 ---
 
-## Phase 0 — Scope (30 minutes, you alone)
+## Phase 0 — The estate (half a day, two or three people)
+
+Invoke `itscp-portfolio` **before** planning anything.
+
+You are building a register of every system, not choosing one to start with. Ask for it in
+five groups rather than as an inventory, because the grouping is what finds the systems a
+CMDB misses:
+
+> "What's the core system of record everything reads from? What reads from it? What do you
+> build and deploy those with? What do clients push data into? What's publicly visible?"
+
+Then three things that only make sense across an estate:
+
+1. **Rank the tiers against a budget.** Asked alone, every owner says Tier 0. Set the budget
+   from *people* — "recovering one system takes most of two engineers for the first hour, you
+   have six engineers" — and force the ranking.
+2. **Map recovery dependencies**, with `itscp-dependencies`. Not what a system needs to run:
+   what it needs to *be recovered*. Where are the runbooks? How do you log in to the console?
+   Where do the credentials come from? These find something in almost every engagement.
+3. **Assign recovery waves.** Note that source control and the artefact repository usually
+   belong in an early wave, not a late one, because the recovery needs them.
+
+```bash
+python3 plugin/itscp_portfolio.py portfolio.toml
+```
+
+**Do not start a per-system plan while this reports errors.** An inversion means two signed
+figures contradict each other, and building a plan on top of one bakes the contradiction in.
+
+Then, per system, in wave order, run Phases 1–7 below.
+
+---
+
+## Phase 0b — Scope one system (30 minutes, you alone)
 
 Invoke `itscp-build`. It asks six questions and creates the repository skeleton and the answer
 store.
@@ -215,6 +248,9 @@ guessed rather than elicited.** Be suspicious of your own output if it looks fin
 
 | Mistake | Consequence |
 |---|---|
+| Planning one application without registering the estate | The plan's targets are unchecked against the systems it depends on, and the first invocation finds the inversion |
+| Asking a single owner for their tier | In isolation the answer is always Tier 0. Tiering is comparative or it is nothing |
+| Asking only what a system needs to run | You will miss what it needs to be recovered, which is where the circular plans are |
 | Skipping discovery because "we know our estate" | The interview spends 40 minutes reconstructing what a read-only walk produces in 10 |
 | Running the technical interviews before the tier gate | You design to assumed tiers and rebuild later |
 | Letting IT answer the business questions | IT sets its own targets; the business signs something it did not choose |
