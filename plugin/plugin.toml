@@ -1,0 +1,7 @@
+name = "itscp-author"
+version = "0.1.0"
+entry = "itscp_author:register"
+description = "IT service continuity planning: interview-driven ITSCP aligned to NIST SP 800-34 Rev. 1, with read-only Oracle Cloud Infrastructure discovery and an adversarial audit against the SP 800-53 CP controls"
+python_deps = []
+requires = ["picoagent>=0.1"]
+skills = ["skills"]

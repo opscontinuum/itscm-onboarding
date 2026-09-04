@@ -1,3 +1,8 @@
+---
+name: itscp-method-coverage-map
+description: The authoritative list of what a complete ITSCP contains: every NIST SP 800-34 ISCP element, the skill that elicits it, and the file it lands in. Read before building a plan, before reporting coverage, and before auditing one.
+---
+
 # Coverage map — every section of the ITSCP, the skill that elicits it, the file it lands in
 
 The authoritative list of what a complete plan contains. `itscp-build` reports against this
@@ -117,4 +122,4 @@ Stated so the toolkit does not imply completeness it lacks.
 | No elicitation for platform types other than Oracle EBS on OCI | The runbook templates assume Oracle Data Guard and OCI replication primitives. Other stacks get the structure but must supply their own procedures |
 | No automated import of an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
 | Discovery covers OCI only | AWS, Azure, GCP and on-premises inventories are manual |
-| Discovery does not render Appendix I | `oci-discover.sh` writes `inventory.md`, `dr-resources.env`, `gaps.md` and `raw/`, and nothing else. The interconnection data is collected into `raw/*.json` and left unrendered, so the whole register comes from the application interview. The half discovery could have pre-filled is recalled in a meeting instead, which is where interfaces get missed |
+| Discovery does not render Appendix I | `itscp_discover_oci` writes `inventory.md`, `dr-resources.env`, `gaps.md` and `raw/`, and nothing else. The interconnection data is collected into `raw/*.json` and left unrendered, so the whole register comes from the application interview. The half discovery could have pre-filled is recalled in a meeting instead, which is where interfaces get missed |

@@ -2,7 +2,7 @@
 # oci-discover.sh — read-only walk of an OCI tenancy for ISCP Appendix H and I.
 #
 # Every call goes through ro_oci() in lib/readonly-guard.sh, which refuses any
-# operation that is not a list or a get. See skills/itscp-discover/SKILL.md.
+# operation that is not a list or a get. See the itscp-discover skill.
 #
 #   ./oci-discover.sh --compartment <ocid> --regions us-ashburn-1,us-phoenix-1 --out discovery-output/
 #   ./oci-discover.sh --compartment <ocid> --regions us-ashburn-1 --dry-run

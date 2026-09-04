@@ -18,8 +18,9 @@ touches a live production tenancy, so it is the phase with a hard safety rule.
 > **Every OCI call this skill makes is a `list` or a `get`. There are no exceptions, and there
 > is no flag that adds one.**
 
-`scripts/discover/lib/readonly-guard.sh` enforces it: the wrapper rejects any invocation whose
-operation is not `list*` or `get*`, before the call reaches the CLI. It fails closed.
+`itscp_discover_oci` is the only way this skill reaches a tenancy, and it enforces the rule: the
+wrapper it runs behind rejects any invocation whose operation is not `list*` or `get*`, before
+the call reaches the CLI. It fails closed.
 
 The reference repository's Terraform is apply-locked because authoring against a hypothetical
 estate is a different risk posture from touching a real one. This skill touches real ones. The
@@ -53,13 +54,14 @@ Confirm before running, and stop if any is unmet:
 
 ## Running it
 
-```bash
-scripts/discover/oci-discover.sh --compartment <ocid> --regions us-ashburn-1,us-phoenix-1 --out discovery-output/
-```
+`itscp_discover_oci compartment=<ocid> regions=us-ashburn-1,us-phoenix-1 dry_run=true` first,
+then the same call with `dry_run=false`. Add `out=<directory>` to write somewhere other than
+`discovery-output`, and `subtree=false` to stop at the named compartment.
 
-`--dry-run` prints every command it would issue without executing any. **Show a customer the
-dry run before the real run.** It converts "an AI is going to look at our production tenancy"
-into a reviewable list, and it has never once been a wasted five minutes.
+`dry_run=true` prints every command it would issue without executing any, and needs no
+credentials. **Show a customer the dry run before the real run.** It converts "an AI is
+going to look at our production tenancy" into a reviewable list, and it has never once
+been a wasted five minutes.
 
 ---
 
@@ -121,7 +123,7 @@ inventory an auditor can use and one that quietly misleads.
 | `discovery-output/raw/*.json` | Raw API responses, for re-rendering without re-walking |
 | `discovery-output/gaps.md` | Everything NOT DISCOVERED, with the reason and who to ask |
 
-That is the whole list. `oci-discover.sh` writes those four things and nothing else. All are
+That is the whole list. `itscp_discover_oci` writes those four things and nothing else. All are
 gitignored by default, and `inventory.md` is a complete map of a production estate.
 
 Then write `discovery.*` keys into the answer store with provenance

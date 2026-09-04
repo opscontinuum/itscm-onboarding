@@ -9,7 +9,7 @@ The recovery strategy and the machinery that implements it. Produces the archite
 replication matrix, Appendix C alternate site and storage, Appendix D recovery procedures, and
 the cost model that decides whether the business's chosen tier is affordable.
 
-**Read first:** `skills/_method/interview-method.md`, plus the discovery inventory and the
+**Read first:** the `itscp-method-interview` skill, plus the discovery inventory and the
 signed tier assignment. This interview is where the business's targets meet physics and price.
 
 **Interviewee:** the cloud or infrastructure owner, with the lead engineer. The owner holds the

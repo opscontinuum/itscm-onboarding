@@ -1,3 +1,8 @@
+---
+name: itscp-method-answer-store
+description: Where the answers to every interview live, the shape of a key, which skill owns which prefix, and why the store is gitignored. Read before recording or reading an answer, or before generating a document from one.
+---
+
 # The answer store
 
 One file per plan: `.itscm/answers.yaml` in the generated repository. Every interview reads
@@ -112,7 +117,7 @@ roster is wrong, so fix the roster rather than inventing an eighth owner.
 | `discovery.*` | `itscp-discover` only | Raw inventory; never written by an interview |
 
 Section and appendix numbers in the *Feeds* column are NIST ISCP crosswalk references, not
-numbering the ITSCP owns. `skills/_method/coverage-map.md` carries the crosswalk and states
+numbering the ITSCP owns. The `itscp-method-coverage-map` skill carries the crosswalk and states
 the relationship.
 
 A skill writes only within its own prefix. If an interview learns something outside its

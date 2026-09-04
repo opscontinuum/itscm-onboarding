@@ -11,15 +11,25 @@ plus a day of assembly.
 
 ## Before you start
 
-Three things, and the third is the one people skip.
+Four things, and the last is the one people skip.
 
-1. **A repository.** Private. It will contain OCIDs, names, phone numbers, MTD figures and,
+1. **The plugin, loaded.** From wherever you cloned this repository:
+
+   ```bash
+   picoagent -e /path/to/itscm-onboarding/plugin
+   ```
+
+   That trusts it for the one run. For a permanent install, and for the trust fingerprint
+   that will otherwise silently stop it loading after you edit a skill, see
+   [Installing](README.md#installing).
+
+2. **A repository.** Private. It will contain OCIDs, names, phone numbers, MTD figures and,
    eventually, incident narratives.
-2. **The reference example.** [`oci-itscp`](https://github.com/opscontinuum/oci-itscp) is a
+3. **The reference example.** [`oci-itscp`](https://github.com/opscontinuum/oci-itscp) is a
    complete worked plan for a hypothetical corporation. Read `README.md` and `docs/01` before
    your first interview so you know what you are aiming at. Do not copy its numbers — they
    describe a company that does not exist.
-3. **Fourteen names: seven roles, and a deputy for each.**
+4. **Fourteen names: seven roles, and a deputy for each.**
 
    | Role | Deputy |
    |---|---|
@@ -71,19 +81,22 @@ inventory.
 
 Invoke `itscp-discover`.
 
-```bash
-# Show the customer this first. Always.
-scripts/discover/oci-discover.sh --compartment <ocid> --regions <primary>,<standby> --dry-run
+It calls the `itscp_discover_oci` tool. Show the customer the dry run first, always:
 
-# Then the real walk
-scripts/discover/oci-discover.sh --compartment <ocid> --regions <primary>,<standby> --out discovery-output/
-```
+    itscp_discover_oci compartment=<ocid> regions=<primary>,<standby> dry_run=true
+
+Then the real walk:
+
+    itscp_discover_oci compartment=<ocid> regions=<primary>,<standby> dry_run=false
+
+Output lands in `discovery-output/` inside your plan repository. Pass `out=<directory>` to put
+it somewhere else.
 
 Every call is a `list` or a `get`, enforced structurally rather than by convention. Verify it
-yourself before pointing it at production:
+yourself before pointing it at production, from your clone of this repository:
 
 ```bash
-scripts/discover/test-readonly.sh
+plugin/scripts/discover/test-readonly.sh
 ```
 
 **You now have an inventory and, more usefully, `gaps.md`.** The gaps are interview material:

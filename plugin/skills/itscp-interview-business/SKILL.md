@@ -8,7 +8,7 @@ description: Use when a continuity plan needs its business impact analysis, when
 The business impact analysis, run as a conversation rather than a form. Produces Appendix K,
 the MTD tiers, the minimum business continuity objective, and Appendix E manual workarounds.
 
-**Read first:** `skills/_method/interview-method.md`. The method is not optional here — this
+**Read first:** the `itscp-method-interview` skill. The method is not optional here — this
 is the interview where invented numbers do the most damage, because everything downstream is
 built to them.
 

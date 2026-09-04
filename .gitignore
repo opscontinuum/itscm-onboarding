@@ -8,6 +8,11 @@ discovery-output/
 dr-resources.env
 *.dr-resources.env
 
+# Python bytecode. The plugin trust fingerprint hashes every file in the
+# plugin directory, so a stray __pycache__ makes picoagent treat the plugin
+# as changed and skip loading it until it is trusted again.
+__pycache__/
+
 # Working files
 *.tmp
 .DS_Store

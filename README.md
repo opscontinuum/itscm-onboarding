@@ -15,7 +15,12 @@ application suite at a time, for as many as you serve.
 
 ## What it is
 
-Eight skills, a read-only discovery walk, and a sequenced guide.
+A picoagent plugin: twelve skills, a read-only discovery walk, and a sequenced guide.
+
+Eight of the skills you invoke by name. The other four carry the method they share — the
+elicitation discipline, the answer store, the coverage map and the repository scaffold — and
+the eight refer to them by name rather than by file, so they keep working wherever the plugin
+is installed.
 
 The skills **interview people**. They do not generate a plan from assumptions; they ask the
 business owner what actually breaks, ask the infrastructure owner what the replication really
@@ -24,16 +29,60 @@ output says so, by name.
 
 | Skill | Interviews | Produces |
 |---|---|---|
-| [`itscp-build`](skills/itscp-build/SKILL.md) | nobody — it sequences | Phase order, coverage reporting, repository generation |
-| [`itscp-discover`](skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, resource file, gap list |
-| [`itscp-interview-business`](skills/itscp-interview-business/SKILL.md) | business / process owner | Appendix K BIA, MTD tiers, MBCO, Appendix E workarounds |
-| [`itscp-interview-application`](skills/itscp-interview-application/SKILL.md) | application owner + lead engineer | §2.1 system description, interconnections, Appendix F validation, WRT |
-| [`itscp-interview-infrastructure`](skills/itscp-interview-infrastructure/SKILL.md) | infrastructure owner + lead engineer | Recovery strategy, replication matrix, Appendix C, cost model |
-| [`itscp-interview-continuity`](skills/itscp-interview-continuity/SKILL.md) | DR process owner | §2.3 roles and succession, §3.1 activation, §3.2 notification, §3.3 outage assessment |
-| [`itscp-interview-governance`](skills/itscp-interview-governance/SKILL.md) | governance / risk / audit | Approval, review cadence, Appendix J training and exercises, risk register |
-| [`itscp-audit`](skills/itscp-audit/SKILL.md) | nobody | Adversarial audit of the generated plan |
+| [`itscp-build`](plugin/skills/itscp-build/SKILL.md) | nobody — it sequences | Phase order, coverage reporting, repository generation |
+| [`itscp-discover`](plugin/skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, resource file, gap list |
+| [`itscp-interview-business`](plugin/skills/itscp-interview-business/SKILL.md) | business / process owner | Appendix K BIA, MTD tiers, MBCO, Appendix E workarounds |
+| [`itscp-interview-application`](plugin/skills/itscp-interview-application/SKILL.md) | application owner + lead engineer | §2.1 system description, interconnections, Appendix F validation, WRT |
+| [`itscp-interview-infrastructure`](plugin/skills/itscp-interview-infrastructure/SKILL.md) | infrastructure owner + lead engineer | Recovery strategy, replication matrix, Appendix C, cost model |
+| [`itscp-interview-continuity`](plugin/skills/itscp-interview-continuity/SKILL.md) | DR process owner | §2.3 roles and succession, §3.1 activation, §3.2 notification, §3.3 outage assessment |
+| [`itscp-interview-governance`](plugin/skills/itscp-interview-governance/SKILL.md) | governance / risk / audit | Approval, review cadence, Appendix J training and exercises, risk register |
+| [`itscp-audit`](plugin/skills/itscp-audit/SKILL.md) | nobody | Adversarial audit of the generated plan |
 
 **Start here:** [`GETTING-STARTED.md`](GETTING-STARTED.md).
+
+---
+
+## Installing
+
+The `plugin/` directory is the whole toolkit. Everything below assumes
+`/path/to/itscm-onboarding` is where you cloned this repository.
+
+**While you are editing it**, load it for a single run:
+
+```bash
+picoagent -e /path/to/itscm-onboarding/plugin
+```
+
+A `-e` path is trusted for that run only. No prompt, nothing recorded, and no fingerprint to
+keep in step. This is the right mode for anyone changing a skill.
+
+**To keep it**, add it to `~/.picoagent/config.toml`:
+
+```toml
+[plugins]
+enabled = ["/path/to/itscm-onboarding/plugin"]
+```
+
+and approve it once:
+
+```bash
+picoagent plugin trust /path/to/itscm-onboarding/plugin
+```
+
+### The fingerprint will catch you out
+
+Approval is recorded as a sha256 over **every file in the plugin directory**, not just the
+Python. Fix a typo in a SKILL.md and the fingerprint stops matching, so the next start skips
+the plugin. Nothing crashes and no error is raised: the skills are simply not there, and the
+only sign is a warning line you were probably not watching.
+
+```bash
+picoagent plugin list      # shows CHANGED against a plugin that needs re-approval
+```
+
+Re-approve with the same `plugin trust` command after any edit. Better, use `-e` while you are
+iterating, which is exactly what it is for. A stray `__pycache__` counts as a change too,
+which is why it is gitignored.
 
 ---
 
@@ -64,22 +113,22 @@ rather than at documentation.
 
 ## Discovery never mutates
 
-`itscp-discover` walks a live OCI tenancy. Every call is a `list` or a `get`, and that is
-enforced structurally: `scripts/discover/lib/readonly-guard.sh` rejects any operation that is
-not a read, before it reaches the CLI, failing closed.
+`itscp-discover` walks a live OCI tenancy through the `itscp_discover_oci` tool. Every call is
+a `list` or a `get`, and that is enforced structurally: a read-only guard rejects any operation
+that is not a read, before it reaches the CLI, failing closed.
 
 Verify it yourself:
 
 ```bash
-scripts/discover/test-readonly.sh
+plugin/scripts/discover/test-readonly.sh
 ```
 
 Three independent checks: the guard's unit tests, a static tripwire that fails if any script
 ever calls the CLI outside the guard, and an end-to-end check that every command a full walk
 would issue is a read.
 
-`--dry-run` prints every command without executing any. **Show that to a customer before the
-real run** — it turns "an AI is going to look at our production tenancy" into a reviewable list.
+`dry_run=true` prints every command without executing any, and needs no credentials. **Show
+that to a customer before the real run** — it turns "an AI is going to look at our production tenancy" into a reviewable list.
 
 ---
 
@@ -120,8 +169,8 @@ was built to prevent.
 
 ## Status
 
-Early. The skills are written and the discovery tooling is tested; the toolkit has not yet
-been run end to end against a real estate. Findings from the first real engagement will change
+Early. The skills are written, the plugin loads and the discovery tooling is tested; the
+toolkit has not yet been run end to end against a real estate. Findings from the first real engagement will change
 it.
 
 ## Licence

@@ -9,7 +9,7 @@ Who decides, who is told, and how anyone knows what they are deciding about. Pro
 roles and succession, §3.1 activation criteria, §3.2 notification, §3.3 outage assessment,
 §4.3 escalation thresholds, and §5.4 deactivation.
 
-**Read first:** `skills/_method/interview-method.md`. Run **after** the application and
+**Read first:** the `itscp-method-interview` skill. Run **after** the application and
 infrastructure interviews — escalation thresholds are meaningless until there are real
 recovery steps to threshold, and a call tree is meaningless until you know who does the work.
 

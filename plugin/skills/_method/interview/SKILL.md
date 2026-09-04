@@ -1,3 +1,8 @@
+---
+name: itscp-method-interview
+description: The elicitation discipline every itscp-interview-* skill follows: the Iron Rule that no fact enters the plan unless a human said it or a read-only API returned it, the field statuses, and how to record what nobody could answer. Read before running any interview.
+---
+
 # The interview method
 
 Every `itscp-interview-*` skill follows this file. It is the elicitation discipline, written
@@ -29,7 +34,7 @@ That is not consent to invent; it is a `MISSING` with a named owner and a reason
 
 ## Every field starts REFUTED
 
-Borrowed directly from `skills/itscp-compliance-audit` in the reference repository, where
+Borrowed directly from the compliance-audit skill in the reference repository, where
 every compliance requirement starts refuted until a quoted sentence moves it.
 
 | Status | Means | Requires |
