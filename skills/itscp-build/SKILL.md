@@ -1,6 +1,6 @@
 ---
 name: itscp-build
-description: Use when someone needs an IT service continuity plan or ISCP for an application suite and has no plan yet, when resuming a partially-built plan repository, or when asked what is still missing from one. Also use when the request is to build a DR plan repository for a system from scratch.
+description: Use when someone needs an IT service continuity plan (ITSCP) for an application suite and has no plan yet, when resuming a partially-built plan repository, or when asked what is still missing from one. Also use when the request arrives worded as a DR plan, a contingency plan or an ISCP, and when it is to build a plan repository for a system from scratch.
 ---
 
 # itscp-build
@@ -16,7 +16,7 @@ the skill that does it, and reports coverage honestly.
 ## The problem this solves
 
 Someone arrives knowing they need a continuity plan and not much else. They do not know what
-an ISCP contains, which of the twenty-odd sections they can answer themselves, who else needs
+an ITSCP contains, which of the twenty-odd sections they can answer themselves, who else needs
 to be in the room, or what order any of it happens in. Asked "what's your RTO?" on day one
 they will produce a number, and it will be wrong.
 
@@ -146,5 +146,5 @@ repository says it in three places for good reason.
 | "The operator can answer for the business owner" | They can tell you who the business owner is. They cannot sign an MTD |
 | "Coverage is 90%, call it done" | Print the confidence split. Then decide |
 | "The file exists, so the section is complete" | Rendered is not complete. Count fields, not files |
-| "They only want the technical bits" | Then say plainly which ISCP sections will be absent, and let them choose knowingly |
+| "They only want the technical bits" | Then say plainly which sections of the ITSCP will be absent, and let them choose knowingly |
 | "This estate is like the reference repo, I can prefill" | The reference repository is a hypothetical corporation. It is evidence about nothing |

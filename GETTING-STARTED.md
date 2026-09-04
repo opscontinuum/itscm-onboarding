@@ -31,8 +31,10 @@ Three things, and the third is the one people skip.
 Invoke `itscp-build`. It asks six questions and creates the repository skeleton and the answer
 store.
 
-Decide one thing here: **one plan per application suite, or one per system?** NIST's ISCP is a
-system-level artefact. If your suite is genuinely one system with one recovery, one plan.
+Decide one thing here: **one plan per application suite, or one per system?** What you are
+building is an ITSCP, an IT service continuity plan, and it borrows its structure from NIST's
+ISCP, which is a system-level artefact. If your suite is genuinely one system with one
+recovery, one plan.
 If Finance and Manufacturing fail over independently, they are two plans that share an
 inventory.
 

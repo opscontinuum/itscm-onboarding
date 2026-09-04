@@ -1,6 +1,6 @@
 ---
 name: itscp-discover
-description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their estate actually contains, or when a hardware and software inventory or interconnection list is needed for an ISCP appendix.
+description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their estate actually contains, or when a hardware and software inventory or interconnection list is needed for an appendix of an IT service continuity plan.
 ---
 
 # itscp-discover

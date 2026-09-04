@@ -110,7 +110,7 @@ was built to prevent.
 
 | Not covered | Consequence |
 |---|---|
-| Platforms other than Oracle EBS on OCI | You get the ISCP structure and the interview method; the recovery procedures are yours to write |
+| Platforms other than Oracle EBS on OCI | You get the ITSCP structure and the interview method; the recovery procedures are yours to write |
 | Discovery outside OCI | AWS, Azure, GCP and on-premises inventories are manual |
 | Importing an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
 | Terraform config generation | Discovery emits an inventory and a resource file. Turning that into working infrastructure code is not attempted |

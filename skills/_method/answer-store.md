@@ -82,13 +82,17 @@ facts:
 
 | Prefix | Owned by | Feeds |
 |---|---|---|
-| `system.*` | `itscp-interview-application` | ISCP §1 Introduction, §2.1 System Description |
+| `system.*` | `itscp-interview-application` | §1 Introduction, §2.1 System description |
 | `business.*` | `itscp-interview-business` | Appendix K BIA, MTD tiers, Appendix E workarounds |
 | `app.*` | `itscp-interview-application` | §2.1, Appendix F validation, Appendix I interconnections |
 | `infra.*` | `itscp-interview-infrastructure` + `itscp-discover` | Architecture, replication, Appendix C, Appendix H |
 | `continuity.*` | `itscp-interview-continuity` | §2.3 roles, §3.1 activation, §3.2 notification, §3.3 assessment, §4.3 escalation |
 | `governance.*` | `itscp-interview-governance` | Approval, categorization, review cadence, Appendix J TT&E |
 | `discovery.*` | `itscp-discover` only | Raw inventory; never written by an interview |
+
+Section and appendix numbers in the *Feeds* column are NIST ISCP crosswalk references, not
+numbering the ITSCP owns. `skills/_method/coverage-map.md` carries the crosswalk and states
+the relationship.
 
 A skill writes only within its own prefix. If an interview learns something outside its
 prefix — and it will — it records the fact **and** notes which interview owns the key, so the

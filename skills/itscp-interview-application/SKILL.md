@@ -39,10 +39,10 @@ supposed to exist.
 
 | Field | Why |
 |---|---|
-| System name, and what the business calls it | Both. The ISCP is read by both audiences |
+| System name, and what the business calls it | Both. The ITSCP is read by both audiences |
 | Version and platform | Determines which recovery procedures apply at all |
 | System owner, and the authorising official if one exists | §2.1; the reassessment decision at Reconstitution |
-| Data classification / impact level, if categorised | ISCP §1.2 scope; drives which controls are required |
+| Data classification / impact level, if categorised | NIST ISCP §1.2 scope in the crosswalk; drives which controls are required |
 | User population — who, how many, where | Notification scope; the load a recovered system must carry |
 
 If the system has never been formally categorised, that is a `MISSING` with the governance
@@ -115,7 +115,8 @@ NIST names it as a validation option; most systems cannot do it.
 > "Could this run in two places at once during a recovery, even briefly?"
 
 Usually no, for a good reason — a second writable copy diverges. Record the **reason**, since
-NIST does not require the capability but an ISCP is expected to address it.
+NIST does not require the capability but the ISCP structure the ITSCP borrows expects the
+plan to address it.
 
 ---
 

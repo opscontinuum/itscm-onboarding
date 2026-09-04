@@ -1,4 +1,4 @@
-# Coverage map — every ISCP section, the skill that elicits it, the file it lands in
+# Coverage map — every section of the ITSCP, the skill that elicits it, the file it lands in
 
 The authoritative list of what a complete plan contains. `itscp-build` reports against this
 table and `itscp-audit` checks it. If a row has no skill, the toolkit does not yet cover it
@@ -6,18 +6,30 @@ and says so rather than quietly producing an incomplete plan.
 
 Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and §4.1–§4.5.
 
+**What the toolkit produces is an ITSCP: an IT service continuity plan, the service-level
+artefact of the ITIL service continuity management practice.** NIST SP 800-34 specifies an
+Information System Contingency Plan (ISCP), a system-level artefact under a different
+instrument. The ITSCP aligns *to* the ISCP structure; it is not one. The reference example
+makes the same borrowing explicit through the crosswalk at `oci-itscp/docs/07-itil4-alignment.md`
+§1a, and this map follows that crosswalk: the left-hand column of every table below names a
+**NIST ISCP element**, and the right-hand column names the file in **our ITSCP** that carries
+it. Write "the ITSCP" or "the plan" for what the toolkit produces, and "ISCP" only when
+naming NIST's or FedRAMP's own artefact. Conflating the two inherits the wrong requirement
+set in both directions: the plan acquires requirements it does not have and misses the ones
+it does.
+
 ---
 
 ## Front matter
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | Plan Approval statement | `itscp-interview-governance` | `docs/00-plan-approval.md` |
 | Record of Changes | `itscp-build` (from git log) | `docs/00-record-of-changes.md` |
 
 ## 1. Introduction
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | 1.1 Background — why the plan exists, its objectives | `itscp-interview-governance` | `README.md`, `docs/00-plan-approval.md` |
 | 1.2 Scope — FIPS 199 impact level, RTOs, alternate site and storage | `itscp-interview-governance` + `itscp-interview-business` | `README.md`, `docs/02-mtd-tiers.md` |
@@ -25,7 +37,7 @@ Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and �
 
 ## 2. Concept of Operations
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | 2.1 System description — architecture, locations, I/O and architecture diagrams | `itscp-interview-application` + `itscp-discover` | `docs/01-architecture.md` §2 |
 | 2.2 Overview of the three phases | `itscp-build` (renders from the runbook set) | `docs/08`, `docs/09`, `docs/10` |
@@ -33,7 +45,7 @@ Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and �
 
 ## 3. Activation and Notification
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | 3.1 Activation criteria and procedure; who may activate | `itscp-interview-continuity` | `runbooks/RB-02-failover.md` §0, `checklists/dr-authority-matrix.md` |
 | 3.2 Notification — call tree, methods, unreachable procedure | `itscp-interview-continuity` | `checklists/contact-roster.md` |
@@ -41,7 +53,7 @@ Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and �
 
 ## 4. Recovery
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | 4.1 Sequence of recovery activities, ordered by BIA priority | `itscp-interview-infrastructure` | `runbooks/RB-01`, `RB-02`, `docs/09` §3 |
 | 4.2 Recovery procedures — step by step, nothing assumed | `itscp-interview-infrastructure` + `itscp-interview-application` | `runbooks/`, `scripts/` |
@@ -49,7 +61,7 @@ Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and �
 
 ## 5. Reconstitution
 
-| ISCP element | Elicited by | Written to |
+| NIST ISCP element | Elicited by | Written to |
 |---|---|---|
 | 5.1 Concurrent processing (or a stated reason it is not performed) | `itscp-interview-application` | `docs/10` §3 |
 | 5.2 Validation data testing | `itscp-interview-application` | `docs/10` §3, `runbooks/RB-01` §5 |
@@ -64,7 +76,7 @@ Structure follows NIST SP 800-34 Rev. 1 Appendix A (Sample ISCP Templates) and �
 
 ## Appendices
 
-| ISCP appendix | Elicited by | Written to |
+| NIST ISCP appendix | Elicited by | Written to |
 |---|---|---|
 | A. Personnel contact information | `itscp-interview-continuity` | `checklists/contact-roster.md` §2 |
 | B. Vendor contacts, offsite storage and alternate site POCs | `itscp-interview-infrastructure` | `checklists/contact-roster.md` §5 |

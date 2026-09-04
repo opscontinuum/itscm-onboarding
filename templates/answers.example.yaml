@@ -28,7 +28,7 @@ facts:
     status: MISSING
     value: null
     owner: "business owner"
-    notes: "What the business calls it. The ISCP is read by both audiences."
+    notes: "What the business calls it. The ITSCP is read by both audiences."
 
   system.categorization:
     status: MISSING
