@@ -63,6 +63,15 @@ class Section:
 
         self.check(name, assertion)
 
+    def note(self, text: str) -> None:
+        """Print a measured number that is reported rather than asserted.
+
+        A score recorded for comparison is not a check: nothing about the reference plan can
+        fail this suite, and a check that could never fail would be a lie about what is
+        being enforced. Notes are indented under the checks so a reader sees them in place.
+        """
+        print(f"{_INDENT}note  {text}")
+
     def _fail(self, name: str, detail: str) -> None:
         self.failures += 1
         print(f"{_INDENT}FAIL  {name}")
