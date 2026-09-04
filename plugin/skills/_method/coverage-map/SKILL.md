@@ -25,6 +25,23 @@ it does.
 
 ---
 
+## Portfolio scope (above any single plan)
+
+Elicited once for the organisation, not once per system. Held in `portfolio.toml` rather than
+in an answer store, because a register of systems is a different shape from a set of facts
+about one.
+
+| Element | Elicited by | Written to |
+|---|---|---|
+| System register: every system, its class and owners | `itscp-portfolio` | `portfolio.toml` |
+| Comparative tier ranking and the budget it was ranked against | `itscp-portfolio` | `portfolio.toml` |
+| Recovery waves and their concurrency limits | `itscp-portfolio` | `portfolio.toml` |
+| Runtime, recovery and data dependencies between systems | `itscp-dependencies` | `portfolio.toml` |
+| Cross-system coherence: inversions, cycles, wave order | `itscp_portfolio.validate` | audit report |
+
+**A plan for one system in an estate of many is incomplete even at 100% coverage of the rows
+below**, because none of them can see the system's neighbours.
+
 ## Front matter
 
 | NIST ISCP element | Elicited by | Written to |

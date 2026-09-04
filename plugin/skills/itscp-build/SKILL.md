@@ -11,6 +11,22 @@ the skill that does it, and reports coverage honestly.
 **Read first:** the `itscp-method-coverage-map` skill (what a complete plan contains) and
 the `itscp-method-answer-store` skill (where answers live). Do not start without both.
 
+> ### This skill builds ONE system's plan. Run `itscp-portfolio` first.
+>
+> An organisation has an estate, not a system: a core product suite, the applications reading
+> from it, the tooling those are built with, the interfaces clients push data into, and the
+> public sites fronting all of it. Building plans one at a time without a register produces
+> **N individually-plausible, collectively-impossible plans** -- an application signed at four
+> hours that cannot authenticate until an identity system signed at eight is back.
+>
+> `itscp-portfolio` builds the register, ranks the tiers comparatively and fixes the recovery
+> order. This skill then runs **once per system, in wave order**, taking that system's tier,
+> targets and dependencies from the register as constraints it must honour rather than as
+> questions to re-ask.
+>
+> If the organisation genuinely has one system, say so explicitly and proceed. That is a
+> finding worth recording, not an assumption worth making.
+
 ---
 
 ## The problem this solves
@@ -22,6 +38,7 @@ they will produce a number, and it will be wrong.
 
 The ordering is not cosmetic. Real dependencies:
 
+- You cannot tier one system without the others to rank it against.
 - You cannot tier what you have not inventoried.
 - You cannot design recovery before the business has said what must come back first.
 - You cannot write escalation thresholds before roles exist to escalate to.
@@ -197,3 +214,6 @@ repository says it in three places for good reason.
 | "The role has a name, the deputy can wait" | The deputy is the plan's own single-point-of-failure control. Missing deputy is a finding, reported like any other |
 | "I'll put the operator down as the deputy for now" | That is an invented name in the one place the plan is least able to tolerate one. MISSING, owner: the role holder |
 | "The lead engineer and the application owner are the same person, skip a row" | Record it as the answer. A concentration you can see is manageable; one you deleted is not |
+| "They only asked for a plan for this one app" | Ask what it depends on. If the answer names another system, that system needs a register entry before this plan's targets mean anything |
+| "The register says tier 1 but the owner says tier 0" | The register is where tiers were ranked against each other. Take the disagreement back to the ranking, not into this plan |
+| "This system's RTO is shorter than its dependency's, but the owner signed it" | Two owners signed contradictory figures. Run the portfolio validator and take the inversion back to both |

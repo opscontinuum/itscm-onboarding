@@ -5,8 +5,10 @@ What the model gets
 Tools
   itscp_discover_oci   read-only walk of an Oracle Cloud Infrastructure compartment
 Skills
-  itscp-build, itscp-discover, itscp-audit, the five itscp-interview-* skills, and the
-  four itscp-method-* skills that carry the shared method those eight refer to.
+  itscp-portfolio and itscp-dependencies (the estate: the register of systems, the graph
+  between them and the recovery order), itscp-build, itscp-discover, itscp-audit, the five
+  itscp-interview-* skills, and the four itscp-method-* skills that carry the shared method
+  those ten refer to.
 
 Why the discovery script is a tool rather than a documented command
 -------------------------------------------------------------------
@@ -65,8 +67,16 @@ REGIONS_PATTERN = re.compile(r"^[a-z]{2,3}-[a-z]+-[0-9]+(,[a-z]{2,3}-[a-z]+-[0-9
 
 PROMPT_NOTE = """# IT service continuity planning (itscp-author)
 You can build an ITSCP, an IT service continuity plan aligned to NIST SP 800-34 Rev. 1.
-- Start at the `itscp-build` skill. `itscp-discover` inventories an Oracle Cloud tenancy,
-  the five `itscp-interview-*` skills elicit the content, `itscp-audit` checks the result.
+- **An organisation has an estate, not a system.** Start at `itscp-portfolio`: it registers
+  every system, ranks the tiers against each other and fixes the recovery order.
+  `itscp-dependencies` maps what each system needs, including what it needs in order to be
+  *recovered* rather than to run. Then `itscp-build` runs once per system, in wave order.
+- `itscp-discover` inventories an Oracle Cloud tenancy once for the whole estate, the five
+  `itscp-interview-*` skills elicit each plan's content, `itscp-audit` checks the result.
+- Validate the estate with `python3 itscp_portfolio.py portfolio.toml` (exit 0 clean,
+  1 warnings, 2 errors). A recovery time inversion or a recovery dependency cycle is a
+  contradiction between two signed plans; take it back to both owners, never resolve it by
+  editing a figure.
 - The shared method lives in `itscp-method-interview`, `itscp-method-answer-store`,
   `itscp-method-coverage-map` and `itscp-method-repo-scaffold`. The skills that depend on
   them say so by name; read the named skill rather than looking for a file.

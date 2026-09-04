@@ -20,6 +20,20 @@ functions with different tolerances.
 
 ---
 
+## Tiering is comparative, and this interview does not set the budget
+
+If the organisation has more than one system, the tier budget was set in `itscp-portfolio`
+by ranking systems against each other. **Bring the budget into this interview and say what it
+is.** Asked in isolation every owner answers Tier 0, and they are not wrong to -- the question
+only has a meaningful answer relative to the others competing for the same engineers at 3am.
+
+> "Across the estate there are four Tier 0 places and eleven candidates. Yours is currently
+> third. Here is what that means for you, and here is what would have to move for it to be
+> first."
+
+If the owner disputes the ranking, that is a portfolio decision and it goes back there. Do not
+re-rank inside one system's interview: the other owners are not in the room.
+
 ## Why this interview gates the others
 
 Tier assignment determines standby capacity, replication topology, and run cost. Get it after

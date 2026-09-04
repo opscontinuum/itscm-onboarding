@@ -65,6 +65,25 @@ been a wasted five minutes.
 
 ---
 
+## One walk, many systems
+
+**Discovery is portfolio-wide; plans are per-system.** Walk the tenancy once, then
+*attribute* what you found to the systems in `portfolio.toml`. Walking once per plan
+re-reads the same estate N times and produces N inventories that disagree at the edges.
+
+Attribution is a question, not an inference:
+
+> "Here is everything in the compartment. Which of these belongs to the identity database,
+> which to the HR suite, and which to neither?"
+
+**A resource nobody claims is a finding, and one of the most useful a first engagement
+produces.** Record it as unattributed rather than assigning it to whichever system looks
+closest; an unowned production resource is either a system missing from the register or a
+system nobody is maintaining, and both are worth knowing.
+
+Feed the register back the other way too: a system in `portfolio.toml` with no discovered
+resources either lives somewhere this walk did not reach, or does not exist.
+
 ## What it collects, and why each matters to the plan
 
 | Area | Feeds |

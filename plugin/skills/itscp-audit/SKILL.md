@@ -64,6 +64,32 @@ does not. Report all four:
 produces.** They are the numbers most likely to be wrong, in the document most likely to be
 believed, and they are invisible to any auditor without the store.
 
+## Portfolio findings
+
+A plan can pass every requirement in the standard and still be impossible, because the
+standard is written for one system and the failure is between systems. When a
+`portfolio.toml` exists, run it and fold the result into the report:
+
+```bash
+python3 itscp_portfolio.py portfolio.toml
+```
+
+| Finding | Why it belongs in an audit |
+|---|---|
+| `rto-inversion` | The plan states a recovery target it cannot meet, because something it hard-depends on is signed slower. Two signed documents contradict each other |
+| `recovery-cycle` | Systems that each need the other recovered first. Neither plan can execute |
+| `wave-inversion` | A dependency scheduled to recover after its dependant |
+| `undeclared-shared-service` | A concentration of risk the register's classing hides |
+| `no-plan` | A system the organisation knows it has and has not planned for |
+
+**Report an inversion against both plans, not one.** Naming only the faster of the two reads
+as a defect in that plan; it is a disagreement between two owners, and the finding is only
+actionable when both are named.
+
+If there is no `portfolio.toml`, say so as a finding in its own right: an audit of one plan
+in an estate of many has verified that plan against the standard and nothing against its
+neighbours.
+
 ## Scope
 
 Audit the plan repository: every document, runbook and checklist. Scripts and configuration
