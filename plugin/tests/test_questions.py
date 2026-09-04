@@ -3,11 +3,16 @@
 The bank is the schema. Every rule the store enforces at write time rests on the bank being
 internally consistent, so these run first and the rest of the suite assumes them.
 
-The check that matters most over time is :func:`_crosswalk_never_justifies`. The three-class
-partition of ``docs/ITIL-GROUNDING.md`` section 4.3 is only worth having if the forbidden
-class is mechanically forbidden, and a future edit that classifies a field ``crosswalk``
-would otherwise be a silent route for an unread paywalled standard to introduce a required
-field.
+The check that matters most over time is :func:`_crosswalk_never_justifies`. The partition of
+``docs/ITIL-GROUNDING.md`` section 4.3 is only worth having if the forbidden class is
+mechanically forbidden, and a future edit that classifies a field ``crosswalk`` would
+otherwise be a silent route for an unread paywalled standard to introduce a required field.
+
+The second-most load bearing group is the mechanism pairing. ``mechanism_required`` on its
+own can only ever *reject* a figure that arrived without an explanation; it cannot elicit
+one, because nothing asks. The checks below make the pairing structural: a question yields a
+figure exactly when it is mechanism-required, and a mechanism-required question carries the
+follow-up that asks what breaks, on the same record as the figure it explains.
 """
 from __future__ import annotations
 
@@ -110,6 +115,12 @@ def main() -> None:
     section.check("mechanism is required exactly where a figure is", _every_question(
         _mechanism_attaches_to_a_figure, "mechanism"))
 
+    section.check("every figure question carries the paired follow-up", _every_question(
+        _figures_are_paired_with_a_mechanism_prompt, "mechanism pairing"))
+
+    section.check("a table of figures pairs each figure with the column that explains it",
+                  _every_question(_figure_columns_name_their_explanation, "figure columns"))
+
     section.check("read-back is required for every narrative", _every_question(
         _narrative_requires_readback, "read-back"))
 
@@ -190,11 +201,63 @@ def _ours_claims_nothing(question) -> None:
 
 
 def _mechanism_attaches_to_a_figure(question) -> None:
-    if not question.mechanism_required:
+    """A figure and a demand for its mechanism are the same thing, in both directions.
+
+    The reverse direction is the one that matters. Checking only that mechanism_required
+    implies a figure lets a new duration question ship without the flag, and a duration with
+    no mechanism is the defect the flag exists to catch.
+    """
+    if question.mechanism_required:
+        assert question.kind in bank.FIGURE_KINDS, (
+            f"mechanism_required on a {question.kind!r} field; a mechanism explains a figure"
+        )
+    if question.kind in bank.FIGURE_KINDS:
+        assert question.mechanism_required, (
+            f"kind is {question.kind!r} and nothing demands the mechanism behind the figure"
+        )
+
+
+def _figures_are_paired_with_a_mechanism_prompt(question) -> None:
+    """The pairing, stated as a property of the record rather than as interviewer habit.
+
+    A mechanism the store demands and no question asks for is a rule that can only refuse an
+    answer. The follow-up lives on the same record as the figure because that is where the
+    store keeps the mechanism.
+    """
+    wants_a_mechanism = question.mechanism_required or bool(question.figure_columns)
+    if not wants_a_mechanism:
+        assert not question.mechanism_prompt, (
+            f"carries a mechanism follow-up but yields no figure: "
+            f"{question.mechanism_prompt!r}"
+        )
         return
-    assert question.kind in ("duration", "number", "currency"), (
-        f"mechanism_required on a {question.kind!r} field; a mechanism explains a figure"
+    assert question.mechanism_prompt.strip(), (
+        "yields a figure and asks nothing about what breaks; mechanism_required can refuse "
+        "an answer but only a question can elicit one"
     )
+    assert question.mechanism_prompt.strip().endswith("?"), (
+        f"the mechanism follow-up is not a question: {question.mechanism_prompt!r}"
+    )
+    assert question.mechanism_prompt != question.prompt, (
+        "the mechanism follow-up repeats the question that produced the figure"
+    )
+
+
+def _figure_columns_name_their_explanation(question) -> None:
+    """A figure in a table is still a figure, so its row carries the cell that explains it."""
+    if not question.figure_columns:
+        return
+    assert question.kind == "rows", (
+        f"figure_columns on a {question.kind!r} field; only a table has columns"
+    )
+    for figure, explanation in question.figure_columns.items():
+        assert figure in question.columns, f"figure column {figure!r} is not a column"
+        assert explanation in question.columns, (
+            f"the column said to explain {figure!r} is not a column: {explanation!r}"
+        )
+        assert explanation != figure, (
+            f"{figure!r} is said to explain itself, which explains nothing"
+        )
 
 
 def _narrative_requires_readback(question) -> None:
