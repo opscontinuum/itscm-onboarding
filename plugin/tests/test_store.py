@@ -159,6 +159,13 @@ def main() -> None:
         "readback must be one of")
 
     section.rejects(
+        "an enum value the question does not offer is refused",
+        lambda: store.validate(store.Record(
+            "business.tier_signoff", "ANSWERED", value="mostly signed",
+            provenance=INTERVIEW, confidence="high", readback="confirmed")),
+        "is not one of the options")
+
+    section.rejects(
         "a conflict with one source is refused",
         lambda: store.validate(_answered(conflict=store.Conflict(
             "24h", INTERVIEW, "business owner", "Same speaker, so not a conflict"))),
