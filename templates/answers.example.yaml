@@ -7,6 +7,14 @@
 #
 # Every field starts MISSING. A value appears only when a human said it or a
 # read-only API returned it. There is no third source.
+#
+# `owner` is a role from the Phase 0 roster, never a person's name. The seven
+# roles are business owner, application owner, lead engineer, infrastructure
+# owner, DR process owner, governance/risk contact and signing authority. Each
+# has a deputy value ("lead engineer deputy" and so on), used when the primary
+# is unreachable and the deputy now owes the answer. A role with no named
+# deputy is a finding in its own right, not an acceptable state. See
+# skills/_method/answer-store.md for the vocabulary.
 
 meta:
   schema_version: 1
@@ -33,7 +41,7 @@ facts:
   system.categorization:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
     notes: "Impact level or data classification. Determines which controls are
             mandatory. If never categorised, that is itself the finding."
 
@@ -79,8 +87,10 @@ facts:
   app.start_order:
     status: MISSING
     value: null
-    owner: "application owner"
-    notes: "Rarely written down, usually in one person's head. Capture verbatim."
+    owner: "lead engineer"
+    notes: "Rarely written down, usually in one person's head. Capture verbatim.
+            If only one engineer holds it, that is a deputy gap as well as a
+            documentation gap."
 
   app.interconnections:
     status: MISSING
@@ -122,7 +132,7 @@ facts:
   infra.measured_rtt_ms:
     status: MISSING
     value: null
-    owner: "infrastructure owner"
+    owner: "lead engineer"
     notes: "Measured, not published. A synchronous design over an unmeasured
             link has an unexploded assumption in the middle of it."
 
@@ -150,22 +160,27 @@ facts:
   infra.last_end_to_end_execution:
     status: MISSING
     value: null
-    owner: "infrastructure owner"
+    owner: "lead engineer"
     notes: "'Never' is common and acceptable. Record it; it calibrates how much
-            every duration in the plan can be trusted."
+            every duration in the plan can be trusted. Record who ran it, too:
+            one name means the runbook has an availability requirement on a
+            person."
 
   # ---- continuity.* — DR process owner -------------------------------------
   continuity.declaration_authority:
     status: MISSING
     value: null
     owner: "DR process owner"
-    notes: "Exactly one individual. Not 'the incident team', which is nobody."
+    notes: "Exactly one individual, and one named deputy. Not 'the incident
+            team', which is nobody, and not a rota, which is not a name."
 
   continuity.succession:
     status: MISSING
     value: null          # ordered list of {order, role, passes_after}
     owner: "DR process owner"
-    notes: "Must terminate in someone always reachable."
+    notes: "Must terminate in someone always reachable. Must agree with the
+            Phase 0 deputy roster; a disagreement is a conflict with a named
+            decision owner, never a silent preference for one list."
 
   continuity.activation_criteria:
     status: MISSING
@@ -218,31 +233,34 @@ facts:
   governance.signing_authority:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
+    notes: "The signatory and the alternate signatory. A plan that can only be
+            approved by one reachable person cannot be reapproved after a
+            material change while they are away."
 
   governance.review_cadence:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
     notes: "Frequency AND triggers AND an owner. An unowned cadence does not happen."
 
   governance.training_programme:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
     notes: "Distinct from drills. Drills exercise the plan; training makes
             individuals competent. Auditors check for both."
 
   governance.finding_to_change_route:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
     notes: "If there is no route, the drills are theatre."
 
   governance.risk_register:
     status: MISSING
     value: null
-    owner: "governance"
+    owner: "governance/risk contact"
 
   # ---- discovery.* — written only by itscp-discover ------------------------
   discovery.completed:

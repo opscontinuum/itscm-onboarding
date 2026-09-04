@@ -14,8 +14,11 @@ infrastructure interviews — escalation thresholds are meaningless until there 
 recovery steps to threshold, and a call tree is meaningless until you know who does the work.
 
 **Interviewee:** the DR process owner, incident manager, or whoever would actually be running
-the bridge at 3am. If nobody holds that role, you have found the most important gap in the
-engagement; say so before continuing.
+the bridge at 3am, with their deputy in the room where one is named. If nobody holds that role,
+you have found the most important gap in the engagement; say so before continuing.
+
+**Bring the Phase 0 role roster.** The deputies named there and the succession elicited here are
+two views of one fact, and this interview is where they get reconciled.
 
 **Time:** 90 minutes.
 
@@ -46,6 +49,12 @@ NIST is unambiguous: exactly one individual holds declaration authority, and a s
 clearly identified. Elicit an **ordered** list with the interval after which authority passes,
 and press until it terminates in someone who is always reachable.
 
+Then check it against the Phase 0 roster. If the roster names one deputy and the succession
+names a different person first, you have not found a wording difference; you have found two
+groups with different beliefs about who takes over, which is exactly the disagreement that
+surfaces at 3am. Record a `conflict`, name whose decision it is, and move on. Do not pick the
+more credible list.
+
 **Two failure modes to name explicitly if you see them:**
 
 - **Nobody holds it.** Common. The organisation believes the decision would "be made by the
@@ -61,7 +70,7 @@ If yes, name the risk plainly: the decision gate gets compressed into whatever t
 work leaves time for. It is a legitimate choice for a small team — record it as a stated
 choice with its consequence, not as an oversight.
 
-### Teams and alternates
+### Teams, alternates and the deputy roster
 
 Walk the candidate team list and, for each, ask who does it here. Expect several to collapse
 into the same three people. That is normal and worth recording accurately rather than
@@ -72,6 +81,19 @@ For every team: leader, alternate, second alternate.
 > "Is the alternate someone who could actually do it, or someone who'd know who to call?"
 
 Both are valid answers and they are very different plans. Record which.
+
+Cover the technical roles explicitly, because they are the ones usually left with a single
+name: the lead engineer running the recovery, and the backup lead engineer or lead developer
+behind them. A runbook with one person who has executed it is a runbook with an availability
+requirement on that person.
+
+> "Which of these actions has exactly one person who has ever done it?"
+
+That question finds the real gap faster than walking the roster does. **A role with no named
+deputy is a finding, not an acceptable state.** NIST SP 800-34 Rev. 1 §3.4.6 requires a
+designated alternate for every team leader. Record it MISSING against the role holder. Do not
+name a deputy on their behalf, and do not accept "whoever is on call" as one: an unnamed
+deputy is the plausible-answer failure with a rota in front of it.
 
 ### The disruption may take the people too
 
@@ -202,8 +224,9 @@ organisation unsure whether it is still in a disaster, which is its own kind of 
 
 ## Output
 
-Writes `continuity.*`: leadership roles, ordered succession with intervals, team structure with
-alternates and their capability, geographic and vendor fallback, activation criteria and the
+Writes `continuity.*`: leadership roles and the deputy named for each, ordered succession with
+intervals reconciled against the Phase 0 roster, team structure with alternates and their
+capability, geographic and vendor fallback, activation criteria and the
 unknown-case default, decision time budget, call tree, bridge and its dependencies,
 notification script, external notification list, assessment team, time budget, signal list,
 provider escalation path, unknown-estimate rule, closed-book form, escalation thresholds,
@@ -221,6 +244,9 @@ in `runbooks/RB-02`.
 | "Several senior people could declare" | Concurrent declarations half-fail-over an estate. One at a time, in order |
 | "They'll assess it when it happens" | Then the activation criteria consume a number nothing produces |
 | "The alternate is listed, that's covered" | Ask whether the alternate could actually do it, or only knows who to call |
+| "Only one engineer has ever run the failback, but they're reliable" | Reliability is not availability. No deputy is a finding, at the same weight as no owner |
+| "The on-call rota is the deputy" | A rota is not a name. Ask who is on it who could actually execute this step |
+| "The roster and the succession are near enough the same" | "Near enough" is a conflict you have not looked at. Record both, name the decision owner |
 | "Thresholds are a judgement call" | Judgement at 3am is not repeatable. Get an observable number |
 | "The bridge is our usual incident channel" | Check what that channel depends on. A loop through the failed estate is not a bridge |
 | "Safety isn't relevant, it's all cloud" | The event that takes the region may take the people. Ask |

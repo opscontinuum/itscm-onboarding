@@ -19,10 +19,32 @@ Three things, and the third is the one people skip.
    complete worked plan for a hypothetical corporation. Read `README.md` and `docs/01` before
    your first interview so you know what you are aiming at. Do not copy its numbers — they
    describe a company that does not exist.
-3. **Six names.** Business owner, application owner, infrastructure owner, DR process owner,
-   governance/risk contact, and whoever signs. **If a role has no name, that is your first
-   finding.** A system with no named business owner has nobody who can sign an MTD, and no
-   amount of documentation fixes that.
+3. **Fourteen names: seven roles, and a deputy for each.**
+
+   | Role | Deputy |
+   |---|---|
+   | Business owner | Business deputy, able to decide in their absence |
+   | Application owner | Deputy application owner |
+   | Lead engineer | Backup lead engineer, or the lead developer |
+   | Infrastructure owner | Deputy infrastructure owner |
+   | DR process owner | Deputy DR process owner |
+   | Governance / risk contact | Deputy governance contact |
+   | Signing authority | Alternate signatory |
+
+   **If a role has no name, that is your first finding.** A system with no named business
+   owner has nobody who can sign an MTD, and no amount of documentation fixes that.
+
+   **If a role has a name but no deputy, that is a finding of the same class**, not a lesser
+   one. A plan whose recovery depends on one unreachable person has a single point of failure
+   written into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 requires a
+   designated alternate for every team leader, and §4.2.1 requires a clearly identified
+   successor to whoever declares. The reference example carries the gap it warns about: its
+   authority matrix names a deputy for the declaration and none for a planned switchover or a
+   failback, the two actions with no "declare and act" path around a missing name.
+
+   **Never substitute yourself for a missing name, and never invent a deputy.** An unfilled
+   role and an unnamed deputy are both recorded as MISSING against whoever owes the answer,
+   like any other fact.
 
 ---
 
@@ -89,10 +111,16 @@ real architecture within a day and are never revisited.
 
 Independent of each other; run in either order or in parallel with different people.
 
-- `itscp-interview-application` — application owner. System description, interconnections,
-  the validation pack, work recovery activities.
-- `itscp-interview-infrastructure` — infrastructure owner. Replication design, standby
+- `itscp-interview-application` — application owner, with the lead engineer for anything
+  hands-on. System description, start order, interconnections, the validation pack, work
+  recovery activities.
+- `itscp-interview-infrastructure` — infrastructure owner, with the lead engineer for the
+  measured figures and for what has actually been executed. Replication design, standby
   posture and cost, the alternate site, recovery procedures.
+
+**Bring the deputy to at least one of these.** The backup lead engineer sitting in is the
+cheapest test available of whether the deputy could really do it, and it usually answers the
+question before you have to ask it.
 
 **Expect a contradiction here, and do not resolve it yourself.** The business says four hours;
 the application owner says batch reprocessing alone takes a day. Record both, name whose
@@ -103,15 +131,17 @@ contradiction is honest. A plan where one side was silently dropped fails in exa
 
 ## Phase 4 — The continuity interview (90 minutes)
 
-Invoke `itscp-interview-continuity`. Interviewee: the DR process owner.
+Invoke `itscp-interview-continuity`. Interviewee: the DR process owner, with their deputy.
 
 Runs after Phase 3 because escalation thresholds need real recovery steps to threshold against.
 
 This is where most organisations discover that **nobody owns the declaration decision.** That
 is not a failure of the interview; it is the single most valuable thing it produces.
 
-**Output:** roles, succession, activation criteria, call tree, outage assessment, escalation
-thresholds, deactivation.
+**Output:** roles and the deputy named for each, succession, activation criteria, call tree,
+outage assessment, escalation thresholds, deactivation. The succession elicited here and the
+Phase 0 deputy roster must agree; where they do not, that is a recorded conflict with a named
+decision owner, not something to reconcile quietly.
 
 ---
 
@@ -174,6 +204,8 @@ guessed rather than elicited.** Be suspicious of your own output if it looks fin
 | Skipping discovery because "we know our estate" | The interview spends 40 minutes reconstructing what a read-only walk produces in 10 |
 | Running the technical interviews before the tier gate | You design to assumed tiers and rebuild later |
 | Letting IT answer the business questions | IT sets its own targets; the business signs something it did not choose |
+| Naming a role holder and leaving the deputy blank | The plan now depends on one person being reachable. It is a finding, and it is cheapest to fix on day one |
+| Putting yourself down as the deputy to fill the column | An invented deputy is the plausible-answer failure, wearing a name badge |
 | Filling gaps with sensible defaults to look complete | The one failure this toolkit exists to prevent. A plausible number nobody gave is worse than a visible gap |
 | Treating the generated plan as finished | It is a design. The drill makes it a plan |
 | Committing the answer store | It holds names, numbers and organisational weak points. Check `.gitignore` before the first push |

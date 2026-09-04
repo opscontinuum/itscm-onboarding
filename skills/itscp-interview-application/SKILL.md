@@ -15,6 +15,12 @@ that decide whether the MTD is achievable at all.
 not for the infrastructure under it. In an ERP context this is usually the functional lead or
 applications DBA rather than the cloud team.
 
+**Bring the lead engineer, and the backup lead engineer if there is one.** Sections 2 and 5
+below ask what actually happens when the system is brought up, and the owner is accountable for
+that rather than practised at it. If the only person who can answer section 2 is one engineer,
+say so: that is a deputy gap as well as an undocumented start order, and it belongs in the
+roster finding rather than only in the notes.
+
 **Time:** 90 minutes. Bring the discovery inventory; it halves the session.
 
 ---
@@ -58,7 +64,10 @@ The question that finds the real dependency:
 > "If you brought this up in the wrong order, what would break, and how would you know?"
 
 Order-of-operations knowledge is almost never written down and is almost always in one
-person's head. Capture it verbatim.
+person's head. Capture it verbatim, and record **whose** head, because that name is the
+plan's dependency. Then ask the deputy question:
+
+> "If they were on leave the week this happened, who else has actually done this?"
 
 ### 3. Interconnections — Appendix I (25 min)
 
@@ -146,3 +155,4 @@ Renders `docs/01-architecture.md` §2, `docs/12-interconnections.md`,
 | "Validation is obvious — check it's up" | Then no one has defined correct, and the declaration will be a guess |
 | "WRT is roughly an hour" | Per activity, with parallelisability. "Roughly an hour" is not a plan |
 | "They don't know the start order" | Then that is a MISSING with a named owner and a drill objective |
+| "One engineer knows the whole bring-up, so we're fine" | You have documented a person, not a procedure. Record the deputy gap |

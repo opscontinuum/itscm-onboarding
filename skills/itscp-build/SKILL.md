@@ -56,9 +56,9 @@ digraph build {
 | 0. Scope | this skill | the operator | — |
 | 1. Discovery | `itscp-discover` | a tenancy, read-only | OCI credentials |
 | 2. Business | `itscp-interview-business` | business / process owner | Discovery (so you can name real components) |
-| 3. Application | `itscp-interview-application` | application owner | Tier gate |
-| 4. Infrastructure | `itscp-interview-infrastructure` | cloud / infrastructure owner | Tier gate |
-| 5. Continuity | `itscp-interview-continuity` | DR process owner | Phases 3–4 (roles escalate about real steps) |
+| 3. Application | `itscp-interview-application` | application owner, with the lead engineer | Tier gate |
+| 4. Infrastructure | `itscp-interview-infrastructure` | infrastructure owner, with the lead engineer | Tier gate |
+| 5. Continuity | `itscp-interview-continuity` | DR process owner, with their deputy | Phases 3–4 (roles escalate about real steps) |
 | 6. Governance | `itscp-interview-governance` | governance / audit / risk | Phase 5 |
 | 7. Generate and audit | this skill, then `itscp-audit` | — | All above |
 
@@ -74,13 +74,47 @@ Six questions to the operator, one at a time, before anything else:
 1. What is the application suite called, and what does the business call it?
 2. Where does it run today — cloud, region, on-premises?
 3. Is there an existing plan, in any state? (If yes, read it before interviewing anyone.)
-4. Who are the six people in the table above, by name and role?
+4. Who holds each of the seven roles below, by name, and who deputises for each of them?
 5. Is this a real estate, or an exercise? (Exercises skip discovery and use placeholders.)
 6. Where should the plan repository live? Default: a new **private** repository.
+
+### The role roster
+
+Fourteen names: seven roles, and a deputy for each. The deputy column is not a courtesy.
+
+| Role | Answers for | Deputy |
+|---|---|---|
+| Business owner | MTD, tiers, MBCO, the tier signature | Business deputy, able to decide in their absence |
+| Application owner | System description, interconnections, validation | Deputy application owner |
+| Lead engineer | How the recovery is actually executed; start order; measured figures | Backup lead engineer, or the lead developer |
+| Infrastructure owner | Replication design, standby posture, cost floor | Deputy infrastructure owner |
+| DR process owner | Declaration authority, call tree, outage assessment | Deputy DR process owner |
+| Governance / risk contact | Categorization, review cadence, training, evidence | Deputy governance contact |
+| Signing authority | The approval signature | Alternate signatory |
+
+The lead engineer is separate from the application and infrastructure owners on purpose. An
+owner is accountable for the thing working; the lead engineer is the person who would be typing
+during a recovery, and the two are the same person only in small teams. Where they are the
+same person, record that as the answer rather than leaving a row blank, because it is a
+concentration worth seeing.
 
 **Never proceed past a missing name in question 4 by substituting yourself.** An unfilled role
 is the first finding of the engagement, not an inconvenience — a system with no named business
 owner has no one who can sign an MTD, and that is worth saying out loud on day one.
+
+**A role with a holder and no named deputy is a finding of the same class**, not a lesser one.
+A plan whose recovery depends on one unreachable person has a single point of failure written
+into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 requires a designated
+alternate for every team leader, and §4.2.1 requires a clearly identified successor to whoever
+holds declaration authority. The reference example carries the gap it warns about: its
+authority matrix names a deputy for the declaration and none for a planned switchover or a
+failback, the two actions with no "declare and act" path around a missing name.
+
+**Do not invent a deputy either.** An unnamed deputy is recorded MISSING with the role holder
+as its owner, and it is carried into `itscp-interview-continuity`, which elicits the ordered
+line of succession. The roster and the succession are two views of the same fact and must end
+up agreeing. Where they disagree, record a `conflict`, name whose decision it is, and let the
+generated plan carry the disagreement openly.
 
 ---
 
@@ -148,3 +182,6 @@ repository says it in three places for good reason.
 | "The file exists, so the section is complete" | Rendered is not complete. Count fields, not files |
 | "They only want the technical bits" | Then say plainly which sections of the ITSCP will be absent, and let them choose knowingly |
 | "This estate is like the reference repo, I can prefill" | The reference repository is a hypothetical corporation. It is evidence about nothing |
+| "The role has a name, the deputy can wait" | The deputy is the plan's own single-point-of-failure control. Missing deputy is a finding, reported like any other |
+| "I'll put the operator down as the deputy for now" | That is an invented name in the one place the plan is least able to tolerate one. MISSING, owner: the role holder |
+| "The lead engineer and the application owner are the same person, skip a row" | Record it as the answer. A concentration you can see is manageable; one you deleted is not |

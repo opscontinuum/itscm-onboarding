@@ -43,6 +43,12 @@ Establish the signing authority — typically the system owner or designated aut
 what the statement affirms: that the plan is complete, that it will be tested at a stated
 frequency, and that it will be maintained.
 
+> "And if they're unavailable when it needs re-approving, who signs instead?"
+
+An alternate signatory is the same requirement as every other deputy on the Phase 0 roster.
+A plan reapprovable by exactly one reachable person is a plan that goes stale during a long
+absence, which is precisely when nobody notices.
+
 > "Has anything like this been signed before? Can I see it?"
 
 An existing signed plan, however stale, tells you the organisation's real cadence and the real
@@ -136,6 +142,7 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 | Thought | Reality |
 |---|---|
 | "The CIO will sign it, that's approval covered" | Ask what they are attesting to. A signature on an unspecified claim is not approval |
+| "There's one signatory and that's normal" | Then approval stalls whenever they are away. Name the alternate, or record the gap |
 | "They drill annually, so training is covered" | Different activities. Drills exercise the plan; training makes individuals competent |
 | "There's no formal categorization, I'll assess it as moderate" | Categorization is theirs to assign. MISSING with an owner |
 | "Review cadence is annual" | And the other triggers? And who owns it? An unowned cadence does not happen |

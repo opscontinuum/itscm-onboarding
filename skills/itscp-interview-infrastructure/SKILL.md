@@ -12,7 +12,9 @@ the cost model that decides whether the business's chosen tier is affordable.
 **Read first:** `skills/_method/interview-method.md`, plus the discovery inventory and the
 signed tier assignment. This interview is where the business's targets meet physics and price.
 
-**Interviewee:** the cloud or infrastructure owner.
+**Interviewee:** the cloud or infrastructure owner, with the lead engineer. The owner holds the
+design and the budget; the lead engineer holds the measured figures and the answer to section 6,
+and those are the parts of this interview that decide how much of the plan is real.
 
 **Time:** 90–120 minutes.
 
@@ -108,6 +110,13 @@ decides how much of the plan is real:
 "Never" is a common and acceptable answer. Record it plainly; it sets the drill programme's
 first objective and calibrates how much the current design's timings can be trusted.
 
+Then the question that turns drill history into a roster finding:
+
+> "Who ran it? And who else has ever run it?"
+
+One name is an availability requirement on a person, sitting inside a document written to
+remove single points of failure. Record it against the lead engineer and their deputy.
+
 ### 7. Alternate site and telecommunications — Appendix C (10 min)
 
 For cloud estates most of NIST's Appendix C is answered by the provider. Record which parts
@@ -149,4 +158,5 @@ Renders `docs/01-architecture.md`, `docs/03-replication-matrix.md`,
 | "Latency is fine, it's the published figure" | Published figures are not measurements. Mark it low confidence |
 | "The business wants Tier 0 but can't afford it, I'll design Tier 1" | Never. Present costed options and let them choose |
 | "They've never drilled, but the design is sound" | Then every duration is a target, and the plan must say so everywhere |
+| "The lead engineer has done it, that's enough" | Once, by one person, is not a capability. Ask who else, and record the deputy gap |
 | "Appendix C is mostly not applicable for cloud" | Probably true, and each one still needs its reason written down |

@@ -41,7 +41,7 @@ it does.
 |---|---|---|
 | 2.1 System description — architecture, locations, I/O and architecture diagrams | `itscp-interview-application` + `itscp-discover` | `docs/01-architecture.md` §2 |
 | 2.2 Overview of the three phases | `itscp-build` (renders from the runbook set) | `docs/08`, `docs/09`, `docs/10` |
-| 2.3 Roles and responsibilities — team structure, hierarchy, coordination | `itscp-interview-continuity` | `checklists/roles-and-responsibilities.md` |
+| 2.3 Roles and responsibilities — team structure, hierarchy, coordination, and a named deputy for every role | `itscp-build` (Phase 0 roster) + `itscp-interview-continuity` | `checklists/roles-and-responsibilities.md` |
 
 ## 3. Activation and Notification
 
@@ -78,7 +78,7 @@ it does.
 
 | NIST ISCP appendix | Elicited by | Written to |
 |---|---|---|
-| A. Personnel contact information | `itscp-interview-continuity` | `checklists/contact-roster.md` §2 |
+| A. Personnel contact information, primary and deputy for every role | `itscp-build` (Phase 0 roster) + `itscp-interview-continuity` | `checklists/contact-roster.md` §2 |
 | B. Vendor contacts, offsite storage and alternate site POCs | `itscp-interview-infrastructure` | `checklists/contact-roster.md` §5 |
 | C. Alternate site, storage and telecommunications | `itscp-interview-infrastructure` | `docs/01` §5, `docs/03` |
 | D. Detailed recovery procedures and checklists | `itscp-interview-infrastructure` | `runbooks/`, `checklists/pre-failover-precheck.md` |
