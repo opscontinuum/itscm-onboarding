@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # run-tests.sh - the itscp-author data layer, proved.
 #
-# Eight sections, each a Python module printing its own ok/FAIL lines. Any one
+# Nine sections, each a Python module printing its own ok/FAIL lines. Any one
 # failing fails the suite:
 #   1. The question bank is internally consistent (unit).
 #   2. Every store rule refuses bad input, and the emitter round-trips
@@ -17,6 +17,8 @@
 #      unsourced figure is marked in three channels that survive greyscale.
 #   8. Acceptance, end to end: a scripted answer set in, a plan repository
 #      out, graded on structure, provenance and quoted-standard fidelity.
+#   9. The two committed examples under examples/ are still what the build
+#      step writes from their own answer stores.
 #
 # Check 2's round trip is the one that matters over time. The emitter is hand
 # written and tomllib is the standard library's parser; without a property
@@ -42,7 +44,7 @@ if ! "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)
 fi
 
 for module in test_questions test_store test_session test_realisation test_example \
-              test_render test_diagrams test_acceptance; do
+              test_render test_diagrams test_acceptance test_examples; do
     if ! "$PYTHON" "${module}.py"; then
         FAILS=$((FAILS + 1))
     fi
