@@ -60,6 +60,9 @@ FORBIDDEN_IDENTIFIERS: tuple[str, ...] = ("ocid1.", "http://", "https://")
 #: An electronic mail address, which is the shape the at sign is actually being watched for.
 EMAIL_SHAPE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 
+#: Where the generated drawings land, relative to the plan root.
+DIAGRAM_DIRECTORY = "docs/diagrams"
+
 #: The only provenance class a derivation from a document may write. An ``interview:``
 #: provenance here would be the store claiming a conversation that did not happen, which is
 #: the exact failure the toolkit exists to prevent.
@@ -81,6 +84,7 @@ def main() -> None:
     section.check("the day-one plan is what the build step writes",
                   lambda: _plan_is_rebuilt(DAY_ONE_PLAN, _starter_document()))
 
+    section.check("the day-one store answers nothing", _day_one_is_uncovered)
     section.check("the day-one plan is a page of named gaps", _day_one_names_every_owner)
     section.check("the day-one drawings carry the MISSING marker", _day_one_drawings_are_marked)
 
@@ -120,16 +124,20 @@ def _worked_is_canonical() -> None:
     answer store is one whose comments no longer match the question bank behind them.
     """
     text = WORKED_STORE.read_text(encoding="utf-8")
-    emitted = store.emit(_worked_document())
-    assert text.endswith(emitted), (
+    assert text.endswith(store.emit(_worked_document())), (
         "the committed worked store is not what the emitter produces from its own values. "
         "Regenerate it rather than editing it: the guidance comments are rendered from the "
         "question bank on every write.")
 
 
-def _worked_states_the_exception() -> None:
+def _worked_header() -> str:
+    """Whatever the committed file says before the emitter's own output starts."""
     text = WORKED_STORE.read_text(encoding="utf-8")
-    header = text[:-len(store.emit(_worked_document()))]
+    return text[:-len(store.emit(_worked_document()))]
+
+
+def _worked_states_the_exception() -> None:
+    header = _worked_header()
     assert header.strip(), (
         "the committed worked store carries no header of its own. The emitter's header says "
         "an answer store must never be committed; a file that is committed anyway has to say "
@@ -190,14 +198,18 @@ def _same_bytes(committed: Path, rebuilt: Path) -> None:
 
 # ----------------------------------------------------------------- what day one shows
 
-def _day_one_names_every_owner() -> None:
-    """Every gap on the page names the role who can close it, and there are no other cells.
+def _day_one_is_uncovered() -> None:
+    """Nothing is answered, which is the honest starting position and not an embarrassment."""
+    equal(store.coverage(_starter_document()).covered, 0,
+          "covered fields in the day-one store")
 
-    This is the day-one claim in one check: the deliverable before an interview is not an
-    empty document, it is a work assignment. A marker naming nobody would make it one.
+
+def _day_one_names_every_owner() -> None:
+    """Every gap on the page names the role who can close it.
+
+    This is the day-one claim: the deliverable before an interview is not an empty document,
+    it is a work assignment. A marker naming nobody would make it one.
     """
-    coverage = store.coverage(_starter_document())
-    equal(coverage.covered, 0, "covered fields in the day-one store")
     unassigned = store.status_marker(None)
     for page in DAY_ONE_PLAN.rglob("*.md"):
         assert unassigned not in page.read_text(encoding="utf-8"), (
@@ -209,7 +221,7 @@ def _day_one_drawings_are_marked() -> None:
     """A drawing with no data behind it says so, rather than drawing an empty chart."""
     marker = store.status_marker(None)
     for name in build.DIAGRAMS:
-        drawing = (DAY_ONE_PLAN / "docs" / "diagrams" / name).read_text(encoding="utf-8")
+        drawing = (DAY_ONE_PLAN / DIAGRAM_DIRECTORY / name).read_text(encoding="utf-8")
         assert marker in drawing, (
             f"{name} was written with no data and without the store's MISSING marker, so it "
             f"reads as a chart of nothing rather than as an unanswered question")
