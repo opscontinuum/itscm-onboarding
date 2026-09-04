@@ -1,12 +1,12 @@
 ---
 name: itscp-discover
-description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their estate actually contains, or when a hardware and software inventory or interconnection list is needed for an ISCP appendix.
+description: Use when building a continuity plan for a workload running in Oracle Cloud Infrastructure and the environment is not yet documented, when someone says they are unsure what their estate actually contains, or when a hardware and software inventory or interconnection list is needed for an appendix of an IT service continuity plan.
 ---
 
 # itscp-discover
 
 Walks an OCI tenancy **read-only** and turns "I have a vague idea of my environment" into an
-inventory, an interconnection list, and a populated resource file the runbook scripts consume.
+inventory, a gap list, and a populated resource file the runbook scripts consume.
 
 This is usually the highest-value hour of the whole engagement. It is also the only phase that
 touches a live production tenancy, so it is the phase with a hard safety rule.
@@ -117,15 +117,30 @@ inventory an auditor can use and one that quietly misleads.
 | File | Contents |
 |---|---|
 | `discovery-output/inventory.md` | Appendix H — every resource, with OCID, region, shape, state |
-| `discovery-output/interconnections.md` | Appendix I — buckets, load balancers, DNS, peering; external partners left for interview |
 | `discovery-output/dr-resources.env` | Populated resource file the runbook scripts read |
 | `discovery-output/raw/*.json` | Raw API responses, for re-rendering without re-walking |
 | `discovery-output/gaps.md` | Everything NOT DISCOVERED, with the reason and who to ask |
 
-All are gitignored by default. `inventory.md` is a complete map of a production estate.
+That is the whole list. `oci-discover.sh` writes those four things and nothing else. All are
+gitignored by default, and `inventory.md` is a complete map of a production estate.
 
 Then write `discovery.*` keys into the answer store with provenance
 `oci-discovery:<operation>`, and hand `gaps.md` to `itscp-build` as interview input.
+
+### Not produced yet: Appendix I
+
+**There is no `discovery-output/interconnections.md`.** The buckets, load balancers, DNS zones,
+steering policies and peering connections that would populate Appendix I are collected into
+`raw/*.json` by the walk and left unrendered. Nothing turns them into an interconnection list.
+
+**The consequence, and say it to the operator rather than letting the appendix look
+pre-populated:** Appendix I is built entirely from `itscp-interview-application`. The half of
+the register discovery could have pre-filled is instead recalled in a meeting, which is exactly
+the condition under which an interface gets missed, and a missed interface is the most damaging
+single omission this toolkit has. Budget the interview time accordingly and treat the
+interconnection section as the one with no safety net under it.
+
+Writing the renderer is separate work and is not attempted here.
 
 ---
 

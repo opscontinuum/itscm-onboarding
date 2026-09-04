@@ -5,7 +5,7 @@ once. If a skill's own instructions and this file disagree, this file wins — t
 the *questions*, this file carries the *method*.
 
 The method exists because the failure mode of an AI-assisted plan is not a wrong answer. It
-is a **plausible answer nobody gave**. A generated ISCP that says "RTO: 4 hours" when no human
+is a **plausible answer nobody gave**. A generated ITSCP that says "RTO: 4 hours" when no human
 ever said four hours is worse than one that says "RTO: MISSING — owner: Head of Finance
 Systems", because the first cannot be audited and will be believed.
 

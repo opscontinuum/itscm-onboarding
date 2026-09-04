@@ -25,12 +25,12 @@ Every structural decision below follows from designing against that one failure.
 
 ---
 
-## Decision 1 — Skills grouped by interviewee, not by ISCP section
+## Decision 1 — Skills grouped by interviewee, not by ITSCP section
 
 **Chosen:** one orchestrator, one discovery skill, five interview skills grouped by who holds
 the knowledge, one audit skill.
 
-**Rejected — one skill per ISCP section (~20 skills).** Faithful to the standard and maximally
+**Rejected — one skill per ITSCP section (~20 skills).** Faithful to the standard and maximally
 tailorable, but the elicitation method would be duplicated twenty times, and a user who does
 not know the standard has no idea which to run or in what order. Sections do not cluster by
 number; they cluster by who can answer them.

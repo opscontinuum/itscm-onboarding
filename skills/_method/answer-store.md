@@ -73,22 +73,47 @@ facts:
 | `mechanism` | Required for every duration, threshold or currency figure. See the method file |
 | `provenance` | Required when `ANSWERED`. Never `assistant`, never `inferred` |
 | `confidence` | Required when `ANSWERED`. `high`, `medium` or `low` |
-| `owner` | Required when `MISSING` or `DEFERRED`. A role, not a name, where possible |
+| `owner` | Required when `MISSING` or `DEFERRED`. A role from the vocabulary below, not a person's name |
 | `due` | Required when `DEFERRED` |
 | `notes` | Free text. Where the reason for `NOT_APPLICABLE` goes |
 | `conflict` | Present only when two sources disagree. Never resolved silently |
+
+### Owner vocabulary
+
+`owner` names a role from the Phase 0 roster rather than a person, so the store stays shareable
+and survives a leaver. The permitted values, and the deputy value for each:
+
+| Role value | Deputy value |
+|---|---|
+| `business owner` | `business owner deputy` |
+| `application owner` | `application owner deputy` |
+| `lead engineer` | `lead engineer deputy` |
+| `infrastructure owner` | `infrastructure owner deputy` |
+| `DR process owner` | `DR process owner deputy` |
+| `governance/risk contact` | `governance/risk contact deputy` |
+| `signing authority` | `signing authority deputy` |
+
+Use the deputy value when the primary is unreachable and the deputy now owes the answer. A role
+whose deputy has no name does not block the field, but the missing deputy is itself a finding,
+raised by `itscp-build` at Phase 0 and reconciled against the line of succession by
+`itscp-interview-continuity`. Anything genuinely outside this list means the
+roster is wrong, so fix the roster rather than inventing an eighth owner.
 
 ### Key namespaces
 
 | Prefix | Owned by | Feeds |
 |---|---|---|
-| `system.*` | `itscp-interview-application` | ISCP §1 Introduction, §2.1 System Description |
+| `system.*` | `itscp-interview-application` | §1 Introduction, §2.1 System description |
 | `business.*` | `itscp-interview-business` | Appendix K BIA, MTD tiers, Appendix E workarounds |
 | `app.*` | `itscp-interview-application` | §2.1, Appendix F validation, Appendix I interconnections |
 | `infra.*` | `itscp-interview-infrastructure` + `itscp-discover` | Architecture, replication, Appendix C, Appendix H |
 | `continuity.*` | `itscp-interview-continuity` | §2.3 roles, §3.1 activation, §3.2 notification, §3.3 assessment, §4.3 escalation |
 | `governance.*` | `itscp-interview-governance` | Approval, categorization, review cadence, Appendix J TT&E |
 | `discovery.*` | `itscp-discover` only | Raw inventory; never written by an interview |
+
+Section and appendix numbers in the *Feeds* column are NIST ISCP crosswalk references, not
+numbering the ITSCP owns. `skills/_method/coverage-map.md` carries the crosswalk and states
+the relationship.
 
 A skill writes only within its own prefix. If an interview learns something outside its
 prefix — and it will — it records the fact **and** notes which interview owns the key, so the

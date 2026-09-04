@@ -1,12 +1,22 @@
 ---
 name: itscp-audit
-description: Use when a continuity plan or ISCP needs checking against NIST SP 800-34 or the SP 800-53 contingency planning controls, when someone asks whether their plan is complete or audit-ready, or before submitting a plan for approval or external review.
+description: Use when an IT service continuity plan (ITSCP) needs checking against NIST SP 800-34 or the SP 800-53 contingency planning controls, when someone asks whether their plan is complete or audit-ready, or before submitting a plan for approval or external review.
 ---
 
 # itscp-audit
 
 Audits a generated plan against the standard. Adversarial by construction: every requirement
 starts REFUTED and only a quoted sentence from a file in the plan moves it.
+
+**What is being audited against what.** The document under audit is an ITSCP, an IT service
+continuity plan. NIST SP 800-34 specifies an Information System Contingency Plan (ISCP), and
+the SP 800-53 CP family is written for that ISCP. The ITSCP aligns *to* the ISCP structure;
+it is not one. Every row therefore assesses an ISCP requirement against this ITSCP by way of
+the crosswalk in `skills/_method/coverage-map.md`, and a finding holds or fails at that
+crosswalk: a runbook is the ITSCP's recovery procedure, the tier workshop is its BIA,
+"declare disaster" is its activation. Write "the ITSCP" or "the plan" for the document under
+audit and "ISCP" only inside a quotation or when naming NIST's or FedRAMP's own artefact. An
+auditor who conflates the two will cite the wrong instrument for the finding.
 
 Descended from `skills/itscp-compliance-audit` in the reference repository, generalised to
 audit *your* plan rather than that one.

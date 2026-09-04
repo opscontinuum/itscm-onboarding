@@ -25,10 +25,10 @@ output says so, by name.
 | Skill | Interviews | Produces |
 |---|---|---|
 | [`itscp-build`](skills/itscp-build/SKILL.md) | nobody — it sequences | Phase order, coverage reporting, repository generation |
-| [`itscp-discover`](skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, Appendix I interconnections, resource file |
+| [`itscp-discover`](skills/itscp-discover/SKILL.md) | a tenancy, read-only | Appendix H inventory, resource file, gap list |
 | [`itscp-interview-business`](skills/itscp-interview-business/SKILL.md) | business / process owner | Appendix K BIA, MTD tiers, MBCO, Appendix E workarounds |
-| [`itscp-interview-application`](skills/itscp-interview-application/SKILL.md) | application owner | §2.1 system description, interconnections, Appendix F validation, WRT |
-| [`itscp-interview-infrastructure`](skills/itscp-interview-infrastructure/SKILL.md) | cloud / infrastructure owner | Recovery strategy, replication matrix, Appendix C, cost model |
+| [`itscp-interview-application`](skills/itscp-interview-application/SKILL.md) | application owner + lead engineer | §2.1 system description, interconnections, Appendix F validation, WRT |
+| [`itscp-interview-infrastructure`](skills/itscp-interview-infrastructure/SKILL.md) | infrastructure owner + lead engineer | Recovery strategy, replication matrix, Appendix C, cost model |
 | [`itscp-interview-continuity`](skills/itscp-interview-continuity/SKILL.md) | DR process owner | §2.3 roles and succession, §3.1 activation, §3.2 notification, §3.3 outage assessment |
 | [`itscp-interview-governance`](skills/itscp-interview-governance/SKILL.md) | governance / risk / audit | Approval, review cadence, Appendix J training and exercises, risk register |
 | [`itscp-audit`](skills/itscp-audit/SKILL.md) | nobody | Adversarial audit of the generated plan |
@@ -110,7 +110,7 @@ was built to prevent.
 
 | Not covered | Consequence |
 |---|---|
-| Platforms other than Oracle EBS on OCI | You get the ISCP structure and the interview method; the recovery procedures are yours to write |
+| Platforms other than Oracle EBS on OCI | You get the ITSCP structure and the interview method; the recovery procedures are yours to write |
 | Discovery outside OCI | AWS, Azure, GCP and on-premises inventories are manual |
 | Importing an existing plan | An organisation with a plan in Word starts from interviews, not from its own document |
 | Terraform config generation | Discovery emits an inventory and a resource file. Turning that into working infrastructure code is not attempted |

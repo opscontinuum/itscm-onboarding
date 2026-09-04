@@ -19,11 +19,11 @@ reference example so that anyone who has read one plan can navigate any other.
 │   ├── 05-cost-and-teardown.md        infrastructure  posture economics
 │   ├── 06-test-environments.md        infrastructure  what each test tier proves
 │   ├── 07-standards-alignment.md      governance      NIST / ITIL / ISO crosswalk
-│   ├── 08-phase-activation.md         build           ISCP phase 1 routing
-│   ├── 09-phase-recovery.md           build           ISCP phase 2 routing
-│   ├── 10-phase-reconstitution.md     build           ISCP phase 3 routing
+│   ├── 08-phase-activation.md         build           ITSCP phase 1 routing
+│   ├── 09-phase-recovery.md           build           ITSCP phase 2 routing
+│   ├── 10-phase-reconstitution.md     build           ITSCP phase 3 routing
 │   ├── 11-inventory.md                discovery       Appendix H
-│   ├── 12-interconnections.md         discovery + app Appendix I
+│   ├── 12-interconnections.md         application     Appendix I (discovery does not render it)
 │   ├── references.md                  build           consolidated citation index
 │   └── compliance-audit.md            audit           adversarial audit output
 ├── runbooks/
