@@ -51,7 +51,20 @@ def _assert_exists(path: Path) -> None:
 
 
 def _example_matches_the_bank() -> None:
-    equal(EXAMPLE.read_text(encoding="utf-8"), store.emit(store.starter_document()),
+    """Every byte except the two dates in ``[meta]``, which say when it was generated.
+
+    ``starter_document`` stamps today, so comparing those two would fail on the first day
+    after the example was committed and go on failing until somebody regenerated it, which
+    re-arms the same trap for tomorrow. The dates carry no schema and no answer; the check
+    that matters is that the field list, the owners and the regenerated guidance comments are
+    what the bank produces now.
+    """
+    committed = _parsed()["meta"]
+    document = store.starter_document()
+    document["meta"] = {**document["meta"],
+                        "created": committed["created"],
+                        "last_updated": committed["last_updated"]}
+    equal(EXAMPLE.read_text(encoding="utf-8"), store.emit(document),
           "the committed example against what the bank generates now")
 
 
