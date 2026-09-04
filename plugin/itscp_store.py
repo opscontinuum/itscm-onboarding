@@ -458,7 +458,7 @@ def emit(document: dict) -> str:
     changed in the interview rather than what changed in the emitter.
     """
     lines = [_header(), "", "[meta]"]
-    lines.extend(f"{name} = {_toml_value(value)}"
+    lines.extend(f"{name} = {toml_value(value)}"
                  for name, value in document["meta"].items())
     for question in bank.QUESTIONS:
         stored = record(document, question.id)
@@ -523,7 +523,7 @@ def _fact_block(stored: Record) -> list[str]:
         for row in stored.value:
             lines.append("")
             lines.append(f"[[facts.{table}.value]]")
-            lines.extend(f"{name} = {_toml_value(cell)}" for name, cell in row.items())
+            lines.extend(f"{name} = {toml_value(cell)}" for name, cell in row.items())
     for previous in stored.superseded:
         lines.append("")
         lines.append(f"[[facts.{table}.superseded]]")
@@ -557,7 +557,7 @@ def _scalar_lines(stored: Record) -> list[str]:
 
 def _named_lines(fields: dict[str, Any]) -> list[str]:
     """Assignment lines for the fields that carry something. Absence means unanswered."""
-    return [f"{name} = {_toml_value(value)}"
+    return [f"{name} = {toml_value(value)}"
             for name, value in fields.items()
             if value is not None and value != ""]
 
@@ -567,7 +567,12 @@ def _quoted_key(key: str) -> str:
     return f'"{_escape_basic(key)}"'
 
 
-def _toml_value(value: Any) -> str:
+def toml_value(value: Any) -> str:
+    """One TOML value, chosen by Python type. Shared with :mod:`itscp_session`.
+
+    A string containing a newline becomes a multi-line basic string so a narrative answer
+    stays readable to whoever opens the file to correct it.
+    """
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, int):
@@ -575,7 +580,7 @@ def _toml_value(value: Any) -> str:
     if isinstance(value, float):
         return repr(value)
     if isinstance(value, list):
-        return "[" + ", ".join(_toml_value(item) for item in value) + "]"
+        return "[" + ", ".join(toml_value(item) for item in value) + "]"
     text = str(value)
     if "\n" in text:
         return f'"""\n{_escape_multiline(text)}"""'
