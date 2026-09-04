@@ -46,7 +46,10 @@ owner = "business owner"
 
 # business.mtd.tier0 - asked of the business owner
 # A number without a mechanism is a guess wearing a suit.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What happens at that hour that does not happen at the hour before it? Name the
+# deadline, the cut-off, the batch that has to run, or the person who picks up the
+# phone.
 # Read this back and get a yes before recording it.
 [facts."business.mtd.tier0"]
 status = "MISSING"
@@ -54,7 +57,9 @@ owner = "business owner"
 
 # business.rpo.tier0 - asked of the business owner
 # Elicited as: if we lost 15 minutes, who redoes the work, and can they?
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is in those minutes that nobody could rebuild from anywhere else, and who finds
+# out first that it is gone?
 # Read this back and get a yes before recording it.
 [facts."business.rpo.tier0"]
 status = "MISSING"
@@ -69,6 +74,9 @@ owner = "business owner"
 
 # business.workarounds - asked of the business owner
 # Appendix E. Ask about the last real outage, not the hypothetical one.
+# The figure needs its mechanism beside it. Ask:
+# When each of those workarounds runs out, what is the first thing that fails, and who
+# notices it?
 [facts."business.workarounds"]
 status = "MISSING"
 owner = "business owner"
@@ -133,7 +141,9 @@ owner = "infrastructure owner"
 # infra.measured_rtt_ms - asked of the lead engineer
 # Measured, not published. A synchronous design over an unmeasured link has an
 # unexploded assumption in the middle of it.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What was running when it was measured, and at what time of day? And at what figure
+# would this design stop working?
 [facts."infra.measured_rtt_ms"]
 status = "MISSING"
 owner = "lead engineer"
@@ -141,6 +151,9 @@ owner = "lead engineer"
 # infra.replication - asked of the infrastructure owner
 # Press the re-baseline question. It is the failback cost and it is almost never
 # costed.
+# The figure needs its mechanism beside it. Ask:
+# For each tier, at what lag would you stop trusting the standby, and what is the
+# first thing that breaks when it reaches that?
 [facts."infra.replication"]
 status = "MISSING"
 owner = "infrastructure owner"
@@ -148,7 +161,9 @@ owner = "infrastructure owner"
 # infra.standby_cost_floor - asked of the infrastructure owner
 # The tier the business chose may be unaffordable at the floor. Now is when that
 # conversation is cheap.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is in that figure and what is not? Name the lines it covers, and say what would
+# have to be switched off to make it smaller.
 [facts."infra.standby_cost_floor"]
 status = "MISSING"
 owner = "infrastructure owner"
@@ -195,7 +210,9 @@ owner = "DR process owner"
 # continuity.decision_time_budget - asked of the DR process owner
 # Deciding is on the recovery critical path and is almost never budgeted. Whatever the
 # number is, it comes out of the MTD.
-# A figure here needs the mechanism beside it.
+# The figure needs its mechanism beside it. Ask:
+# What is happening to the outage while that decision is being taken, and what stops
+# being recoverable once the budget is spent?
 [facts."continuity.decision_time_budget"]
 status = "MISSING"
 owner = "DR process owner"

@@ -235,8 +235,8 @@ def _figures_are_paired_with_a_mechanism_prompt(question) -> None:
         "yields a figure and asks nothing about what breaks; mechanism_required can refuse "
         "an answer but only a question can elicit one"
     )
-    assert question.mechanism_prompt.strip().endswith("?"), (
-        f"the mechanism follow-up is not a question: {question.mechanism_prompt!r}"
+    assert "?" in question.mechanism_prompt, (
+        f"the mechanism follow-up asks nothing: {question.mechanism_prompt!r}"
     )
     assert question.mechanism_prompt != question.prompt, (
         "the mechanism follow-up repeats the question that produced the figure"

@@ -147,6 +147,11 @@ KINDS: tuple[str, ...] = (
     "code", "diagram", "citation", "blank", "range", "reference",
 )
 
+#: The kinds that yield a figure, and therefore the kinds that owe a mechanism. Named here
+#: rather than repeated at each use, because the set is the definition of "a figure" and the
+#: store, the bank and the tests all have to agree on it.
+FIGURE_KINDS: tuple[str, ...] = ("duration", "number", "currency")
+
 #: How a narrative answer came to be attributable. Recorded on the record, not only in the
 #: session transcript, because the renderer reads the store and never sees the transcript: if
 #: confirmation lived only in the transcript, a store copied without it would launder drafts
@@ -183,6 +188,20 @@ class Question:
     own note says a number without a mechanism is a guess wearing a suit; the store rejects
     an ANSWERED value on one of these fields with no ``mechanism``.
 
+    ``mechanism_prompt`` is the paired question that produces what the flag demands. The flag
+    alone can only refuse a figure that arrived without an explanation; it cannot elicit one,
+    because nothing asks. The follow-up sits on the same record as the figure it explains,
+    which is where the store keeps the mechanism, so the two cannot be separated by an edit
+    to one of them. ``mechanism_required`` and a non-empty ``mechanism_prompt`` are the same
+    condition, and a test asserts it in both directions.
+
+    ``figure_columns`` is the table-shaped form of that pairing: it maps a column holding a
+    target or a threshold to the column that says what breaks against it. It is declarative
+    rather than inferred, because a column name does not say whether a duration in it is a
+    target somebody has to meet or an elapsed time somebody measured. Only the first owes an
+    explanation, and inventing one for the second would fill a plan with cells nobody can
+    answer.
+
     ``seedable`` is the answer to picoagent's open question 5. True means discovery may
     prefill the field and the interview reads it back for correction rather than asking
     cold; the prefill carries provenance ``oci-discovery:<seed_operation>``. False means the
@@ -212,6 +231,8 @@ class Question:
     provenance_required: bool = True
     confidence_required: bool = True
     mechanism_required: bool = False
+    mechanism_prompt: str = ""
+    figure_columns: dict[str, str] = field(default_factory=dict)
     readback_required: bool = False
     seedable: bool = False
     seed_operation: str = ""
@@ -580,6 +601,9 @@ QUESTIONS: tuple[Question, ...] = (
         "Maximum tolerable downtime for the tier 0 processes",
         "business owner", "nist", kind="duration", unit="hours",
         mechanism_required=True, readback_required=True,
+        mechanism_prompt="What happens at that hour that does not happen at the hour before "
+                         "it? Name the deadline, the cut-off, the batch that has to run, or "
+                         "the person who picks up the phone.",
         guidance="A number without a mechanism is a guess wearing a suit.",
         nist_heading="3.2.1 Determine Business Processes and Recovery Criticality",
         nist_source=_BIA,
@@ -594,6 +618,8 @@ QUESTIONS: tuple[Question, ...] = (
         "Recovery point objective for the tier 0 processes",
         "business owner", "nist", kind="duration", unit="minutes",
         mechanism_required=True, readback_required=True,
+        mechanism_prompt="What is in those minutes that nobody could rebuild from anywhere "
+                         "else, and who finds out first that it is gone?",
         guidance="Elicited as: if we lost 15 minutes, who redoes the work, and can they?",
         nist_heading="3.2.1 Determine Business Processes and Recovery Criticality",
         nist_source=_BIA,
@@ -617,7 +643,10 @@ QUESTIONS: tuple[Question, ...] = (
         "paper, and how long could they keep that up?",
         "Each process, the workaround used, and how long it is sustainable",
         "business owner", "nist", kind="rows",
-        columns=("process", "workaround", "sustainable_for"),
+        columns=("process", "workaround", "sustainable_for", "what_fails_first"),
+        figure_columns={"sustainable_for": "what_fails_first"},
+        mechanism_prompt="When each of those workarounds runs out, what is the first thing "
+                         "that fails, and who notices it?",
         guidance="Appendix E. Ask about the last real outage, not the hypothetical one.",
         nist_heading="APPENDIX D ALTERNATE PROCESSING PROCEDURES", nist_source=_A3,
     ),
@@ -725,6 +754,8 @@ QUESTIONS: tuple[Question, ...] = (
         "reading the published figure? What did it come out at, and when?",
         "Measured inter-region round-trip time in milliseconds",
         "lead engineer", "ours", kind="number", unit="ms", mechanism_required=True,
+        mechanism_prompt="What was running when it was measured, and at what time of day? "
+                         "And at what figure would this design stop working?",
         guidance="Measured, not published. A synchronous design over an unmeasured link has "
                  "an unexploded assumption in the middle of it.",
     ),
@@ -736,8 +767,11 @@ QUESTIONS: tuple[Question, ...] = (
         "Per tier: the replication mechanism, whether it is synchronous, measured lag, "
         "failover behaviour, whether reversal needs a re-baseline, and whether it is one-way",
         "infrastructure owner", "nist", kind="rows",
-        columns=("tier", "mechanism", "sync", "measured_lag", "failover_behaviour",
-                 "rebaseline_on_reversal", "one_way"),
+        columns=("tier", "mechanism", "sync", "measured_lag", "what_breaks_at_that_lag",
+                 "failover_behaviour", "rebaseline_on_reversal", "one_way"),
+        figure_columns={"measured_lag": "what_breaks_at_that_lag"},
+        mechanism_prompt="For each tier, at what lag would you stop trusting the standby, "
+                         "and what is the first thing that breaks when it reaches that?",
         seedable=True, seed_operation="ListVolumeGroupReplicas",
         guidance="Press the re-baseline question. It is the failback cost and it is almost "
                  "never costed.",
@@ -750,6 +784,8 @@ QUESTIONS: tuple[Question, ...] = (
         "not the average.",
         "The monthly standby cost floor",
         "infrastructure owner", "ours", kind="currency", mechanism_required=True,
+        mechanism_prompt="What is in that figure and what is not? Name the lines it covers, "
+                         "and say what would have to be switched off to make it smaller.",
         guidance="The tier the business chose may be unaffordable at the floor. Now is when "
                  "that conversation is cheap.",
     ),
@@ -818,6 +854,8 @@ QUESTIONS: tuple[Question, ...] = (
         "The time budget for the declaration decision",
         "DR process owner", "ours", kind="duration", unit="minutes",
         mechanism_required=True,
+        mechanism_prompt="What is happening to the outage while that decision is being "
+                         "taken, and what stops being recoverable once the budget is spent?",
         guidance="Deciding is on the recovery critical path and is almost never budgeted. "
                  "Whatever the number is, it comes out of the MTD.",
     ),

@@ -508,8 +508,9 @@ def _header() -> str:
 def _comment_block(question: bank.Question) -> list[str]:
     lines = [f"# {question.id} - asked of the {question.owner_role}"]
     lines.extend(_wrapped_comment(question.guidance))
-    if question.mechanism_required:
-        lines.append("# A figure here needs the mechanism beside it.")
+    if question.mechanism_prompt:
+        lines.append("# The figure needs its mechanism beside it. Ask:")
+        lines.extend(_wrapped_comment(question.mechanism_prompt))
     if question.readback_required:
         lines.append("# Read this back and get a yes before recording it.")
     return lines
