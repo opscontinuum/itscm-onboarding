@@ -1,7 +1,10 @@
-# The answer store holds real organisational detail: names, phone numbers,
-# OCIDs, MTD figures, incident narratives. It never belongs in a public repo.
-.itscm/answers.yaml
-.itscm/answers.*.yaml
+# Everything the engagement produces about a real organisation. The answer
+# store names roles and carries MTD figures and OCIDs; the session transcripts
+# name people and quote them; the realisation ledger records which parts of the
+# estate do not exist. The transcripts are the most sensitive artefact here.
+# Ignore the directory wholesale rather than naming files, so a new artefact
+# is private by default instead of private only if somebody remembers.
+.itscm/
 
 # Discovery output: a complete inventory of a live tenancy.
 discovery-output/
