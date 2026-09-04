@@ -40,6 +40,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import itscp_diagrams as diagrams
 import itscp_realisation as realisation
+import itscp_store as store
 from harness import Section, equal
 
 #: The four maximum tolerable downtimes the reference tier table states, in hours, and the
@@ -74,6 +75,8 @@ def main() -> None:
     section.check("an unsourced figure is explained in a footnote", _unsourced_carries_a_note)
     section.check("a sourced ladder carries no dagger and no dashes", _sourced_is_unmarked)
     section.check("the ladder renders as Mermaid too", _the_ladder_renders_as_mermaid)
+    section.check("a ladder with no tier table says so, in the store's own words",
+                  _an_unrecorded_ladder_says_so)
 
     section.check("the timeline is well-formed SVG", _the_timeline_is_well_formed)
     section.check("the timeline substitutes exactly five strings",
@@ -81,6 +84,8 @@ def main() -> None:
     section.check("the timeline's bar widths carry no data",
                   _the_timeline_widths_are_fixed)
     section.check("the timeline renders as Mermaid too", _the_timeline_renders_as_mermaid)
+    section.check("a timeline with no labels says so, in the store's own words",
+                  _an_unrecorded_timeline_says_so)
 
     section.check("every realisation state has a fill", _states_have_distinct_fills)
     section.check("every realisation state has its own dash pattern",
@@ -246,6 +251,27 @@ def _the_ladder_renders_as_mermaid() -> None:
 
 
 # --------------------------------------------------------------------- the timeline
+
+def _an_unrecorded_ladder_says_so() -> None:
+    """No tier table is an unanswered question, not an empty chart.
+
+    A chart with an axis and no bars reads as "nothing is at risk". The same rule the answer
+    store applies to a missing value applies to a missing drawing: it renders as the marker.
+    """
+    svg = diagrams.tier_ladder_svg(())
+    ElementTree.fromstring(svg)
+    assert store.status_marker(None) in svg, (
+        "an unrecorded ladder drew an empty chart instead of the store's MISSING marker")
+    assert diagrams.UNRECORDED_LADDER in svg, "an unrecorded ladder says nothing about why"
+
+
+def _an_unrecorded_timeline_says_so() -> None:
+    svg = diagrams.mtd_timeline_svg(None)
+    ElementTree.fromstring(svg)
+    assert store.status_marker(None) in svg, (
+        "an unrecorded timeline drew an empty illustration instead of the MISSING marker")
+    assert diagrams.UNRECORDED_TIMELINE in svg, "an unrecorded timeline says nothing about why"
+
 
 def _the_timeline_is_well_formed() -> None:
     ElementTree.fromstring(diagrams.mtd_timeline_svg(_labels()))
