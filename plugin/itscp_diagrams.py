@@ -65,6 +65,7 @@ from dataclasses import dataclass
 from xml.sax.saxutils import escape
 
 import itscp_realisation as realisation
+import itscp_store as store
 
 # --------------------------------------------------------------------- shared drawing
 
@@ -153,6 +154,24 @@ def _dagger(text: str, provenance: str) -> str:
 #: The dash pattern an unsourced outline wears. Long enough to read after a photocopy.
 UNSOURCED_DASHES = "8 3"
 
+#: Where a drawing's own text starts, on either drawing.
+_MARGIN_X = 24
+
+#: What a drawing says when the data behind it was never elicited. The answer store's rule
+#: about a missing value applies to a missing drawing too: a chart with an axis and no bars
+#: reads as "nothing is at risk here", which is a plausible default wearing a graph.
+UNRECORDED_LADDER = "No tier table has been recorded for this plan."
+UNRECORDED_TIMELINE = "No recovery activities have been recorded for this plan."
+
+
+def _unrecorded(canvas: Canvas, title: str, note: str) -> str:
+    """A drawing with nothing behind it: the store's own marker, never an empty chart."""
+    return _document(canvas, [
+        _text(Point(_MARGIN_X, 30), "txt ttl", title),
+        _text(Point(_MARGIN_X, 60), "txt val", store.status_marker(None)),
+        _text(Point(_MARGIN_X, 84), "mut sub", note),
+    ])
+
 
 # ------------------------------------------------------------------------ tier ladder
 
@@ -180,7 +199,8 @@ COST_COLUMN_HEADING = "run cost"
 
 #: Every string this drawing may write that did not come from a tier.
 LADDER_CHROME: tuple[str, ...] = (
-    (LADDER_TITLE, LADDER_SUBTITLE, COST_COLUMN_HEADING, UNSOURCED_FOOTNOTE)
+    (LADDER_TITLE, LADDER_SUBTITLE, COST_COLUMN_HEADING, UNSOURCED_FOOTNOTE,
+     UNRECORDED_LADDER, store.status_marker(None))
     + tuple(label for _, label in AXIS_TICKS)
 )
 
@@ -188,7 +208,6 @@ LADDER_CHROME: tuple[str, ...] = (
 BAR_CLASS = "bar"
 COST_CLASS = "cost"
 
-_MARGIN_X = 24
 _FIRST_ROW_Y = 82
 _ROW_PITCH = 65
 _BAR_HEIGHT = 30
@@ -232,7 +251,13 @@ def tick_x(hours: float) -> int:
 
 
 def tier_ladder_svg(tiers: tuple[Tier, ...]) -> str:
-    """The tier ladder as SVG, one row per tier, drawn from the tier table alone."""
+    """The tier ladder as SVG, one row per tier, drawn from the tier table alone.
+
+    No tier table is an unanswered question rather than an empty chart, so it draws the
+    store's MISSING marker instead of an axis with nothing on it.
+    """
+    if not tiers:
+        return _unrecorded(LADDER_CANVAS, LADDER_TITLE, UNRECORDED_LADDER)
     body = _ladder_heading() + _ladder_axis()
     for position, tier in enumerate(tiers):
         body.extend(_ladder_row(tier, _FIRST_ROW_Y + position * _ROW_PITCH))
@@ -278,6 +303,8 @@ def _ladder_row(tier: Tier, top: float) -> list[str]:
 
 def tier_ladder_mermaid(tiers: tuple[Tier, ...]) -> str:
     """The same ladder as Mermaid, which a plan repository renders with no build step."""
+    if not tiers:
+        return _unrecorded_mermaid(LADDER_TITLE, UNRECORDED_LADDER)
     lines = ["flowchart TB", f'    LADDER["{_mermaid_safe(LADDER_TITLE)}"]']
     previous = "LADDER"
     for position, tier in enumerate(tiers):
@@ -358,8 +385,14 @@ class TimelineLabels:
     work_recovery_owner: str
 
 
-def mtd_timeline_svg(labels: TimelineLabels) -> str:
-    """The recovery timeline as SVG. Five strings vary; the geometry never does."""
+def mtd_timeline_svg(labels: TimelineLabels | None) -> str:
+    """The recovery timeline as SVG. Five strings vary; the geometry never does.
+
+    No labels is an unanswered question, and draws the store's MISSING marker for the same
+    reason the ladder does.
+    """
+    if labels is None:
+        return _unrecorded(TIMELINE_CANVAS, TIMELINE_TITLE, UNRECORDED_TIMELINE)
     body = [
         _text(Point(28, 34), "txt ttl", TIMELINE_TITLE),
         _text(Point(28, 54), "mut sub", TIMELINE_SUBTITLE),
@@ -393,8 +426,10 @@ def _timeline_event(x: float, caption: str) -> list[str]:
             _text(Point(x, _CAPTION_Y), "txt sub", caption)]
 
 
-def mtd_timeline_mermaid(labels: TimelineLabels) -> str:
+def mtd_timeline_mermaid(labels: TimelineLabels | None) -> str:
     """The same timeline as Mermaid, for a repository that renders fences and builds nothing."""
+    if labels is None:
+        return _unrecorded_mermaid(TIMELINE_TITLE, UNRECORDED_TIMELINE)
     spans = ((DATA_AT_RISK_HEADING, labels.data_at_risk, ""),
              (RECOVERY_HEADING, labels.recovery_activities, labels.recovery_owner),
              (WORK_RECOVERY_HEADING, labels.work_recovery_activities,
@@ -484,6 +519,15 @@ def _reconciliation_node_text(reconciliation: realisation.Reconciliation) -> str
     if reconciliation.label != reconciliation.state:
         parts.append(reconciliation.label)
     return "<br/>".join(_mermaid_safe(part) for part in parts)
+
+
+def _unrecorded_mermaid(title: str, note: str) -> str:
+    """The Mermaid form of a drawing with nothing behind it."""
+    return "\n".join((
+        "flowchart TB",
+        f'    UNRECORDED["{_mermaid_safe(title)}<br/>'
+        f'{_mermaid_safe(store.status_marker(None))}<br/>{_mermaid_safe(note)}"]',
+    )) + "\n"
 
 
 def _mermaid_safe(text: str) -> str:
