@@ -157,6 +157,18 @@ def main() -> None:
 
     section.check("every discrepancy has a known kind", _discrepancy_kinds_are_closed)
 
+    section.check("the bank asks which impact level was assigned", _the_bank_asks_for_a_level)
+
+    section.check("the moderate and high templates letter to M", _moderate_and_high_lettering)
+
+    section.check("the low template omits one appendix and letters one lower",
+                  _low_impact_lettering)
+
+    section.check("only the appendices re-letter", _only_the_appendices_move)
+
+    section.check("an unstated impact level is refused, never guessed",
+                  _an_unknown_level_is_refused)
+
     section.finish()
 
 
@@ -366,6 +378,79 @@ def _lookup_round_trips() -> None:
     for question in bank.QUESTIONS:
         equal(bank.question(question.id), question, f"lookup of {question.id}")
     assert bank.question("nonexistent.key") is None, "lookup invented a question"
+
+
+#: Where the coverage map's appendix lettering came apart, restated as the two anchors the
+#: derivation has to reproduce. Both are already recorded in ``bank.NIST_DISCREPANCIES``: the
+#: business impact analysis is Appendix K in the low template and L in the other two, and the
+#: document change page is L in the low template and M in the other two.
+_LOW_ANCHORS = (
+    ("BUSINESS IMPACT ANALYSIS", "APPENDIX K BUSINESS IMPACT ANALYSIS"),
+    ("DOCUMENT CHANGE PAGE", "APPENDIX L DOCUMENT CHANGE PAGE"),
+    ("ASSOCIATED PLANS AND PROCEDURES", "APPENDIX J ASSOCIATED PLANS AND PROCEDURES"),
+    ("INTERCONNECTIONS TABLE", "APPENDIX H INTERCONNECTIONS TABLE"),
+)
+
+_HIGH_ANCHORS = (
+    ("BUSINESS IMPACT ANALYSIS", "APPENDIX L BUSINESS IMPACT ANALYSIS"),
+    ("DOCUMENT CHANGE PAGE", "APPENDIX M DOCUMENT CHANGE PAGE"),
+    ("ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS",
+     "APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"),
+    ("INTERCONNECTIONS TABLE", "APPENDIX I INTERCONNECTIONS TABLE"),
+)
+
+_ABSENT_FROM_THE_LOW_TEMPLATE = "ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"
+
+
+def _the_bank_asks_for_a_level() -> None:
+    """The letter is a function of the categorisation, so the categorisation is elicited.
+
+    The reference plan never states one, and its own compliance skill says a plan that states
+    none has that row REFUTED. A toolkit whose appendix lettering depends on an answer nobody
+    is asked for would reproduce that.
+    """
+    question = bank.BY_ID[bank.IMPACT_LEVEL_KEY]
+    equal(question.kind, "enum", f"kind of {bank.IMPACT_LEVEL_KEY}")
+    equal(question.options, bank.IMPACT_LEVELS, "the levels offered")
+    assert question.readback_required, (
+        "the impact level decides which template the plan is graded against and is not "
+        "written down without being said back")
+
+
+def _lettering_matches(anchors, impact_level: str) -> None:
+    for title, expected in anchors:
+        equal(bank.heading_in_scheme(f"APPENDIX ? {title}", impact_level), expected,
+              f"{title} at {impact_level} impact")
+
+
+def _moderate_and_high_lettering() -> None:
+    for impact_level in ("moderate", "high"):
+        _lettering_matches(_HIGH_ANCHORS, impact_level)
+
+
+def _low_impact_lettering() -> None:
+    _lettering_matches(_LOW_ANCHORS, "low")
+    equal(bank.heading_in_scheme(f"APPENDIX F {_ABSENT_FROM_THE_LOW_TEMPLATE}", "low"), "",
+          "the appendix the low template does not have")
+
+
+def _only_the_appendices_move() -> None:
+    """A section number is the same in all three templates; only the letters shift."""
+    for heading in bank.NIST_A3_HEADINGS:
+        if heading.startswith("APPENDIX "):
+            continue
+        equal(bank.heading_in_scheme(heading, "low"), heading, f"{heading} at low impact")
+
+
+def _an_unknown_level_is_refused() -> None:
+    for level in ("", "medium", "LOW"):
+        try:
+            bank.heading_in_scheme("APPENDIX L BUSINESS IMPACT ANALYSIS", level)
+        except ValueError:
+            continue
+        raise AssertionError(
+            f"lettered an appendix at impact level {level!r}; an uncategorised system has no "
+            f"template, and picking one silently is the guess the toolkit exists to refuse")
 
 
 def _discrepancy_kinds_are_closed() -> None:
