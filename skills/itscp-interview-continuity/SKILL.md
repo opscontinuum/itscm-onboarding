@@ -90,8 +90,9 @@ requirement on that person.
 > "Which of these actions has exactly one person who has ever done it?"
 
 That question finds the real gap faster than walking the roster does. **A role with no named
-deputy is a finding, not an acceptable state.** NIST SP 800-34 Rev. 1 §3.4.6 requires a
-designated alternate for every team leader. Record it MISSING against the role holder. Do not
+deputy is a finding, not an acceptable state.** NIST SP 800-34 Rev. 1 §3.4.6 says team leaders
+"should have a designated alternate to act as the leader if the primary leader is unavailable".
+Record it MISSING against the role holder. Do not
 name a deputy on their behalf, and do not accept "whoever is on call" as one: an unnamed
 deputy is the plausible-answer failure with a rota in front of it.
 

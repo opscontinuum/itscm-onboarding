@@ -36,9 +36,10 @@ Three things, and the third is the one people skip.
 
    **If a role has a name but no deputy, that is a finding of the same class**, not a lesser
    one. A plan whose recovery depends on one unreachable person has a single point of failure
-   written into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 requires a
-   designated alternate for every team leader, and §4.2.1 requires a clearly identified
-   successor to whoever declares. The reference example carries the gap it warns about: its
+   written into the plan rather than into the estate. NIST SP 800-34 Rev. 1 §3.4.6 says team
+   leaders "should have a designated alternate to act as the leader if the primary leader is
+   unavailable", and §4.2.1 that "a successor should be clearly identified" for whoever holds
+   declaration authority. The reference example carries the gap it warns about: its
    authority matrix names a deputy for the declaration and none for a planned switchover or a
    failback, the two actions with no "declare and act" path around a missing name.
 
