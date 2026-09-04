@@ -445,23 +445,46 @@ def _write_fields(writer: Writer, page: DocumentSpec, document: dict) -> None:
         writer.structural(NO_FIELDS_HERE)
         writer.markup("\n")
         return
+    impact_level = impact_level_of(document)
     heading = ""
     for question in questions:
-        if _heading_for(question) != heading:
-            heading = _heading_for(question)
+        if _heading_for(question, impact_level) != heading:
+            heading = _heading_for(question, impact_level)
             _write_heading(writer, "\n## ", heading)
         _write_field(writer, question, store.record(document, question.id))
 
 
-def _heading_for(question: bank.Question) -> str:
+def impact_level_of(document: dict) -> str:
+    """The categorisation this plan states about itself, or the empty string for none.
+
+    Empty is the reference plan's own position and is not a defect of this function: no
+    sentence anywhere in it says the system is low, moderate or high impact.
+    """
+    stored = store.record(document, bank.IMPACT_LEVEL_KEY)
+    if stored is None or stored.status != "ANSWERED":
+        return ""
+    return str(stored.value)
+
+
+def _heading_for(question: bank.Question, impact_level: str) -> str:
     """The heading a field sits under, which is its structural-provenance class made visible.
 
     NIST's own heading where the bank cites one, the method heading where the toolkit
     supplied the element, and ours for everything this project carries on its own account.
+
+    NIST's own heading is not a constant. Its appendix letters depend on which of the three
+    sample templates applies, so the categorisation selects the letter. An uncategorised plan
+    keeps the transcribed high-impact heading, which is the superset an auditor with no
+    stated level grades against. Where the selected template has no appendix for the element
+    at all, the element survives and its NIST provenance does not, so it is declared ours.
     """
     if question.structural_provenance == "method":
         return METHOD_HEADING
-    return question.nist_heading or OURS_HEADING
+    if not question.nist_heading:
+        return OURS_HEADING
+    if not impact_level:
+        return question.nist_heading
+    return bank.heading_in_scheme(question.nist_heading, impact_level) or OURS_HEADING
 
 
 def _write_field(writer: Writer, question: bank.Question, stored: Record | None) -> None:

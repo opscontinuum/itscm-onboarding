@@ -25,7 +25,7 @@ from harness import Section, equal
 EXAMPLE = Path(__file__).resolve().parent.parent / "answers.example.toml"
 
 #: The denominator itscp-build reports against, quoted in its coverage section.
-PINNED_DENOMINATOR = 37
+PINNED_DENOMINATOR = 38
 
 
 def main() -> None:

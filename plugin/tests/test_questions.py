@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank
 from harness import Section, equal
 
-EXPECTED_STARTER_KEYS = 37
+EXPECTED_STARTER_KEYS = 38
 #: The seven fields ``templates/answers.example.yaml`` annotates ``# list of {...}``. Named
 #: rather than counted, so a rename cannot silently satisfy the check.
 YAML_LIST_FIELDS = (

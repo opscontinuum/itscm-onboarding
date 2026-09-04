@@ -36,6 +36,19 @@ owner = "business owner"
 status = "MISSING"
 owner = "governance/risk contact"
 
+# system.impact_level - asked of the governance/risk contact
+# Three answers are legal and 'nobody ever assigned one' is not among them: an
+# uncategorised system leaves this MISSING with the governance contact owing it, which
+# is the honest record and the finding an auditor wants. The answer decides which of
+# NIST's three sample templates the plan is graded against, and therefore what letter
+# each of its appendices carries. Uncategorised, the plan keeps the high-impact
+# lettering, because that template is the superset and an auditor with no stated level
+# grades against it.
+# Read this back and get a yes before recording it.
+[facts."system.impact_level"]
+status = "MISSING"
+owner = "governance/risk contact"
+
 # business.processes - asked of the business owner
 # The BIA's first step. Ask about impact at each horizon separately; people answer 'it
 # is critical' to the general question and give you something usable when the horizon

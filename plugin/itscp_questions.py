@@ -275,7 +275,8 @@ class Question:
 # disagreement is recorded in NIST_DISCREPANCIES.
 
 #: Appendix A.3, Sample Template for High-Impact Systems. The moderate template (A.2) shares
-#: this lettering; the low template (A.1) has no Appendix F and letters G through L one lower.
+#: this lettering; the low template (A.1) has no Appendix F and letters G through M one
+#: lower, which :func:`_low_impact_headings` derives rather than restating.
 NIST_A3_HEADINGS: tuple[str, ...] = (
     "Plan Approval",
     "1. Introduction",
@@ -320,6 +321,85 @@ NIST_A3_HEADINGS: tuple[str, ...] = (
     "APPENDIX M DOCUMENT CHANGE PAGE",
 )
 
+#: The impact levels FIPS PUB 199 defines, and the three sample templates NIST publishes one
+#: for each of: A.1 low, A.2 moderate, A.3 high.
+IMPACT_LEVELS: tuple[str, ...] = ("low", "moderate", "high")
+
+#: The key the categorisation is recorded under. Named once, because the lettering, the
+#: renderer and the tests all have to read the same field.
+IMPACT_LEVEL_KEY = "system.impact_level"
+
+_APPENDIX = "APPENDIX "
+
+#: The one appendix the low-impact template does not have. Everything after it in A.2 and A.3
+#: letters one lower in A.1, and that single omission is the whole of the difference between
+#: the two lettering schemes. Recorded in :data:`NIST_DISCREPANCIES` under "App. C" ("NIST
+#: letters this F in the moderate and high templates and omits it entirely from the low
+#: template") and under "App. K" ("K is right only for the low-impact template").
+ABSENT_FROM_THE_LOW_TEMPLATE = "ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS"
+
+
+def _appendix_title(heading: str) -> str:
+    """The words after ``APPENDIX <letter> ``, or the empty string for a section heading."""
+    if not heading.startswith(_APPENDIX):
+        return ""
+    return heading.split(" ", 2)[2]
+
+
+def _low_impact_headings() -> tuple[str, ...]:
+    """A.1's headings, derived from A.3's rather than transcribed a second time.
+
+    Derived because the difference between the two templates is one omission and a shift,
+    and a second transcription would be a second thing to keep right. The section headings
+    are identical in all three templates, so only the appendices move.
+    """
+    headings: list[str] = []
+    letter = ord("A")
+    for heading in NIST_A3_HEADINGS:
+        title = _appendix_title(heading)
+        if not title:
+            headings.append(heading)
+        elif title != ABSENT_FROM_THE_LOW_TEMPLATE:
+            headings.append(f"{_APPENDIX}{chr(letter)} {title}")
+            letter += 1
+    return tuple(headings)
+
+
+#: Appendix A.1, Sample Template for Low-Impact Systems. Runs A to L.
+NIST_A1_HEADINGS: tuple[str, ...] = _low_impact_headings()
+
+_APPENDIX_TITLES: frozenset[str] = frozenset(
+    title for title in map(_appendix_title, NIST_A3_HEADINGS) if title)
+
+
+def heading_in_scheme(nist_heading: str, impact_level: str) -> str:
+    """The heading this element carries in the template ``impact_level`` selects.
+
+    A section heading is returned unchanged: NIST numbers 1.1 to 5.10 the same way in all
+    three templates. An appendix is re-lettered, and comes back as the empty string when the
+    selected template has no appendix for it at all, which for the low-impact template is
+    exactly one element.
+
+    Raises rather than defaulting when the level is not one of the three. An uncategorised
+    system has no template, and picking one on its behalf is the guess the toolkit exists to
+    refuse; the caller decides what an unstated categorisation renders as.
+    """
+    if impact_level not in IMPACT_LEVELS:
+        raise ValueError(
+            f"{impact_level!r} is not one of {', '.join(IMPACT_LEVELS)}. The appendix letter "
+            f"is a function of the categorisation, and a system nobody has categorised has "
+            f"no letter rather than a default one."
+        )
+    title = _appendix_title(nist_heading)
+    if not title:
+        return nist_heading
+    if title not in _APPENDIX_TITLES:
+        raise ValueError(f"{title!r} is not an appendix of any of NIST's three templates")
+    scheme = NIST_A1_HEADINGS if impact_level == "low" else NIST_A3_HEADINGS
+    lettered = [heading for heading in scheme if _appendix_title(heading) == title]
+    return lettered[0] if lettered else ""
+
+
 #: Headings from the body chapters, used where NIST places an element in the guidance rather
 #: than in the plan template. A field justified from here is still ``nist``, but the coverage
 #: map's claim that the structure follows "Appendix A and 4.1-4.5" does not reach it, so the
@@ -348,7 +428,8 @@ NIST_CHAPTER_HEADINGS: tuple[str, ...] = (
 #: Every heading a ``nist`` question may cite. A test asserts membership, which is the
 #: mechanically-checkable form of claim 1 in ``docs/ITIL-GROUNDING.md`` §4.3: no heading
 #: exists whose provenance is an unread standard.
-NIST_CORPUS: frozenset[str] = frozenset(NIST_A3_HEADINGS) | frozenset(NIST_CHAPTER_HEADINGS)
+NIST_CORPUS: frozenset[str] = (frozenset(NIST_A3_HEADINGS) | frozenset(NIST_A1_HEADINGS)
+                               | frozenset(NIST_CHAPTER_HEADINGS))
 
 
 @dataclass(frozen=True)
@@ -600,6 +681,26 @@ QUESTIONS: tuple[Question, ...] = (
         nist_heading="1.2 Scope", nist_source=_A3,
         crosswalk_note="ISO 22301 uses a different categorisation vocabulary "
                        "(practice guide; not verified)",
+    ),
+    Question(
+        "system.impact_level", "system", "1.2", "1.2 Scope",
+        "README.md, docs/02-mtd-tiers.md, docs/07-standards-alignment.md",
+        "Of low, moderate and high, which one is this system's availability impact? Not what "
+        "you would choose today: what is written down. If nothing is, say so and we record "
+        "that.",
+        "The assigned availability impact level, which selects the template this plan is "
+        "graded against",
+        "governance/risk contact", "nist", kind="enum", options=IMPACT_LEVELS,
+        readback_required=True,
+        guidance="Three answers are legal and 'nobody ever assigned one' is not among them: "
+                 "an uncategorised system leaves this MISSING with the governance contact "
+                 "owing it, which is the honest record and the finding an auditor wants. The "
+                 "answer decides which of NIST's three sample templates the plan is graded "
+                 "against, and therefore what letter each of its appendices carries. "
+                 "Uncategorised, the plan keeps the high-impact lettering, because that "
+                 "template is the superset and an auditor with no stated level grades "
+                 "against it.",
+        nist_heading="1.2 Scope", nist_source=_A3,
     ),
     # ------------------------------------------------------ business.* - business owner
     Question(
