@@ -171,14 +171,18 @@ worksheets, holding the same things in columns: the answer, who gave it, how sur
 what breaks at that number. Typing those up into the store is an appendix, for an organization
 that later adopts the toolkit.
 
-It tells nobody to run anything. The skills are written for an agent with the plugin loaded,
-so they name scripts, tools and files a room does not have. Sections that only drive the
-toolkit are excluded by name with a stated reason, and every surviving mention is answered by
-the page's own *Running this without the toolkit* table. A test scans each page for
-command-shaped text using a pattern written independently of that table, so a reference
-nothing translates fails the build. Where a script did real work, as the validator does for
-the register's five cross-system checks, the manual carries the procedure by hand; a further
-test asserts each check still names a finding the validator actually raises.
+It names no tool at all. The skills are written for an agent with the plugin loaded, so they
+name scripts, modules and files a room does not have. An earlier version answered each of
+those with a translation table on the page, which was honest and still wrong: a facilitator
+does not want to be told what the sentence would have meant to somebody else. So sections that
+only drive the toolkit are excluded by name, the handful of sentences elsewhere that name
+something runnable are replaced one at a time with a recorded reason, and cross-references
+between skills become the phase that carries them, derived from the phase list so a phase that
+moves takes its references with it. A test scans every page for command-shaped text using a
+pattern written independently of those replacements, so anything runnable that reappears fails
+the build. Where a script did real work, as the validator does for the register's five
+cross-system checks, the manual carries the procedure by hand; a further test asserts each
+check still names a finding the validator actually raises.
 
 It assumes no particular cloud. Phase 1 is whatever the teams already use to see their
 environment. The read-only walk is one provider's shortcut, and what generalizes out of it is
@@ -189,7 +193,7 @@ drift-free and it is an index, not a manual. Somebody facilitating from a printe
 the technique on that page.
 
 **Rejected — embedding the skills whole.** The first version did, and it shipped a document
-that told a room to run `oci-discover.sh` and hand-write `answers.toml`. Verbatim is the right
+that told a room to run a discovery script and hand-write `answers.toml`. Verbatim is the right
 instinct for drift and the wrong unit: the unit is the section, and which sections belong is a
 decision that has to be recorded and tested, not assumed.
 
@@ -200,6 +204,35 @@ lives rather than parsing one out of the other.
 The extractors refuse rather than guess: a missing heading, frontmatter field or `**Label:**`
 line raises. A skill that grows a section fails the build too, until somebody says whether the
 manual carries it.
+
+## Decision 10 — Discovery is one directory per environment
+
+Discovery is the only part of the toolkit that has to know what it is looking at. Everything
+else is a conversation, and a conversation about an outage runs the same whether the workload
+is on OCI, on VMware or in somebody's colo. So the environment-specific part is isolated
+rather than spread: `plugin/scripts/discover/<environment>/`, with the contract in a README
+beside it and `oci/` the only implementation today.
+
+**Named, not implied.** AWS, Azure, VMware and Kubernetes have directories in nobody's future
+until somebody writes them, and the README says so. A toolkit that implies broader coverage
+than it has costs an engagement more than one that states its limit: the first is discovered
+at the customer site.
+
+The proof of read-only-ness is what makes this a contract rather than a convention. Each
+environment carries its own `test-readonly.sh`, and the runner one level up finds them by
+looking rather than by list, so a new environment is covered by the suite the moment its
+directory exists and an environment whose proof is missing fails loudly instead of being
+skipped.
+
+**Rejected — one script with a `--provider` flag.** The guard is the load-bearing part, and a
+guard that has to know every provider's read verbs is one edit from allowing a write on the
+provider whose verbs somebody got wrong. One guard per environment keeps the blast radius
+readable: a reviewer opens one file.
+
+**Rejected — dropping the scripts and making discovery manual everywhere.** Tempting after the
+manual was rewritten around what teams already have, and wrong. A read-only walk of a tenancy
+takes ten minutes and produces a gap list nobody assembles by hand. The manual treats it as an
+accelerator where it exists, which is exactly what it is.
 
 ## Known limitations
 
