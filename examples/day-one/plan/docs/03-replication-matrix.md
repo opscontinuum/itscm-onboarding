@@ -33,6 +33,13 @@ Some decisions in a continuity design cost a change ticket to undo and some cann
 ## 5.8 Data Backup
 
 - **How the recovered system is protected again, when, and who confirms it**: **[MISSING — owner: infrastructure owner]**
+- **What protects each part of the system, and which loss each protection answers**: **[MISSING — owner: infrastructure owner]**
+- **Per component: what is backed up, how, what kind of copy, how often and for how long**: **[MISSING — owner: infrastructure owner]**
+
+## Recorded for this plan
+
+- **How long a restore of the largest component takes, end to end**: **[MISSING — owner: lead engineer]**
+- **The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it**: **[MISSING — owner: infrastructure owner]**
 
 ## References
 
@@ -51,3 +58,7 @@ Engineering judgments, outstanding gaps and disagreements, labeled as such.
 - **Each decision that cannot be cheaply reversed, what reversing it costs and who may take it**: **[MISSING — owner: lead engineer]**
 - **Each backup copy, where it is held, how long it is kept and how it is retrieved**: **[MISSING — owner: infrastructure owner]**
 - **How the recovered system is protected again, when, and who confirms it**: **[MISSING — owner: infrastructure owner]**
+- **What protects each part of the system, and which loss each protection answers**: **[MISSING — owner: infrastructure owner]**
+- **Per component: what is backed up, how, what kind of copy, how often and for how long**: **[MISSING — owner: infrastructure owner]**
+- **How long a restore of the largest component takes, end to end**: **[MISSING — owner: lead engineer]**
+- **The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it**: **[MISSING — owner: infrastructure owner]**

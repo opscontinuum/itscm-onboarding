@@ -14,6 +14,10 @@ Maximum tolerable downtime is recovery time plus work recovery time. The toolkit
 
 - **Whether concurrent processing is performed, and the reason either way**: **[MISSING — owner: application owner]**
 
+## Recorded for this plan
+
+- **The reconstitution order, where it is written and who owns it**: **[MISSING — owner: lead engineer]**
+
 ## 5.2 Validation Data Testing
 
 - **Each data validation check, what it proves and who signs it off**: **[MISSING — owner: application owner]**
@@ -54,6 +58,7 @@ Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **Each work-recovery activity, its duration, and whether it runs in parallel with bring-up**: **[MISSING — owner: application owner]**
 - **Whether concurrent processing is performed, and the reason either way**: **[MISSING — owner: application owner]**
+- **The reconstitution order, where it is written and who owns it**: **[MISSING — owner: lead engineer]**
 - **Each data validation check, what it proves and who signs it off**: **[MISSING — owner: application owner]**
 - **Each scheduled job, whether it is safe to resubmit, and what a second run does**: **[MISSING — owner: application owner]**
 - **How the recovered system is protected again, when, and who confirms it**: **[MISSING — owner: infrastructure owner]**

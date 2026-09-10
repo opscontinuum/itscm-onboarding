@@ -243,6 +243,35 @@ owner = "application owner"
 status = "MISSING"
 owner = "lead engineer"
 
+# app.component_playbooks - asked of the lead engineer
+# 'It is in somebody's head' is an answer, and it is the one worth writing down: it
+# names a person the plan depends on being reachable. A procedure nobody has exercised
+# in two years is a different finding from one that does not exist, so keep the
+# last-exercised column honest rather than blank.
+[facts."app.component_playbooks"]
+status = "MISSING"
+owner = "lead engineer"
+
+# app.playbook_reachability - asked of the lead engineer
+# The question that separates what a system needs to run from what it needs to be
+# recovered. Source control in the failed region, a wiki behind the identity provider
+# that is also down, a bookmark on one laptop: each is a recovery dependency, and each
+# belongs on the register as an edge rather than in a footnote here.
+# Read this back and get a yes before recording it.
+[facts."app.playbook_reachability"]
+status = "MISSING"
+owner = "lead engineer"
+
+# app.reconstitution_order - asked of the lead engineer
+# Distinct from the cold start order, which answers a different question. A return has
+# data moving the other way, a cutover window somebody has to agree, and a decision
+# about what happens to the standby afterwards. Where the answer is that nobody has
+# written it, that is the honest record and a drill objective.
+# Read this back and get a yes before recording it.
+[facts."app.reconstitution_order"]
+status = "MISSING"
+owner = "lead engineer"
+
 # app.validation_data_tests - asked of the application owner
 # Not the same as the functional pack, and the difference is the point. A database
 # opening read-write proves the system is up. Only somebody who runs the process can
@@ -433,6 +462,56 @@ owner = "infrastructure owner"
 # time attached to it, not an intention.
 # Read this back and get a yes before recording it.
 [facts."infra.post_recovery_backup"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.backup_strategy - asked of the infrastructure owner
+# Two different failures, and organizations routinely have an answer for the second
+# and none for the first. Replication is not a backup: it copies the deletion
+# faithfully and at once. If the answer to both questions is the same mechanism, that
+# is the finding.
+# Read this back and get a yes before recording it.
+[facts."infra.backup_strategy"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.backup_matrix - asked of the infrastructure owner
+# One row per piece, and 'none' is a legal value in the type column: a component
+# nobody backs up is a decision somebody made, and it belongs on the page rather than
+# in an assumption. Frequency and retention are what make the row usable. A daily full
+# kept for seven days and an hourly incremental kept for a year describe very
+# different recoveries, and the difference decides what a recovery point objective is
+# actually worth.
+[facts."infra.backup_matrix"]
+status = "MISSING"
+owner = "infrastructure owner"
+
+# infra.backup_restore_duration - asked of the lead engineer
+# This is the number that decides whether restoring is a real option during an
+# invocation or only on paper. Where it exceeds the recovery time objective, the plan
+# cannot use restore as its answer and has to say so.
+# The figure needs its mechanism beside it. Ask:
+# Is that measured or estimated? At what data volume, and which part of it takes the
+# longest?
+[facts."infra.backup_restore_duration"]
+status = "MISSING"
+owner = "lead engineer"
+
+# infra.backup_last_restore - asked of the lead engineer
+# A backup nobody has restored is a hypothesis, and a backup job reporting success is
+# evidence about the job rather than about the copy. An empty table is an honest and
+# common answer, and it is the first thing the drill programme should fix.
+[facts."infra.backup_last_restore"]
+status = "MISSING"
+owner = "lead engineer"
+
+# infra.backup_immutability - asked of the infrastructure owner
+# A continuity plan whose every copy is reachable with one set of credentials has one
+# failure away from nothing. NOT_APPLICABLE is not available here; where no such copy
+# exists the honest answer is that none does, named as a risk with an owner, and it
+# usually becomes the most expensive finding in the engagement.
+# Read this back and get a yes before recording it.
+[facts."infra.backup_immutability"]
 status = "MISSING"
 owner = "infrastructure owner"
 
@@ -640,6 +719,16 @@ owner = "governance/risk contact"
 # If there is no route, the drills are theater.
 # Read this back and get a yes before recording it.
 [facts."governance.finding_to_change_route"]
+status = "MISSING"
+owner = "governance/risk contact"
+
+# governance.retention_obligation - asked of the governance/risk contact
+# Elicited here rather than from the infrastructure owner, because what a backup
+# schedule keeps and what the organization is obliged to keep are set by different
+# people and routinely disagree. Where a retention in the backup table is shorter than
+# an obligation in this one, that contradiction is a finding with two named owners,
+# and it is not the interviewer's to resolve.
+[facts."governance.retention_obligation"]
 status = "MISSING"
 owner = "governance/risk contact"
 

@@ -21,6 +21,13 @@ This document is generated from the answer store. Correct it by correcting the i
 - **The release of each major component, and any upgrade in flight**: **[MISSING — owner: application owner]**
 - **The operating system of each tier, and what that constrains**: **[MISSING — owner: infrastructure owner]**
 - **Whether the production environment is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
+
+## Recorded for this plan
+
+- **Where the procedures can be read from during an invocation, and what that depends on**: **[MISSING — owner: lead engineer]**
+
+## 2.1 System Description
+
 - **The primary region**: **[MISSING — owner: infrastructure owner]**
 
 ## APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS
@@ -59,6 +66,7 @@ Engineering judgments, outstanding gaps and disagreements, labeled as such.
 - **The release of each major component, and any upgrade in flight**: **[MISSING — owner: application owner]**
 - **The operating system of each tier, and what that constrains**: **[MISSING — owner: infrastructure owner]**
 - **Whether the production environment is one instance or several, and how they are split**: **[MISSING — owner: application owner]**
+- **Where the procedures can be read from during an invocation, and what that depends on**: **[MISSING — owner: lead engineer]**
 - **The primary region**: **[MISSING — owner: infrastructure owner]**
 - **The standby region**: **[MISSING — owner: infrastructure owner]**
 - **Which names are region-locked and what changing them costs in recovery time**: **[MISSING — owner: infrastructure owner]**
