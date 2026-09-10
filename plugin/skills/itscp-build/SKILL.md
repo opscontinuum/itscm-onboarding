@@ -153,8 +153,8 @@ assumed tiers. Assumed tiers become real architecture within a day and are never
 After every phase, report against `coverage-map.md`:
 
 ```
-Coverage: 17/82 fields (20%)
-  ANSWERED 14 | NOT_APPLICABLE 3 | DEFERRED 2 | MISSING 63
+Coverage: 17/91 fields (18%)
+  ANSWERED 14 | NOT_APPLICABLE 3 | DEFERRED 2 | MISSING 72
   Confidence of ANSWERED: high 4 | medium 7 | low 3
 
 Complete sections:  1.3 Assumptions, 3.2 Notification, App. A, App. H
@@ -164,7 +164,7 @@ Next:               itscp-interview-infrastructure (infrastructure owner, ~90 mi
 ```
 
 The figures above are worked against the starter field set described by the
-`itscp-method-answer-store` skill, which is 82 fields. They are an illustration of the shape,
+`itscp-method-answer-store` skill, which is 91 fields. They are an illustration of the shape,
 not a target to reproduce.
 
 **Four rules for this report.**
@@ -172,7 +172,7 @@ not a target to reproduce.
 1. **Coverage is not quality.** Always print the confidence distribution beside it. A plan at
    90% coverage with 60% low confidence is an organization that has guessed comprehensively.
 2. **Count the denominator; never quote one.** It is the number of fields in scope for *this*
-   plan, counted from that plan's answer store. The starter set is 82 fields; a plan that adds
+   plan, counted from that plan's answer store. The starter set is 91 fields; a plan that adds
    fields for its own tiers, processes or interfaces reports against its own total. A
    denominator nobody counted is an invented number in the one report whose entire job is to be
    trustworthy about what is known.

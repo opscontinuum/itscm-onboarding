@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank
 from harness import Section, equal
 
-EXPECTED_STARTER_KEYS = 82
+EXPECTED_STARTER_KEYS = 91
 #: The seven fields ``templates/answers.example.yaml`` annotates ``# list of {...}``. Named
 #: rather than counted, so a rename cannot silently satisfy the check.
 YAML_LIST_FIELDS = (
@@ -61,6 +61,13 @@ DELIBERATE_EXTRA_ROW_FIELDS = (
     "continuity.decision_and_recovery_roles",
     "governance.associated_plans",
     "governance.drill_levels",
+    # Added with the backup and procedure-custody questions. Each is a table in the plan for
+    # the same reason the ones above are: a row per component, with a column somebody has to
+    # keep current, and prose that lists them is not the same artifact.
+    "infra.backup_matrix",
+    "infra.backup_last_restore",
+    "app.component_playbooks",
+    "governance.retention_obligation",
 )
 
 #: The plan rows that had no question at all, as the NIST headings a question now has to
