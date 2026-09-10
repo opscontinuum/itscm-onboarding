@@ -234,6 +234,44 @@ manual was rewritten around what teams already have, and wrong. A read-only walk
 takes ten minutes and produces a gap list nobody assembles by hand. The manual treats it as an
 accelerator where it exists, which is exactly what it is.
 
+## Decision 11 — The capture sheet is one file, and the questions are baked into it
+
+The printed worksheets are Markdown tables with empty cells, which is a form in the sense
+that a napkin is one. You cannot tab through it, it cannot tell you which cells are still
+blank, and typing into pipe-delimited columns while somebody is talking is miserable. So
+`docs/manual/worksheet.html` is what a facilitator actually types into, generated from the
+same bank as the Markdown.
+
+**Baked in, not fetched.** The obvious design has the page read the manual's documents at
+runtime. It cannot: a `file://` page has a null origin and every current browser blocks it
+from reading its siblings. A capture sheet that needs a web server is one that does not work
+in a meeting room with no wifi on a laptop somebody borrowed, which is the room it is for. So
+the bank is serialized into the page. The cost is regenerating when the bank changes, which
+is the cost the Markdown already has and the same test catches.
+
+**Nothing is created by looking at it.** The first version built an answer record whenever it
+rendered a question, so an untouched worksheet exported all 82 fields as `ANSWERED`. That is
+the plausible-answer-nobody-gave failure, arriving through the back door of a UI convenience,
+and it is exactly what the store's own rule prevents by treating an absent key as unanswered.
+Reads and writes are now separate calls, and a regression check opens the page, touches
+nothing, and asserts the file is empty.
+
+**Paper stays.** Both artifacts generate from one bank, so keeping the printed worksheets
+costs nothing and buys the room where a laptop is not allowed, not available, or not working.
+
+**Behaviour is tested where a runtime exists.** The page is JavaScript, and asserting that
+typing an answer records it means running it. `plugin/tests/worksheet-behaviour.js` drives the
+page's own script against a minimal DOM: typing, who said it, confidence, the mechanism
+follow-up, a question nobody could answer becoming a name, a table cell, and a reopened page
+still holding what was typed. The suite runs it when bun, node or deno happens to be
+installed and **reports the check as skipped when none is**, because a suite that counts an
+unrun check as a pass is worse than one that admits what it could not do.
+
+**Rejected — a build step and a framework.** The repository has no JavaScript toolchain and
+this is not the feature to acquire one for. Hand-written markup, style and script in one
+generated file has no install, no lockfile, no supply chain, and can be read end to end by
+whoever inherits it.
+
 ## Known limitations
 
 | Limitation | Why it stands |

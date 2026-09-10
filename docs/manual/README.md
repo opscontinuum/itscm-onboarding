@@ -25,9 +25,11 @@ Read [the method](method.md) before the first session. It is the discipline all 
 
 Phase 7 is not a document. It is the signature, and then the drill: **every duration in the plan is a design target, and none of them are commitments until a drill has measured one.** Schedule the first drill before the approval meeting ends.
 
-## What to print
+## What to take into the room
 
-Each phase page ends with a worksheet sized for its session. Print the worksheet for the session you are running; read the rest of the page before it.
+[worksheet.html](worksheet.html) is the one to type into: open it in any browser, straight off the disk. It asks the same questions as the printed sheets, keeps track of what is still blank, and writes a JSON file you can reload next session or hand to whoever transcribes it. Nothing to install, and it does not need the network.
+
+Each phase page also ends with a worksheet sized for its session, for the room where the laptop is not welcome or not working. Read the rest of the page before either.
 
 - [The method](method.md) — how an answer is captured, and the appendix for typing the worksheets up afterwards.
 - [Every answer, by the document it belongs in](fields.md) — the order to write the plan in, and the full index.

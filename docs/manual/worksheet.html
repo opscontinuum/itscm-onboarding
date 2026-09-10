@@ -1,0 +1,1584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ITSCP worksheet</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --ink: #1a1c1e; --dim: #5b6166; --faint: #8b9299; --line: #d9dee2;
+  --page: #fbfbfa; --card: #ffffff; --accent: #14507a; --warn: #8a5300;
+  --warn-bg: #fdf5e6; --ok: #1c6b45;
+}
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+header {
+  position: sticky; top: 0; z-index: 5; background: var(--card);
+  border-bottom: 1px solid var(--line); padding: 12px 20px;
+}
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.bar h1 { font-size: 17px; margin: 0; letter-spacing: -0.01em; }
+.bar .spacer { flex: 1 1 auto; }
+.meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.meta input { width: 190px; }
+input, select, textarea {
+  font: inherit; color: inherit; background: var(--card);
+  border: 1px solid var(--line); border-radius: 5px; padding: 6px 8px;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+textarea { width: 100%; resize: vertical; min-height: 2.6em; }
+button {
+  font: inherit; cursor: pointer; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 5px; padding: 6px 12px;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.primary:hover { filter: brightness(1.12); color: #fff; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+nav button { padding: 4px 10px; font-size: 14px; }
+nav button[aria-current="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+nav .count { color: var(--faint); font-variant-numeric: tabular-nums; margin-left: 6px; }
+nav button[aria-current="true"] .count { color: #c9ced3; }
+main { max-width: 880px; margin: 0 auto; padding: 24px 20px 96px; }
+.room { color: var(--dim); font-size: 15px; margin: 0 0 20px; }
+.group { margin: 30px 0 10px; font-size: 13px; letter-spacing: 0.07em;
+         text-transform: uppercase; color: var(--faint); }
+.q { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+     padding: 16px 18px; margin-bottom: 14px; }
+.q.done { border-left: 3px solid var(--ok); }
+.q.flagged { border-left: 3px solid var(--warn); }
+.ask { font-size: 17px; margin: 0 0 4px; }
+.records { color: var(--dim); font-size: 14px; margin: 0 0 12px; }
+.key { float: right; color: var(--faint); font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.field { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 10px; }
+.field label { display: block; font-size: 12px; color: var(--dim); margin-bottom: 3px; }
+.field .grow { flex: 1 1 240px; }
+.field .grow input, .field .grow select { width: 100%; }
+.sure { display: flex; gap: 4px; }
+.sure button { padding: 6px 10px; min-width: 34px; }
+.sure button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.note { font-size: 14px; color: var(--dim); border-left: 2px solid var(--line);
+        padding-left: 10px; margin: 10px 0; }
+.then { background: var(--warn-bg); border: 1px solid #ecd9b0; border-radius: 6px;
+        padding: 10px 12px; margin: 10px 0; font-size: 15px; }
+.then strong { color: var(--warn); }
+.readback { display: flex; gap: 7px; align-items: center; font-size: 15px; margin-top: 8px; }
+.status { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.status button { font-size: 13px; padding: 3px 9px; }
+.status button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+table.rows { border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 8px; }
+table.rows th { text-align: left; font-weight: 600; color: var(--dim); font-size: 12px;
+                padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 3px 4px; }
+table.rows input, table.rows select { width: 100%; }
+.summary { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+.summary ul { margin: 8px 0 0; padding-left: 20px; }
+.summary li { margin-bottom: 4px; }
+.saved { color: var(--faint); font-size: 13px; }
+@media print {
+  header { position: static; } nav, .status, button, .saved { display: none !important; }
+  body { background: #fff; } .q { break-inside: avoid; border-left: none; }
+  main { max-width: none; padding: 0; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>ITSCP worksheet</h1>
+    <div class="meta">
+      <input id="system" type="text" placeholder="system or suite">
+      <input id="facilitator" type="text" placeholder="facilitator">
+    </div>
+    <span class="spacer"></span>
+    <span id="saved" class="saved"></span>
+    <button id="save" class="primary" type="button">Save JSON</button>
+    <label class="button" for="load" style="display:inline-block">
+      <button type="button" onclick="document.getElementById('load').click()">Load JSON</button>
+    </label>
+    <input id="load" type="file" accept="application/json,.json" hidden>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="sheet"></main>
+<script id="bank" type="application/json">
+{
+ "statuses": [
+  {
+   "key": "ANSWERED",
+   "label": "Answered",
+   "hint": ""
+  },
+  {
+   "key": "MISSING",
+   "label": "Nobody knew",
+   "hint": "Name whoever can answer"
+  },
+  {
+   "key": "DEFERRED",
+   "label": "Deferred",
+   "hint": "Name an owner and a date"
+  },
+  {
+   "key": "NOT_APPLICABLE",
+   "label": "Not applicable",
+   "hint": "State why, in a sentence"
+  }
+ ],
+ "confidence": [
+  {
+   "key": "high",
+   "short": "H",
+   "hint": "Measured, or read off a screen while you waited"
+  },
+  {
+   "key": "medium",
+   "short": "M",
+   "hint": "Confident from experience, never measured"
+  },
+  {
+   "key": "low",
+   "short": "L",
+   "hint": "Worked out in the room just now"
+  }
+ ],
+ "phases": [
+  {
+   "number": "0",
+   "title": "The portfolio and the dependency map",
+   "room": "A workshop, before the tabletop. Whoever can see the whole environment, which is usually two or three people and never one.",
+   "produces": "the register, on a wall",
+   "questions": []
+  },
+  {
+   "number": "1",
+   "title": "What the room brings",
+   "room": "The tabletop. Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. This segment opens it.",
+   "produces": "the inventory and the gaps in it",
+   "questions": [
+    {
+     "id": "discovery.completed",
+     "prompt": "Not asked. Set by itscp-discover when a read-only walk completes.",
+     "records": "Whether a discovery walk has run, and when",
+     "owner": "infrastructure owner",
+     "kind": "date",
+     "row": "H. Hardware, software and firmware inventory",
+     "writtenTo": "docs/11-inventory.md",
+     "guidance": "Set by itscp-discover. Never written by an interview.",
+     "seeded": true
+    }
+   ]
+  },
+  {
+   "number": "2",
+   "title": "The business figures, which gate everything after them",
+   "room": "Not the tabletop. A separate session with the business or process owner, before the technical segments. Deliberately not in the room with the IT teams.",
+   "produces": "",
+   "questions": [
+    {
+     "id": "business.processes",
+     "prompt": "Walk me through what stops if this is down for an hour. Then for a day. Then for a week. Take the processes one at a time.",
+     "records": "Each business process and what its outage costs at one hour, four hours, a day and a week",
+     "owner": "business owner",
+     "kind": "rows",
+     "row": "K. Business impact analysis",
+     "writtenTo": "docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md",
+     "guidance": "The BIA's first step. Ask about impact at each horizon separately; people answer 'it is critical' to the general question and give you something usable when the horizon is named.",
+     "columns": [
+      "name",
+      "impact_1h",
+      "impact_4h",
+      "impact_1d",
+      "impact_1w"
+     ]
+    },
+    {
+     "id": "business.mtd.tier0",
+     "prompt": "At what point does this stop being an IT problem and become something the chief executive hears about?",
+     "records": "Maximum tolerable downtime for the tier 0 processes",
+     "owner": "business owner",
+     "kind": "duration",
+     "row": "K. Business impact analysis",
+     "writtenTo": "docs/02-mtd-tiers.md",
+     "unit": "hours",
+     "guidance": "A number without a mechanism is a guess wearing a suit.",
+     "mechanism": "What happens at that hour that does not happen at the hour before it? Name the deadline, the cut-off, the batch that has to run, or the person who picks up the phone.",
+     "readback": true
+    },
+    {
+     "id": "business.rpo.tier0",
+     "prompt": "If we recovered to fifteen minutes before the failure, what work would people have to redo, and who would have to redo it?",
+     "records": "Recovery point objective for the tier 0 processes",
+     "owner": "business owner",
+     "kind": "duration",
+     "row": "K. Business impact analysis",
+     "writtenTo": "docs/02-mtd-tiers.md",
+     "unit": "minutes",
+     "guidance": "Elicited as: if we lost 15 minutes, who redoes the work, and can they?",
+     "mechanism": "What is in those minutes that nobody could rebuild from anywhere else, and who finds out first that it is gone?",
+     "readback": true
+    },
+    {
+     "id": "business.mbco.tier0",
+     "prompt": "While we are recovering, what is the smallest amount of this service that keeps you trading? Not the full thing. The part you cannot do without for a day.",
+     "records": "The minimum service level that must be available during work recovery",
+     "owner": "business owner",
+     "kind": "text",
+     "row": "Minimum business continuity objective per tier",
+     "writtenTo": "docs/02-mtd-tiers.md",
+     "guidance": "Not NIST. What must work to keep trading while recovery runs.",
+     "readback": true
+    },
+    {
+     "id": "business.workarounds",
+     "prompt": "Last time this was down, what did people actually do? Did anyone write anything on paper, and how long could they keep that up?",
+     "records": "Each process, the workaround used, and how long it is sustainable",
+     "owner": "business owner",
+     "kind": "rows",
+     "row": "E. Alternate mission/business processing - manual workarounds",
+     "writtenTo": "checklists/manual-workarounds.md",
+     "guidance": "Appendix E. Ask about the last real outage, not the hypothetical one.",
+     "columns": [
+      "process",
+      "workaround",
+      "sustainable_for",
+      "what_fails_first"
+     ]
+    },
+    {
+     "id": "business.tier_signoff",
+     "prompt": "Have you signed off the tier assignment, or is it still with you? If it is not signed, who owes the signature and by when?",
+     "records": "Whether the tier assignment is signed, and by whom, or who owes it",
+     "owner": "business owner",
+     "kind": "enum",
+     "row": "Citation and unverified-statement discipline",
+     "writtenTo": "docs/02-mtd-tiers.md",
+     "guidance": "Signed, or explicitly recorded as not signed and who owes it.",
+     "options": [
+      "signed",
+      "not signed",
+      "signed with exceptions"
+     ],
+     "readback": true
+    },
+    {
+     "id": "business.tier_targets",
+     "prompt": "For each recovery tier you have: how long may it be down in total, how long may the technical recovery take, how long does the business need afterwards before it can work, and how much data may be lost? And what is the least service that still counts as trading?",
+     "records": "Per tier: maximum tolerable downtime, recovery time, work recovery time, recovery point and the minimum service that counts as trading",
+     "owner": "business owner",
+     "kind": "rows",
+     "row": "K. Business impact analysis",
+     "writtenTo": "docs/02-mtd-tiers.md",
+     "guidance": "One table, filled a row at a time, and the last column is the one that makes the rest worth having. A tier ladder of round numbers with nothing behind them is the single most common defect in a continuity plan: it reads as a measurement and it is a preference. Do not accept a figure until the row beside it says what it collides with.",
+     "columns": [
+      "tier",
+      "mtd",
+      "rto",
+      "wrt",
+      "rpo",
+      "minimum_service",
+      "what_breaks_at_the_mtd"
+     ],
+     "readback": true
+    },
+    {
+     "id": "business.tier_assignment",
+     "prompt": "I am going to read you back what this system does. Sort each one into the tiers we just defined, and argue with me where it does not fit.",
+     "records": "Each business process, the tier it is assigned to, and the argument for it",
+     "owner": "business owner",
+     "kind": "rows",
+     "row": "K. Business impact analysis",
+     "writtenTo": "docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md",
+     "guidance": "The impact question asks what stops. This one asks the business to commit. They are different sessions and people answer them differently: 'it is critical' survives the first and does not survive the second. Record the argument, not just the letter, because the argument is what gets re-examined when the cost lands.",
+     "columns": [
+      "process",
+      "tier",
+      "rationale"
+     ]
+    },
+    {
+     "id": "business.freeze_periods",
+     "prompt": "Are there weeks in the year when failing over would be worse than staying down? Period close, year end, a filing deadline?",
+     "records": "Each period when failing over costs more than the outage, and who decides during it",
+     "owner": "business owner",
+     "kind": "rows",
+     "row": "Periods when recovery is more expensive than the outage",
+     "writtenTo": "checklists/dr-authority-matrix.md, docs/08-phase-activation.md",
+     "guidance": "Nobody volunteers this and everybody has one. It changes the activation criteria for a fortnight a quarter, which is when the plan is most likely to be used and least likely to have been read.",
+     "columns": [
+      "period",
+      "why",
+      "who_decides"
+     ],
+     "readback": true
+    },
+    {
+     "id": "business.freeze_override_authority",
+     "prompt": "If we were inside one of those periods and had to fail over anyway, who is allowed to say yes, and what do they need in front of them first?",
+     "records": "Who may authorize a failover inside a freeze period, and on what evidence",
+     "owner": "business owner",
+     "kind": "text",
+     "row": "Periods when recovery is more expensive than the outage",
+     "writtenTo": "checklists/dr-authority-matrix.md",
+     "guidance": "A freeze with no override is a plan that stops working four weeks a year. Name one individual and what they need to see; 'the board' is nobody at two in the morning.",
+     "readback": true
+    },
+    {
+     "id": "business.reconstruction_effort",
+     "prompt": "If we lost the work from the last few minutes before the failure, how long would it take to put it back, and who would be doing it?",
+     "records": "How long rebuilding the lost work takes, and who does it",
+     "owner": "business owner",
+     "kind": "duration",
+     "row": "Minimum business continuity objective per tier",
+     "writtenTo": "docs/02-mtd-tiers.md, checklists/manual-workarounds.md",
+     "unit": "hours",
+     "guidance": "This is the recovery point objective turned into work recovery time, which is the half of the sum that never gets costed. If the source they would rebuild from is inside the failed environment, the answer is not a duration, it is a design finding.",
+     "mechanism": "What are they rebuilding it from, and what happens if that source went down with everything else?"
+    }
+   ]
+  },
+  {
+   "number": "3a",
+   "title": "The application segment",
+   "room": "The tabletop. Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. The application team leads this segment; keep the infrastructure team in the room, because half the corrections come from them.",
+   "produces": "",
+   "questions": [
+    {
+     "id": "system.name",
+     "prompt": "What is this application suite called in the systems that run it: the name on the servers, in the monitoring, in the change tickets?",
+     "records": "The system's technical name, as the plan's title and throughout",
+     "owner": "application owner",
+     "kind": "text",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md 2",
+     "guidance": "The name the environment uses. Where the business calls it something else, that goes in system.business_name and both appear in the plan."
+    },
+    {
+     "id": "system.business_name",
+     "prompt": "And what do the people who use it call it? The name that would appear in an email from Finance saying it is down.",
+     "records": "The business-facing name for the same system",
+     "owner": "business owner",
+     "kind": "text",
+     "row": "1.1 Background",
+     "writtenTo": "README.md, docs/00-plan-approval.md",
+     "guidance": "What the business calls it. The ITSCP is read by both audiences."
+    },
+    {
+     "id": "system.categorization",
+     "prompt": "Has this system ever been given an impact level or a data classification? If so, where is that recorded and what does it say?",
+     "records": "The impact level or data classification and where it is recorded",
+     "owner": "governance/risk contact",
+     "kind": "text",
+     "row": "1.2 Scope",
+     "writtenTo": "README.md, docs/02-mtd-tiers.md",
+     "guidance": "Impact level or data classification. Determines which controls are mandatory. If never categorized, that is itself the finding."
+    },
+    {
+     "id": "system.impact_level",
+     "prompt": "Of low, moderate and high, which one is this system's availability impact? Not what you would choose today: what is written down. If nothing is, say so and we record that.",
+     "records": "The assigned availability impact level, which selects the template this plan is graded against",
+     "owner": "governance/risk contact",
+     "kind": "enum",
+     "row": "1.2 Scope",
+     "writtenTo": "README.md, docs/02-mtd-tiers.md, docs/07-standards-alignment.md",
+     "guidance": "Three answers are legal and 'nobody ever assigned one' is not among them: an uncategorized system leaves this MISSING with the governance contact owing it, which is the honest record and the finding an auditor wants. The answer decides which of NIST's three sample templates the plan is graded against, and therefore what letter each of its appendices carries. Uncategorized, the plan keeps the high-impact lettering, because that template is the superset and an auditor with no stated level grades against it.",
+     "options": [
+      "low",
+      "moderate",
+      "high"
+     ],
+     "readback": true
+    },
+    {
+     "id": "system.assumptions",
+     "prompt": "What are we taking as read about this environment that I have not asked you about directly? Take them one at a time, and for each one tell me what changes if it turns out to be wrong.",
+     "records": "Each stated assumption, what breaks if it is wrong, who confirms it and by when",
+     "owner": "lead engineer",
+     "kind": "rows",
+     "row": "1.3 Assumptions",
+     "writtenTo": "docs/01-architecture.md, checklists/risk-register.md",
+     "guidance": "An assumption is a fact nobody confirmed, so every row here is a question somebody did not get asked. Read each one back. The owner and the date are not decoration: a table of unowned assumptions is a list of things that will still be assumptions at the next review, and one of them will be the one that was wrong.",
+     "columns": [
+      "assumption",
+      "impact_if_wrong",
+      "owner",
+      "confirm_by"
+     ],
+     "readback": true
+    },
+    {
+     "id": "system.component_terms",
+     "prompt": "You used a few words for parts of this that could mean more than one thing. Tell me what each of them means here, in your words, before I draw anything.",
+     "records": "The words this organization uses for its own components, and what each one means",
+     "owner": "application owner",
+     "kind": "narrative",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md",
+     "guidance": "One word that means two things is the cheapest catastrophic mistake in a continuity design: a whole section gets written for the wrong layer and reads perfectly well. Ask before drawing, not after. If they cannot say, that is a MISSING with the application owner's name on it, not a guess.",
+     "readback": true
+    },
+    {
+     "id": "system.releases",
+     "prompt": "What release is the application on, exactly, and what release is the database? If you are part way through an upgrade, tell me both.",
+     "records": "The release of each major component, and any upgrade in flight",
+     "owner": "application owner",
+     "kind": "text",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md, docs/11-inventory.md",
+     "guidance": "Say the numbers back. This is the fact most often carried as an assumption and it changes recovery mechanics more than almost anything else. A half-finished upgrade is the answer that matters most and the one people forget to mention.",
+     "readback": true
+    },
+    {
+     "id": "system.operating_systems",
+     "prompt": "What does each tier run on? And if any of it is a platform your recovery scripts would have to be written differently for, say so now.",
+     "records": "The operating system of each tier, and what that constrains",
+     "owner": "infrastructure owner",
+     "kind": "text",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md, docs/11-inventory.md",
+     "guidance": "Decides what language every recovery script is written in, and therefore who can run it at three in the morning. Read it back.",
+     "readback": true
+    },
+    {
+     "id": "system.instances",
+     "prompt": "Is this one production instance, or several? Separate ledgers, separate legal entities, anything split across sites?",
+     "records": "Whether the production environment is one instance or several, and how they are split",
+     "owner": "application owner",
+     "kind": "narrative",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md, docs/02-mtd-tiers.md",
+     "guidance": "A second instance nobody mentioned changes the tier map, the recovery order and the cost. Ask it early and read the answer back.",
+     "readback": true
+    },
+    {
+     "id": "app.start_order",
+     "prompt": "If everything were off and you had to bring it up from cold, what would you start first, and what would break if you started it second?",
+     "records": "The component start order and what depends on what",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "4.1 Sequence of recovery activities",
+     "writtenTo": "runbooks/RB-01-switchover.md, docs/09 3",
+     "guidance": "Rarely written down, usually in one person's head. Capture verbatim. If only one engineer holds it, that is a deputy gap as well as a documentation gap.",
+     "readback": true
+    },
+    {
+     "id": "app.interconnections",
+     "prompt": "Who sends you files, and who is waiting on files from you? What breaks on their side first?",
+     "records": "Each interconnection, its direction, transport, contact and whether it is replayable",
+     "owner": "application owner",
+     "kind": "rows",
+     "row": "I. System interconnections",
+     "writtenTo": "docs/12-interconnections.md",
+     "guidance": "Appendix I. A partner contact stored only inside the system being recovered is not a contact.",
+     "columns": [
+      "partner",
+      "direction",
+      "transport",
+      "contact",
+      "replayable"
+     ]
+    },
+    {
+     "id": "app.validation_pack",
+     "prompt": "Once it is back up, what do you personally check before you would tell users it is working? How long does each check take, and who does it?",
+     "records": "Each validation check, its duration and its owner",
+     "owner": "application owner",
+     "kind": "rows",
+     "row": "F. System validation test plan",
+     "writtenTo": "checklists/validation-pack.md",
+     "guidance": "Appendix F. On the MTD critical path and routinely omitted from timings.",
+     "columns": [
+      "check",
+      "duration",
+      "who"
+     ]
+    },
+    {
+     "id": "app.wrt_activities",
+     "prompt": "After the system is technically up but before the business can use it, what has to happen? Which of those can run while we are still bringing things up?",
+     "records": "Each work-recovery activity, its duration, and whether it runs in parallel with bring-up",
+     "owner": "application owner",
+     "kind": "rows",
+     "row": "Minimum business continuity objective per tier",
+     "writtenTo": "docs/10 3",
+     "guidance": "The parallel/serial flag decides whether the MTD is achievable.",
+     "columns": [
+      "activity",
+      "duration",
+      "parallel_with_bringup"
+     ]
+    },
+    {
+     "id": "app.concurrent_processing",
+     "prompt": "During recovery, would you ever run the old and the new environment at the same time? If not, why not?",
+     "records": "Whether concurrent processing is performed, and the reason either way",
+     "owner": "application owner",
+     "kind": "narrative",
+     "row": "5.1 Concurrent processing",
+     "writtenTo": "docs/10 3",
+     "guidance": "Usually NOT_APPLICABLE. NIST does not require it; the plan must still address it, with the reason.",
+     "readback": true
+    },
+    {
+     "id": "app.recovery_procedures",
+     "prompt": "Talk me through the recovery as if I were doing it and you were not there. Give me the commands, in order, exactly as you would type them.",
+     "records": "The recovery procedure at the level of what is actually typed, in order",
+     "owner": "lead engineer",
+     "kind": "code",
+     "row": "4.2 Recovery procedures",
+     "writtenTo": "runbooks/RB-02-failover.md, runbooks/RB-01-switchover.md",
+     "guidance": "Reproduced byte for byte or not at all. A paraphrased command is worse than no command, because it looks runnable. Where a step is a decision rather than a keystroke, say so in the block; where a step needs a value nobody has yet, leave the placeholder visible rather than inventing one. Read the block back to them before it is written down.",
+     "readback": true
+    },
+    {
+     "id": "app.validation_data_tests",
+     "prompt": "Once it is back up, how would you satisfy yourself that the data is right, as opposed to the system being up? Who is the person whose word settles it?",
+     "records": "Each data validation check, what it proves and who signs it off",
+     "owner": "application owner",
+     "kind": "rows",
+     "row": "5.2 Validation data testing",
+     "writtenTo": "checklists/validation-pack.md, docs/10-phase-reconstitution.md",
+     "guidance": "Not the same as the functional pack, and the difference is the point. A database opening read-write proves the system is up. Only somebody who runs the process can say the data is right, so the signature column names a person's role and never the infrastructure team.",
+     "columns": [
+      "check",
+      "what_it_proves",
+      "who_signs"
+     ]
+    },
+    {
+     "id": "app.interface_landing",
+     "prompt": "Today, before we change anything: where do inbound files from other systems land, and does anything read them from somewhere that is not replicated?",
+     "records": "Where inbound interface data lands today and whether that location is replicated",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "Interface landing and replication of inbound data",
+     "writtenTo": "docs/12-interconnections.md",
+     "guidance": "Ask what it is, not what it should be. The recommended pattern is easy to write and useless without the current state beside it, and a design proposal in a description's clothes is how a plan ends up recovering an environment nobody has.",
+     "readback": true
+    },
+    {
+     "id": "app.unsafe_reruns",
+     "prompt": "After a failover, which scheduled jobs would be dangerous to run again, and which are safe to just resubmit?",
+     "records": "Each scheduled job, whether it is safe to resubmit, and what a second run does",
+     "owner": "application owner",
+     "kind": "rows",
+     "row": "Interface landing and replication of inbound data",
+     "writtenTo": "runbooks/RB-02-failover.md, docs/10-phase-reconstitution.md",
+     "guidance": "'Nobody knows' is a legal answer and a useful one: it is the list somebody has to work through before the next drill. A job that pays suppliers twice is a worse outage than the one that caused the failover.",
+     "columns": [
+      "job",
+      "safe_to_resubmit",
+      "what_happens_if_it_runs_twice"
+     ],
+     "columnOptions": {
+      "safe_to_resubmit": [
+       "safe",
+       "unsafe",
+       "nobody knows"
+      ]
+     }
+    },
+    {
+     "id": "app.reconfiguration_duration",
+     "prompt": "Has anyone ever timed the full reconfiguration of the application tier after a move, start to finish? What did it come out at?",
+     "records": "How long a full application-tier reconfiguration takes, measured",
+     "owner": "lead engineer",
+     "kind": "duration",
+     "row": "Measured durations on the recovery critical path",
+     "writtenTo": "docs/09-phase-recovery.md, runbooks/RB-01-switchover.md",
+     "unit": "hours",
+     "guidance": "This figure usually carries the plan's whole design argument and usually arrives as a range somebody remembers. If it has never been timed, record that: an untimed step on the critical path is the reason the recovery misses its target by an afternoon.",
+     "mechanism": "Was that timed on a rehearsal or estimated from experience? And what is the longest it has ever taken?"
+    }
+   ]
+  },
+  {
+   "number": "3b",
+   "title": "The infrastructure segment",
+   "room": "The tabletop. Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. The infrastructure team leads this segment, with the lead engineer present for anything measured.",
+   "produces": "",
+   "questions": [
+    {
+     "id": "infra.primary_region",
+     "prompt": "Where does this run today? Discovery says the primary region is the one I will read back to you; correct me if that is wrong.",
+     "records": "The primary region",
+     "owner": "infrastructure owner",
+     "kind": "text",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md 2",
+     "guidance": "Discovery can name this, so it is read back for correction rather than asked cold. A correction is itself worth having: it usually means something moved and nobody updated the diagram.",
+     "seeded": true
+    },
+    {
+     "id": "infra.standby_region",
+     "prompt": "And where would it run instead? Discovery found resources in a second region; I will read back what it found.",
+     "records": "The standby region",
+     "owner": "infrastructure owner",
+     "kind": "text",
+     "row": "C. Alternate site, storage and telecommunications",
+     "writtenTo": "docs/01 5, docs/03",
+     "guidance": "Where discovery finds standby resources in a region nobody names as the standby, that is a shadow environment and worth surfacing before the interview moves on.",
+     "seeded": true
+    },
+    {
+     "id": "infra.measured_rtt_ms",
+     "prompt": "Has anyone measured the round-trip time between the two regions, as opposed to reading the published figure? What did it come out at, and when?",
+     "records": "Measured inter-region round-trip time in milliseconds",
+     "owner": "lead engineer",
+     "kind": "number",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "unit": "ms",
+     "guidance": "Measured, not published. A synchronous design over an unmeasured link has an unexploded assumption in the middle of it.",
+     "mechanism": "What was running when it was measured, and at what time of day? And at what figure would this design stop working?"
+    },
+    {
+     "id": "infra.replication",
+     "prompt": "For each tier, how does the data get to the other region, is it synchronous, and what is the measured lag? Then: when you fail back, do you have to re-baseline?",
+     "records": "Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way",
+     "owner": "infrastructure owner",
+     "kind": "rows",
+     "row": "4.2 Recovery procedures",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "Press the re-baseline question. It is the failback cost and it is almost never costed.",
+     "columns": [
+      "tier",
+      "mechanism",
+      "sync",
+      "measured_lag",
+      "what_breaks_at_that_lag",
+      "failover_behavior",
+      "rebaseline_on_reversal",
+      "one_way"
+     ],
+     "seeded": true
+    },
+    {
+     "id": "infra.standby_cost_floor",
+     "prompt": "What does the standby cost to keep running when nothing is happening? The floor, not the average.",
+     "records": "The monthly standby cost floor",
+     "owner": "infrastructure owner",
+     "kind": "currency",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/05-cost-and-teardown.md",
+     "guidance": "The tier the business chose may be unaffordable at the floor. Now is when that conversation is cheap.",
+     "mechanism": "What is in that figure and what is not? Name the lines it covers, and say what would have to be switched off to make it smaller."
+    },
+    {
+     "id": "infra.region_locked_naming",
+     "prompt": "Do any hostnames, connection strings or certificates have the region baked into them? What would have to change on failover?",
+     "records": "Which names are region-locked and what changing them costs in recovery time",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/01-architecture.md 1",
+     "guidance": "Often the single largest RTO lever, and cheaper than more capacity.",
+     "readback": true
+    },
+    {
+     "id": "infra.last_end_to_end_execution",
+     "prompt": "When did anyone last run this end to end, and who ran it?",
+     "records": "The date of the last end-to-end execution and who performed it",
+     "owner": "lead engineer",
+     "kind": "date",
+     "row": "J. Test, training and exercise documentation",
+     "writtenTo": "runbooks/RB-04-dr-drill.md",
+     "guidance": "'Never' is common and acceptable. Record it; it calibrates how much every duration in the plan can be trusted. Record who ran it, too: one name means the runbook has an availability requirement on a person."
+    },
+    {
+     "id": "infra.availability_domains",
+     "prompt": "Within each region, which availability domains is this spread across, and where does anything that arbitrates between the two regions sit?",
+     "records": "The availability domains in use, and where any arbitrator sits",
+     "owner": "infrastructure owner",
+     "kind": "text",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md",
+     "guidance": "Discovery can name these, so read them back rather than asking cold. The arbitrator is the half people forget: one that sits in the primary region is a vote that is always lost at exactly the moment it is needed.",
+     "seeded": true
+    },
+    {
+     "id": "infra.inter_region_transport",
+     "prompt": "How does traffic get between the two regions today? A dedicated circuit, the provider's own backbone, or the public internet? And is there a bandwidth commitment anywhere in writing?",
+     "records": "How the two regions are joined and what is committed in writing",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/01-architecture.md",
+     "guidance": "Press on the writing. A replication design rests on this link, and 'it has always been fine' is a measurement of the past. If nothing is committed, that is a risk register row with an owner, not a footnote.",
+     "readback": true
+    },
+    {
+     "id": "infra.storage_constraints",
+     "prompt": "Does the data use any storage feature that only works on particular hardware? Compression, encryption at a layer below the database, anything the standby would have to match?",
+     "records": "Storage features that constrain what the standby may be built on",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/03-replication-matrix.md, docs/05-cost-and-teardown.md",
+     "guidance": "A single feature here can rule out the cheap standby entirely, and it is usually discovered after the budget is signed. Read the answer back and record who confirmed it.",
+     "readback": true
+    },
+    {
+     "id": "infra.shared_storage",
+     "prompt": "What sits on shared storage that more than one node needs, and what protocol do those nodes speak to it?",
+     "records": "What lives on shared storage and how it is reached",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "2.1 System description",
+     "writtenTo": "docs/01-architecture.md",
+     "guidance": "This decides a real fork in the recovery design and is usually answered by whoever is in the room rather than by whoever knows. Ask for the protocol, not the product.",
+     "readback": true
+    },
+    {
+     "id": "infra.standby_posture",
+     "prompt": "What do you do to the standby when nothing is happening? Leave it running, stop things, scale something down? And who is allowed to change that?",
+     "records": "The standby's steady-state posture and who may change it",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "Cost model and posture economics",
+     "writtenTo": "runbooks/RB-05-replication-lifecycle.md, docs/05-cost-and-teardown.md",
+     "guidance": "Two answers, and the second one matters more. A posture with no named owner gets changed by whoever is looking at the bill that month, which is how a standby quietly stops being one.",
+     "readback": true
+    },
+    {
+     "id": "infra.warned_posture_time",
+     "prompt": "When you get warning, a storm track or an announced maintenance window, is there a readier state you move to? How long does getting there take?",
+     "records": "How long it takes to move the standby to its warned state",
+     "owner": "infrastructure owner",
+     "kind": "duration",
+     "row": "Cost model and posture economics",
+     "writtenTo": "runbooks/RB-05-replication-lifecycle.md",
+     "unit": "hours",
+     "guidance": "Most environments have no warned state and have never been asked for one. NOT_APPLICABLE with a reason is a good answer here; silence is not.",
+     "mechanism": "What does that state cost while you are holding it, and what decides when you come back down from it?"
+    },
+    {
+     "id": "infra.silent_failures",
+     "prompt": "What has broken before without anyone noticing until it mattered?",
+     "records": "The failures this environment does not notice, and what would have shown them",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "Alert catalog",
+     "writtenTo": "docs/04-monitoring.md",
+     "guidance": "Ask it exactly like that and then stop talking. It is the question that produces the alert catalog, and it produces it as a story about something that already happened rather than as a list of metrics somebody invented.",
+     "readback": true
+    },
+    {
+     "id": "infra.irreversible_choices",
+     "prompt": "Which of the choices in this design could you undo next week, and which could you not undo at all without starting again? What would undoing each one cost?",
+     "records": "Each decision that cannot be cheaply reversed, what reversing it costs and who may take it",
+     "owner": "lead engineer",
+     "kind": "rows",
+     "row": "Reversibility and one-way doors",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "Deleting a replication relationship to save money is the one everybody finds by doing it. Ask whether it has happened here; a scar is worth more than a warning.",
+     "columns": [
+      "decision",
+      "cost_to_reverse",
+      "who_may_take_it"
+     ]
+    },
+    {
+     "id": "infra.licensing",
+     "prompt": "Which optional features is the standby entitled to use? And do you have that in writing rather than in somebody's memory of a call?",
+     "records": "Each optional feature the design needs, whether it is licensed and where that is recorded",
+     "owner": "infrastructure owner",
+     "kind": "rows",
+     "row": "Cost model and posture economics",
+     "writtenTo": "docs/05-cost-and-teardown.md",
+     "guidance": "The line item most often discovered late, and the one the plan is least likely to ask about. 'Nobody knows' is the most useful answer in the column and belongs in the risk register the same day.",
+     "columns": [
+      "feature",
+      "licensed",
+      "where_it_is_recorded"
+     ],
+     "columnOptions": {
+      "licensed": [
+       "yes",
+       "no",
+       "nobody knows"
+      ]
+     },
+     "readback": true
+    },
+    {
+     "id": "infra.offsite_storage",
+     "prompt": "Where do the backups live, how long are they kept, and what would you actually do to get one back? If none of it is physical, say so.",
+     "records": "Each backup copy, where it is held, how long it is kept and how it is retrieved",
+     "owner": "infrastructure owner",
+     "kind": "rows",
+     "row": "5.7 Offsite data storage",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on physical media, and it is a better answer than an invented courier. What is never legitimate is leaving retention blank: a retention shorter than the records the business has to keep is a finding on its own.",
+     "columns": [
+      "copy",
+      "where_it_is_held",
+      "retention",
+      "how_it_is_retrieved"
+     ]
+    },
+    {
+     "id": "infra.post_recovery_backup",
+     "prompt": "Once you are running in the other region, what protects you? When does the first backup of the new primary happen, and who checks that it did?",
+     "records": "How the recovered system is protected again, when, and who confirms it",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "5.8 Data backup",
+     "writtenTo": "docs/10-phase-reconstitution.md, docs/03-replication-matrix.md",
+     "guidance": "The step most likely to be missed, because the system is up and everyone goes home. Until this is done a second event is unrecoverable, so the answer needs a name and a time attached to it, not an intention.",
+     "readback": true
+    }
+   ]
+  },
+  {
+   "number": "4",
+   "title": "The continuity segment",
+   "room": "The tabletop. Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. The DR process owner leads this segment, with their deputy, and both technical teams still in the room.",
+   "produces": "",
+   "questions": [
+    {
+     "id": "continuity.declaration_authority",
+     "prompt": "If this broke at two in the morning and somebody had to say 'we are failing over', who says it? And if they do not answer?",
+     "records": "The single individual with declaration authority, and their named deputy",
+     "owner": "DR process owner",
+     "kind": "text",
+     "row": "3.1 Activation criteria and procedure; who may activate",
+     "writtenTo": "runbooks/RB-02-failover.md 0, checklists/dr-authority-matrix.md",
+     "guidance": "Exactly one individual, and one named deputy. Not 'the incident team', which is nobody, and not a rota, which is not a name.",
+     "readback": true
+    },
+    {
+     "id": "continuity.succession",
+     "prompt": "If the first person does not answer, who is next? And after them? Keep going until you reach someone who is always reachable.",
+     "records": "The ordered line of succession and what each hand-off waits for",
+     "owner": "DR process owner",
+     "kind": "rows",
+     "row": "2.3 Roles and responsibilities",
+     "writtenTo": "checklists/roles-and-responsibilities.md",
+     "guidance": "Must terminate in someone always reachable. Must agree with the Phase 0 deputy roster; a disagreement is a conflict with a named decision owner, never a silent preference for one list.",
+     "columns": [
+      "order",
+      "role",
+      "passes_after"
+     ],
+     "readback": true
+    },
+    {
+     "id": "continuity.activation_criteria",
+     "prompt": "What would you have to see, at three in the morning, to know this is a failover and not a bad hour?",
+     "records": "The activation criteria, each one observable",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "3.1 Activation criteria and procedure; who may activate",
+     "writtenTo": "runbooks/RB-02-failover.md 0",
+     "guidance": "Comparisons against something knowable at 3am, not feelings.",
+     "readback": true
+    },
+    {
+     "id": "continuity.decision_time_budget",
+     "prompt": "How long may the decision itself take before the delay is the problem?",
+     "records": "The time budget for the declaration decision",
+     "owner": "DR process owner",
+     "kind": "duration",
+     "row": "3.1 Activation criteria and procedure; who may activate",
+     "writtenTo": "checklists/dr-authority-matrix.md",
+     "unit": "minutes",
+     "guidance": "Deciding is on the recovery critical path and is almost never budgeted. Whatever the number is, it comes out of the MTD.",
+     "mechanism": "What is happening to the outage while that decision is being taken, and what stops being recoverable once the budget is spent?"
+    },
+    {
+     "id": "continuity.unknown_estimate_default",
+     "prompt": "If nobody can say how long the repair will take, do you declare or do you wait?",
+     "records": "The default action when the repair estimate is unknown",
+     "owner": "DR process owner",
+     "kind": "enum",
+     "row": "3.3 Outage assessment",
+     "writtenTo": "checklists/outage-assessment.md",
+     "guidance": "Declare, or wait? Nobody has answered this. Decide it in daylight.",
+     "options": [
+      "declare",
+      "wait"
+     ],
+     "readback": true
+    },
+    {
+     "id": "continuity.call_tree",
+     "prompt": "Once it is declared, who gets told, in what order, and by whom? What happens when one of them does not pick up?",
+     "records": "The call tree, its order, and the unreachable procedure",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "3.2 Notification",
+     "writtenTo": "checklists/contact-roster.md",
+     "guidance": "The unreachable branch is the half that gets skipped and the half that gets used.",
+     "readback": true
+    },
+    {
+     "id": "continuity.bridge",
+     "prompt": "Where does everyone gather to work the incident, and what does joining it depend on?",
+     "records": "The incident bridge and its dependencies",
+     "owner": "DR process owner",
+     "kind": "text",
+     "row": "3.2 Notification",
+     "writtenTo": "checklists/contact-roster.md",
+     "guidance": "Check what it depends on. A bridge that authenticates through the failed environment is a plan with a loop in it."
+    },
+    {
+     "id": "continuity.assessment_procedure",
+     "prompt": "Who works out how bad it is, and how do they produce a repair estimate the person declaring can act on?",
+     "records": "The outage assessment procedure and where the repair estimate comes from",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "3.3 Outage assessment",
+     "writtenTo": "checklists/outage-assessment.md",
+     "guidance": "Where the repair estimate the activation criteria consume comes from.",
+     "readback": true
+    },
+    {
+     "id": "continuity.escalation_thresholds",
+     "prompt": "Once recovery is running, what would tell a tired person at 4am that it is going badly enough to wake someone more senior?",
+     "records": "The escalation thresholds, each observable",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "4.3 Recovery escalation and notification",
+     "writtenTo": "docs/09 5",
+     "guidance": "Observable at 3am by a tired person. 'When it feels wrong' is not one.",
+     "readback": true
+    },
+    {
+     "id": "continuity.deactivation_authority",
+     "prompt": "Who says it is over, and what do they have to see before they can say it?",
+     "records": "Who may deactivate the plan and on what evidence",
+     "owner": "DR process owner",
+     "kind": "text",
+     "row": "5.10 Deactivation",
+     "writtenTo": "docs/10 4.2",
+     "guidance": "Declaration and deactivation are a matched pair.",
+     "readback": true
+    },
+    {
+     "id": "continuity.contact_roster",
+     "prompt": "For every role we have named: who holds it, how do I reach them out of hours, and when did anyone last ring that number and get an answer?",
+     "records": "Each role, who holds it, how they are reached and when that was last verified",
+     "owner": "DR process owner",
+     "kind": "rows",
+     "row": "A. Personnel contact list",
+     "writtenTo": "checklists/contact-roster.md",
+     "guidance": "The one file that must never be committed to a shared repository, and the one that is useless if it is out of date. Press on the last column: a roster nobody has rung is a list of numbers, not a call tree. A role with no holder is a gap with a name on it and belongs here as MISSING rather than being quietly left out.",
+     "columns": [
+      "role",
+      "held_by",
+      "reached_by",
+      "last_verified"
+     ],
+     "readback": true
+    },
+    {
+     "id": "continuity.vendor_contacts",
+     "prompt": "Which outside organizations would you have to call during this, how do you reach them out of hours, and what reference do they need you to quote before they will help?",
+     "records": "Each vendor, what they supply, how they are reached and the reference they need",
+     "owner": "DR process owner",
+     "kind": "rows",
+     "row": "B. Vendor contact list",
+     "writtenTo": "checklists/contact-roster.md",
+     "guidance": "The reference column is the one that saves an hour. A support contract number stored only inside the system being recovered is not a contract number. Ask where a printed copy lives.",
+     "columns": [
+      "organization",
+      "what_they_supply",
+      "reached_by",
+      "reference_to_quote"
+     ]
+    },
+    {
+     "id": "continuity.vendor_obligations",
+     "prompt": "Is anyone outside this organization contracted to do part of this if you cannot? What does the contract actually oblige them to do, and how fast?",
+     "records": "Each external party, what their contract obliges, how fast, and where the contract is held",
+     "owner": "governance/risk contact",
+     "kind": "rows",
+     "row": "Vendor obligations during a recovery",
+     "writtenTo": "checklists/contact-roster.md, checklists/risk-register.md",
+     "guidance": "Not a NIST appendix: the templates have no heading for this and the coverage map invented one. It is still worth asking, because a recovery that assumes a vendor will help is a recovery resting on goodwill. If the answer is that nobody has read the contract, record that.",
+     "columns": [
+      "organization",
+      "what_the_contract_obliges",
+      "response_time",
+      "where_the_contract_is_held"
+     ]
+    },
+    {
+     "id": "continuity.decision_and_recovery_roles",
+     "prompt": "Who decides to declare, who runs the recovery, who authorizes spending, and who says it is over? Take them one at a time, and tell me where the same person appears twice.",
+     "records": "Each duty in a recovery, the role that holds it and the deputy behind them",
+     "owner": "DR process owner",
+     "kind": "rows",
+     "row": "2.3 Roles and responsibilities",
+     "writtenTo": "checklists/roles-and-responsibilities.md",
+     "guidance": "Four duties, asked separately, because asking for one job title gets you one name and hides the overlap. Where the same role holds two of them, say so out loud and ask what they put down to do the other. Deciding whether the repair estimate beats the remaining budget and running the storage sequence are not the same work and cannot be done at the same minute.",
+     "columns": [
+      "duty",
+      "held_by",
+      "deputy"
+     ],
+     "columnOptions": {
+      "duty": [
+       "decides to declare",
+       "runs the recovery",
+       "authorizes the spending",
+       "says it is over"
+      ]
+     },
+     "readback": true
+    },
+    {
+     "id": "continuity.people_unavailable",
+     "prompt": "If whatever caused this also took your people, one office or one time zone, who is left who could execute this, and where are they?",
+     "records": "Who could execute the plan if the disruption also removed the primary team",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "2.3 Roles and responsibilities",
+     "writtenTo": "checklists/roles-and-responsibilities.md",
+     "guidance": "Almost never asked and almost never has an answer. 'Nobody' is the correct answer where it is true, and it belongs in the plan as a named hole rather than being filled in by whoever is drafting.",
+     "readback": true
+    },
+    {
+     "id": "continuity.assessment_calibration",
+     "prompt": "Last time something broke badly, how long was it before anyone could say how long it would take to fix?",
+     "records": "How long this organization actually takes to produce a repair estimate",
+     "owner": "DR process owner",
+     "kind": "duration",
+     "row": "3.3 Outage assessment",
+     "writtenTo": "checklists/outage-assessment.md",
+     "unit": "minutes",
+     "guidance": "Calibrates the assessment budget against what this organization can do rather than against what the plan would like. If the honest answer is two hours, a ten-minute assessment step is fiction and the plan should say so.",
+     "mechanism": "What were they waiting on for that long, and is that thing any faster now?"
+    },
+    {
+     "id": "continuity.declaration_threshold_rule",
+     "prompt": "Should the point at which you stop waiting be a fixed number of hours, or should it be worked out from how much of the tolerable downtime is left at that moment?",
+     "records": "How the point of no return is calculated rather than what it is today",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "3.1 Activation criteria and procedure; who may activate",
+     "writtenTo": "checklists/dr-authority-matrix.md",
+     "guidance": "The default action when nobody can estimate is a separate field and this is the rule behind it. A fixed threshold ages badly; one computed from what is left of the budget survives a change to the tier. Ask which they want and write down why.",
+     "readback": true
+    },
+    {
+     "id": "continuity.data_loss_gate",
+     "prompt": "If you came up having lost more data than the tier allows, does downstream processing stay stopped until somebody clears it, or does it run?",
+     "records": "What happens to downstream processing when the recovery point was missed",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "3.1 Activation criteria and procedure; who may activate",
+     "writtenTo": "checklists/dr-authority-matrix.md",
+     "guidance": "Decide it in daylight. In the event this is asked of whoever is nearest, at speed, and the wrong answer pays somebody twice or fails to pay them at all. Name who clears it.",
+     "readback": true
+    },
+    {
+     "id": "continuity.recovery_declaration",
+     "prompt": "Who tells the business it is recovered, and what do they have to have seen before they are allowed to say it?",
+     "records": "Who declares recovery complete and the evidence they need first",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "5.4 Recovery declaration",
+     "writtenTo": "docs/10-phase-reconstitution.md",
+     "guidance": "Distinct from standing the plan down. This is the moment users are told they may work, and the evidence for it is the validation pack rather than the infrastructure being green.",
+     "readback": true
+    },
+    {
+     "id": "continuity.user_notification",
+     "prompt": "How do users find out they can work again? Who sends it, through what, and what does it have to tell them?",
+     "records": "How users are told service is restored, by whom and what the message must carry",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "5.5 Notification (users)",
+     "writtenTo": "checklists/contact-roster.md, docs/10-phase-reconstitution.md",
+     "guidance": "Ask what the message has to say, not just who sends it. Users coming back to a system that lost fifteen minutes of work need to be told that, and a channel that runs through the recovered environment is a channel with a loop in it.",
+     "readback": true
+    },
+    {
+     "id": "continuity.cleanup",
+     "prompt": "Once it is over, what has to be taken down or put back? And what is the thing you would most regret leaving running?",
+     "records": "What is dismantled after the event, and who is responsible for each of it",
+     "owner": "DR process owner",
+     "kind": "narrative",
+     "row": "5.6 Cleanup",
+     "writtenTo": "docs/10-phase-reconstitution.md",
+     "guidance": "The second half of the question finds the expensive one. Ask also what must deliberately not be torn down: the replication that was rebuilt is the thing most often cleaned up by somebody tidying.",
+     "readback": true
+    }
+   ]
+  },
+  {
+   "number": "5",
+   "title": "Approval, review and training",
+   "room": "Not the tabletop. A separate session with governance, risk or audit, after the technical segments.",
+   "produces": "",
+   "questions": [
+    {
+     "id": "governance.signing_authority",
+     "prompt": "Who signs this plan, and who signs it if they are away for a month?",
+     "records": "The signatory and the alternate signatory",
+     "owner": "signing authority",
+     "kind": "text",
+     "row": "Plan Approval statement",
+     "writtenTo": "docs/00-plan-approval.md",
+     "guidance": "The signatory and the alternate signatory. A plan that can only be approved by one reachable person cannot be reapproved after a material change while they are away.",
+     "readback": true
+    },
+    {
+     "id": "governance.review_cadence",
+     "prompt": "How often does this get reviewed, what else triggers a review, and whose job is it to start one?",
+     "records": "Review frequency, the triggers, and the owner of the review",
+     "owner": "governance/risk contact",
+     "kind": "text",
+     "row": "J. Test, training and exercise documentation",
+     "writtenTo": "README.md",
+     "guidance": "Frequency AND triggers AND an owner. An unowned cadence does not happen."
+    },
+    {
+     "id": "governance.training_program",
+     "prompt": "Separately from drills: how does someone new become competent to do their part of this?",
+     "records": "The training program, distinct from the drill program",
+     "owner": "governance/risk contact",
+     "kind": "narrative",
+     "row": "J. Test, training and exercise documentation",
+     "writtenTo": "checklists/contingency-training.md",
+     "guidance": "Distinct from drills. Drills exercise the plan; training makes individuals competent. Auditors check for both.",
+     "readback": true
+    },
+    {
+     "id": "governance.finding_to_change_route",
+     "prompt": "A drill finds something wrong. What happens to that finding, and who closes it?",
+     "records": "The route from a drill finding to a change in the plan",
+     "owner": "governance/risk contact",
+     "kind": "narrative",
+     "row": "Plan review and maintenance cadence",
+     "writtenTo": "README.md",
+     "guidance": "If there is no route, the drills are theater.",
+     "readback": true
+    },
+    {
+     "id": "governance.risk_register",
+     "prompt": "What are you assuming for this to work, that you would not want to discover was wrong during an outage? Take them one at a time.",
+     "records": "Each material assumption or design risk, its owner and its review date",
+     "owner": "governance/risk contact",
+     "kind": "rows",
+     "row": "Risk register",
+     "writtenTo": "checklists/risk-register.md",
+     "guidance": "Material assumptions and design risks, owned and reviewed rather than scattered.",
+     "columns": [
+      "risk",
+      "owner",
+      "review_date",
+      "mitigation"
+     ]
+    },
+    {
+     "id": "governance.event_documentation",
+     "prompt": "After a real event, who writes down what happened, what goes in it, and where does it end up? And has that ever actually been done here?",
+     "records": "How a real event is written up, by whom, and where the record goes",
+     "owner": "governance/risk contact",
+     "kind": "narrative",
+     "row": "5.9 Event documentation",
+     "writtenTo": "docs/00-record-of-changes.md, runbooks/RB-04-dr-drill.md",
+     "guidance": "A drill report and an event report are different documents and most organizations have neither. Ask the last part plainly: if it has never been done, the answer is what the plan should say, not an intention dressed as a procedure.",
+     "readback": true
+    },
+    {
+     "id": "governance.associated_plans",
+     "prompt": "What other plans does this one lean on or feed into? Anything for the building, for a security incident, for the wider business?",
+     "records": "Each related plan, who owns it and how it relates to this one",
+     "owner": "governance/risk contact",
+     "kind": "rows",
+     "row": "K. Associated plans and procedures",
+     "writtenTo": "docs/07-standards-alignment.md, README.md",
+     "guidance": "A continuity plan that assumes a facilities plan exists, and a facilities plan that assumes this one does, is a pair of documents each waiting for the other. Naming the owner is what makes the assumption checkable.",
+     "columns": [
+      "plan",
+      "owner",
+      "how_it_relates"
+     ]
+    },
+    {
+     "id": "governance.drill_cadence",
+     "prompt": "How often will you actually exercise this? Not what the policy says: what you will fund and staff.",
+     "records": "How often the plan is exercised, in practice",
+     "owner": "governance/risk contact",
+     "kind": "duration",
+     "row": "J. Test, training and exercise documentation",
+     "writtenTo": "runbooks/RB-04-dr-drill.md",
+     "unit": "months",
+     "guidance": "Two questions in one and the second is the real one. A stricter cadence than the organization will fund is worse than an honest looser one, because the plan then documents a control that does not run and an auditor will find the gap rather than the intention.",
+     "mechanism": "What would have to happen for one to be skipped, and who notices when it is?"
+    },
+    {
+     "id": "governance.drill_levels",
+     "prompt": "For each exercise you run: does it prove the plan reads correctly, that the steps run, or that the business can work afterwards? And what does it leave unproven?",
+     "records": "Each exercise level, what it proves and what it does not",
+     "owner": "governance/risk contact",
+     "kind": "rows",
+     "row": "Drill levels and what each proves",
+     "writtenTo": "docs/06-test-environments.md, runbooks/RB-04-dr-drill.md",
+     "guidance": "The last column is the one that gets argued about, which is why it is a column. An organization whose only evidence is a reading has a plan nobody has run, and it will believe otherwise until this table is filled in.",
+     "columns": [
+      "level",
+      "what_it_proves",
+      "what_it_does_not_prove"
+     ]
+    },
+    {
+     "id": "governance.availability_boundary",
+     "prompt": "Who owns keeping this available day to day, and who owns getting it back after a disaster? Same person, or different?",
+     "records": "Where day-to-day availability ends and continuity begins, and who owns each side",
+     "owner": "governance/risk contact",
+     "kind": "narrative",
+     "row": "Plan review and maintenance cadence",
+     "writtenTo": "docs/07-standards-alignment.md",
+     "guidance": "The boundary most plans raise against themselves and never close. Where it is the same person, ask what they stop doing during a recovery; where it is two, ask who decides which one a given incident is.",
+     "readback": true
+    },
+    {
+     "id": "governance.plan_custody",
+     "prompt": "Where will the signed copy of this plan live? And where will it live when the thing holding it is the thing that is down?",
+     "records": "Where the approved plan is held, and where it is held when the environment is unavailable",
+     "owner": "signing authority",
+     "kind": "narrative",
+     "row": "Plan Approval statement",
+     "writtenTo": "docs/00-plan-approval.md",
+     "guidance": "A plan readable only from the system it recovers is a plan nobody can read when they need it. The second half of the question is the whole question; ask it separately and wait.",
+     "readback": true
+    },
+    {
+     "id": "governance.breach_disclosure_clock",
+     "prompt": "If the cause turns out to be an attack rather than a failure, who has to be told, how fast, and whose job is that clock? Name the role, not the department.",
+     "records": "Who owns the disclosure clock when the cause is an attack, and how fast it runs",
+     "owner": "governance/risk contact",
+     "kind": "narrative",
+     "row": "Risk register",
+     "writtenTo": "checklists/roles-and-responsibilities.md, docs/08-phase-activation.md",
+     "guidance": "A recovery driven by an attack is not only a continuity event, and this plan has no authority over the disclosure clock. Record who does. An unowned regulatory clock is the one gap in a continuity plan that costs money after the service is back.",
+     "readback": true
+    }
+   ]
+  },
+  {
+   "number": "6",
+   "title": "Writing it up, and auditing what you wrote",
+   "room": "You, on your own, with the worksheets from every session in front of you.",
+   "produces": "the written plan",
+   "questions": []
+  }
+ ]
+}
+</script>
+<script>
+const DATA = JSON.parse(document.getElementById('bank').textContent);
+const KEY = 'itscp-worksheet';
+let state = { system: '', facilitator: '', answers: {} };
+let current = DATA.phases.findIndex(p => p.questions.length) || 0;
+
+// Reading a question must never create an answer for it. Rendering touches every question on
+// a phase, so a mutating lookup would fill the file with 82 records claiming ANSWERED before
+// anybody had said anything, which is the exact failure the whole method exists to prevent:
+// a plausible answer nobody gave. `view` is the read; `edit` is the only thing that writes.
+const BLANK = { status: 'ANSWERED' };
+function view(id) { return state.answers[id] || BLANK; }
+function edit(id, change) {
+  const a = state.answers[id] || (state.answers[id] = { status: 'ANSWERED' });
+  change(a);
+  save();
+}
+function blankRows(n) { return Array.from({ length: n }, () => ({})); }
+function cell(q, index, column, value) {
+  edit(q.id, x => {
+    x.rows = x.rows || blankRows(3);
+    while (x.rows.length <= index) x.rows.push({});
+    x.rows[index][column] = value;
+  });
+}
+function isDone(q) {
+  const a = state.answers[q.id];
+  if (!a) return false;
+  if (a.status === 'MISSING' || a.status === 'DEFERRED') return !!a.owner;
+  if (a.status === 'NOT_APPLICABLE') return !!a.reason;
+  if (q.kind === 'rows') return Array.isArray(a.rows) && a.rows.some(r => Object.values(r).some(v => v));
+  return !!(a.value && String(a.value).trim());
+}
+function isFlagged(q) {
+  const a = state.answers[q.id];
+  if (!a || !isDone(q) || a.status !== 'ANSWERED') return false;
+  if (q.mechanism && !(a.mechanism || '').trim()) return true;
+  if (q.readback && !a.readback) return true;
+  return false;
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  const el = document.getElementById('saved');
+  el.textContent = 'saved';
+  clearTimeout(save.t);
+  save.t = setTimeout(() => { el.textContent = ''; }, 1200);
+}
+function restore() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+
+function el(tag, attrs, kids) {
+  const node = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    if (k === 'class') node.className = attrs[k];
+    else if (k === 'text') node.textContent = attrs[k];
+    else if (k.startsWith('on')) node.addEventListener(k.slice(2), attrs[k]);
+    else if (attrs[k] !== null && attrs[k] !== undefined) node.setAttribute(k, attrs[k]);
+  }
+  (kids || []).forEach(kid => kid && node.appendChild(kid));
+  return node;
+}
+function field(labelText, control) {
+  return el('div', { class: 'grow' }, [el('label', { text: labelText }), control]);
+}
+function textInput(value, oninput, placeholder) {
+  return el('input', { type: 'text', value: value || '', placeholder: placeholder || '',
+                       oninput: e => { oninput(e.target.value); save(); } });
+}
+
+function statusRow(q) {
+  const a = view(q.id);
+  const buttons = DATA.statuses.map(s => el('button', {
+    type: 'button', 'aria-pressed': String(a.status === s.key), title: s.hint, text: s.label,
+    onclick: () => { edit(q.id, x => { x.status = s.key; }); render(); }
+  }));
+  return el('div', { class: 'status' }, buttons);
+}
+
+function answerControls(q) {
+  const a = view(q.id);
+  if (a.status === 'MISSING' || a.status === 'DEFERRED') {
+    const kids = [field('Who can answer',
+      textInput(a.owner, v => edit(q.id, x => { x.owner = v; }), 'a role, not a name'))];
+    if (a.status === 'DEFERRED') {
+      kids.push(field('By when', el('input', { type: 'date', value: a.due || '',
+        oninput: e => edit(q.id, x => { x.due = e.target.value; }) })));
+    }
+    kids.push(field('Why', textInput(a.reason, v => edit(q.id, x => { x.reason = v; }),
+                                     'what is blocking it')));
+    return el('div', { class: 'field' }, kids);
+  }
+  if (a.status === 'NOT_APPLICABLE') {
+    return el('div', { class: 'field' },
+      [field('Why it does not apply', textInput(a.reason, v => edit(q.id, x => { x.reason = v; }),
+        'a stated reason, not a judgment call'))]);
+  }
+  if (q.kind === 'rows') return rowsTable(q, a);
+
+  let control;
+  if (q.kind === 'enum') {
+    control = el('select', { onchange: e => { edit(q.id, x => { x.value = e.target.value; }); render(); } },
+      [el('option', { value: '', text: '—' })].concat(
+        q.options.map(o => el('option', { value: o, text: o,
+                                          selected: a.value === o ? 'selected' : null }))));
+  } else if (q.kind === 'narrative' || q.kind === 'code') {
+    control = el('textarea', { rows: '4', placeholder: 'in their words',
+      oninput: e => edit(q.id, x => { x.value = e.target.value; }) });
+    control.value = a.value || '';
+  } else if (q.kind === 'date') {
+    control = el('input', { type: 'date', value: a.value || '',
+      oninput: e => { edit(q.id, x => { x.value = e.target.value; }); render(); } });
+  } else {
+    control = textInput(a.value, v => edit(q.id, x => { x.value = v; }),
+                        q.unit ? ('in ' + q.unit) : '');
+    control.addEventListener('change', render);
+  }
+  return el('div', { class: 'field' }, [
+    field(q.unit ? 'Answer (' + q.unit + ')' : 'Answer', control),
+    field('Who said it', textInput(a.who, v => edit(q.id, x => { x.who = v; }),
+                                   'the role in the room')),
+    el('div', {}, [el('label', { text: 'Sure?' }), sureButtons(q)])
+  ]);
+}
+
+function sureButtons(q) {
+  const a = view(q.id);
+  return el('div', { class: 'sure' }, DATA.confidence.map(c => el('button', {
+    type: 'button', title: c.hint, text: c.short,
+    'aria-pressed': String(a.confidence === c.key),
+    onclick: () => {
+      edit(q.id, x => { x.confidence = x.confidence === c.key ? '' : c.key; });
+      render();
+    }
+  })));
+}
+
+function rowsTable(q, a) {
+  const rows = (a.rows && a.rows.length) ? a.rows : blankRows(3);
+  const head = el('tr', {}, q.columns.map(c => el('th', { text: c.replace(/_/g, ' ') }))
+    .concat([el('th', { text: 'who' }), el('th', { text: 'sure?' })]));
+  const body = rows.map((row, i) => el('tr', {}, q.columns.map(c => {
+    const opts = (q.columnOptions || {})[c];
+    if (opts) {
+      return el('td', {}, [el('select', { onchange: e => cell(q, i, c, e.target.value) },
+        [el('option', { value: '', text: '—' })].concat(
+          opts.map(o => el('option', { value: o, text: o,
+                                       selected: row[c] === o ? 'selected' : null }))))]);
+    }
+    return el('td', {}, [textInput(row[c], v => cell(q, i, c, v), '')]);
+  }).concat([
+    el('td', {}, [textInput(row.__who, v => cell(q, i, '__who', v), '')]),
+    el('td', {}, [el('select', { onchange: e => cell(q, i, '__sure', e.target.value) },
+      [el('option', { value: '', text: '—' })].concat(
+        DATA.confidence.map(c => el('option', { value: c.key, text: c.short,
+          selected: row.__sure === c.key ? 'selected' : null }))))])
+  ])));
+  return el('div', {}, [
+    el('table', { class: 'rows' }, [el('thead', {}, [head]), el('tbody', {}, body)]),
+    el('button', { type: 'button', text: '+ row',
+                   onclick: () => {
+                     edit(q.id, x => { x.rows = x.rows || blankRows(3); x.rows.push({}); });
+                     render();
+                   } })
+  ]);
+}
+
+function questionCard(q) {
+  const a = view(q.id);
+  const cls = 'q' + (isFlagged(q) ? ' flagged' : (isDone(q) ? ' done' : ''));
+  const kids = [
+    el('div', { class: 'key', text: q.id }),
+    el('p', { class: 'ask', text: q.prompt.startsWith('Not asked') ? q.prompt : '“' + q.prompt + '”' }),
+    el('p', { class: 'records', text: 'Records: ' + q.records + ' · ' + q.owner + ' answers' }),
+    statusRow(q),
+    answerControls(q)
+  ];
+  if (q.seeded) {
+    kids.push(el('div', { class: 'note', text:
+      'Often already on the inventory the room brought. Read it back for correction rather than asking cold.' }));
+  }
+  if (q.mechanism && a.status === 'ANSWERED') {
+    const box = el('div', { class: 'then' }, [
+      el('div', {}, [el('strong', { text: 'Then ask: ' }), document.createTextNode(q.mechanism)]),
+      el('textarea', { rows: '2', placeholder: 'what breaks at that number',
+                       oninput: e => edit(q.id, x => { x.mechanism = e.target.value; }) })
+    ]);
+    box.querySelector('textarea').value = a.mechanism || '';
+    kids.push(box);
+  }
+  if (q.guidance) kids.push(el('div', { class: 'note', text: q.guidance }));
+  if (q.readback && a.status === 'ANSWERED') {
+    const box = el('input', { type: 'checkbox',
+      onchange: e => { edit(q.id, x => { x.readback = e.target.checked; }); render(); } });
+    box.checked = !!a.readback;
+    kids.push(el('label', { class: 'readback' },
+      [box, document.createTextNode('Said it back in one sentence and got a yes')]));
+  }
+  kids.push(el('div', { class: 'field' },
+    [field('Notes', textInput(a.notes, v => edit(q.id, x => { x.notes = v; }),
+                              'who was in the room, what was contested'))]));
+  return el('div', { class: cls }, kids);
+}
+
+function summary() {
+  const open = [], unsure = [];
+  DATA.phases.forEach(p => p.questions.forEach(q => {
+    if (!isDone(q)) open.push('Phase ' + p.number + ' · ' + q.id);
+    else if (isFlagged(q)) unsure.push('Phase ' + p.number + ' · ' + q.id +
+      ((state.answers[q.id].mechanism || '').trim() ? ' (not read back)' : ' (no mechanism)'));
+  }));
+  const kids = [el('p', { text: open.length
+    ? open.length + ' answer(s) with nothing written against them. A blank is not a result; ' +
+      'an answer nobody has is a name.'
+    : 'Every answer has something written against it.' })];
+  if (open.length) kids.push(el('ul', {}, open.slice(0, 40).map(t => el('li', { text: t }))));
+  if (unsure.length) {
+    kids.push(el('p', { text: unsure.length + ' answered without the thing that makes it hold up:' }));
+    kids.push(el('ul', {}, unsure.slice(0, 40).map(t => el('li', { text: t }))));
+  }
+  return el('div', { class: 'summary' }, kids);
+}
+
+function render() {
+  const nav = document.getElementById('nav');
+  nav.textContent = '';
+  DATA.phases.forEach((p, i) => {
+    const done = p.questions.filter(isDone).length;
+    nav.appendChild(el('button', {
+      type: 'button', 'aria-current': String(i === current),
+      onclick: () => { current = i; render(); window.scrollTo(0, 0); }
+    }, [document.createTextNode('Phase ' + p.number),
+        el('span', { class: 'count', text: p.questions.length ? done + '/' + p.questions.length : '—' })]));
+  });
+  nav.appendChild(el('button', {
+    type: 'button', 'aria-current': String(current === -1),
+    onclick: () => { current = -1; render(); window.scrollTo(0, 0); }, text: 'What is still open'
+  }));
+
+  const main = document.getElementById('sheet');
+  main.textContent = '';
+  if (current === -1) { main.appendChild(summary()); return; }
+  const phase = DATA.phases[current];
+  main.appendChild(el('h2', { text: 'Phase ' + phase.number + ' — ' + phase.title }));
+  main.appendChild(el('p', { class: 'room', text: phase.room }));
+  if (!phase.questions.length) {
+    main.appendChild(el('div', { class: 'summary' }, [el('p', { text:
+      'Nothing is captured here. This phase produces ' + (phase.produces || 'no recorded answers') +
+      ', and the page for it in the manual carries what to do.' })]));
+    return;
+  }
+  let group = null;
+  phase.questions.forEach(q => {
+    if (q.row !== group) { group = q.row; main.appendChild(el('div', { class: 'group', text: group })); }
+    main.appendChild(questionCard(q));
+  });
+}
+
+function download() {
+  const answers = {};
+  for (const id in state.answers) {
+    const a = state.answers[id];
+    const said = Object.keys(a).some(k => k !== 'status' && a[k] !== '' && a[k] !== false &&
+      !(Array.isArray(a[k]) && !a[k].some(r => Object.values(r).some(v => v))));
+    if (said) answers[id] = a;
+  }
+  const out = { schema: 'itscp-worksheet/1', system: state.system,
+                facilitator: state.facilitator, answers: answers };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.system || 'itscp') .replace(/[^A-Za-z0-9._-]+/g, '-') + '-worksheet.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function upload(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const loaded = JSON.parse(reader.result);
+      state.answers = loaded.answers || {};
+      state.system = loaded.system || '';
+      state.facilitator = loaded.facilitator || '';
+      document.getElementById('system').value = state.system;
+      document.getElementById('facilitator').value = state.facilitator;
+      render(); save();
+    } catch (e) { alert('That file is not a worksheet this page wrote.'); }
+  };
+  reader.readAsText(file);
+}
+
+restore();
+document.getElementById('system').value = state.system;
+document.getElementById('facilitator').value = state.facilitator;
+document.getElementById('system').addEventListener('input', e => { state.system = e.target.value; save(); });
+document.getElementById('facilitator').addEventListener('input', e => { state.facilitator = e.target.value; save(); });
+document.getElementById('save').addEventListener('click', download);
+document.getElementById('load').addEventListener('change', e => {
+  if (e.target.files[0]) upload(e.target.files[0]);
+  e.target.value = '';
+});
+render();
+</script>
+</body>
+</html>
