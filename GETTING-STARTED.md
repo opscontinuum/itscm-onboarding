@@ -7,6 +7,11 @@ read. Follow it in order; the ordering encodes real dependencies, not preference
 waiting for people, not working. The actual effort is roughly five sessions of 60–120 minutes
 plus a day of assembly.
 
+This page is the sequence, and each phase below names the skill that runs it. If you are
+running the engagement by hand rather than through a loaded plugin, [`docs/manual/`](docs/manual/README.md)
+is the same sequence with the questions written out: one page per phase, every field it
+records, and who owes each answer.
+
 ---
 
 ## Before you start

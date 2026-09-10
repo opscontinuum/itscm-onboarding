@@ -143,6 +143,35 @@ document per system and changing that safely is a larger change than the registe
 skills currently instruct the interviewer to carry the answer across with its original
 provenance intact. Stated here rather than left as a surprise.
 
+## Decision 9 — The manual is generated from the skills, never written beside them
+
+Added when the engagement had to be runnable by somebody with no plugin loaded. The obvious
+answer is to write a manual, and the obvious answer is wrong: a written manual is a second
+copy of the method, and a second copy is right on the day it is written and wrong from the
+first improvement to a skill that nobody remembers to mirror. What a reader would then hold is
+a document that is stale in exactly the places the toolkit recently got better.
+
+So `docs/manual/` is assembled by `plugin/itscp_manual.py` from the files that are already
+authoritative: the skill bodies for the technique, `itscp_questions` for the fields, and
+`GETTING-STARTED.md` for the orientation. **Only the phase sequence is written in the
+generator**, because nothing else states it in one place.
+
+Freshness is enforced rather than remembered. `test_manual` rebuilds every page and fails on
+the first differing line, so changing a skill without regenerating is a failing test — the
+same guard `examples/` is held to, for the same reason.
+
+**Rejected — a manual that links to the skills instead of embedding them.** It is trivially
+drift-free and it is an index, not a manual. Somebody running an interview from a printed page
+needs the technique on that page.
+
+**Rejected — extracting the interview questions from the skill prose.** The bank already is
+the schema, and the skills carry the conversational probes around it. The manual takes each
+from where it lives rather than parsing one out of the other.
+
+The extractors refuse rather than guess: a missing heading, frontmatter field or `**Label:**`
+line raises. A restructured skill therefore fails the build loudly instead of producing a
+manual with a section silently missing.
+
 ## Known limitations
 
 | Limitation | Why it stands |
