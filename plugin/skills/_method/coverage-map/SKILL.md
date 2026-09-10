@@ -118,7 +118,9 @@ below**, because none of them can see the system's neighbours.
 ## Beyond NIST
 
 Not required by SP 800-34, included because the reference repository demonstrates their value
-and because auditors working to ISO 22301 ask for them.
+and because auditors working to ISO 22301 ask for them. Every element the question bank
+elicits appears here; a test fails the build if one stops doing so, because a map that claims
+to be the authoritative list has to be one.
 
 | Element | Elicited by | Written to | Why |
 |---|---|---|---|
@@ -127,6 +129,17 @@ and because auditors working to ISO 22301 ask for them.
 | Plan review and maintenance cadence | `itscp-interview-governance` | `README.md` | Continuity plans decay; nothing else states when this one is reviewed |
 | Cost model and posture economics | `itscp-interview-infrastructure` | `docs/05-cost-and-teardown.md` | Standby cost drives the tier the business can actually have |
 | Citation and unverified-statement discipline | every skill | every document | The property that makes a generated plan auditable |
+| Measured durations on the recovery critical path | `itscp-interview-application` + `itscp-interview-infrastructure` | `docs/03-replication-matrix.md`, `docs/09-phase-recovery.md`, `runbooks/RB-01` | A target nobody has timed is a wish. These are the figures a drill either confirms or ends |
+| Periods when recovery is more expensive than the outage | `itscp-interview-business` | `docs/08-phase-activation.md`, `checklists/dr-authority-matrix.md` | Month end, a settlement window, a trading day. Failing over during one can cost more than staying down |
+| Interface landing and replication of inbound data | `itscp-interview-application` | `docs/12-interconnections.md`, `runbooks/RB-02` | A partner that has already sent a file considers it delivered. Nothing upstream is holding a copy to send again |
+| Playbooks, runbooks and where they live | `itscp-interview-application` | `runbooks/RB-01`, `runbooks/RB-03`, `docs/01-architecture.md` | A procedure kept inside the region it recovers is unreadable exactly when it is needed |
+| Alert catalog | `itscp-interview-infrastructure` | `docs/04-monitoring.md` | What currently pages somebody, against what the plan assumes will be noticed |
+| Reversibility and one-way doors | `itscp-interview-infrastructure` | `docs/03-replication-matrix.md` | Several replication primitives cannot be undone without copying everything again. That is the failback cost, and it usually surprises |
+| Restores actually performed | `itscp-interview-infrastructure` | `docs/06-test-environments.md`, `runbooks/RB-04` | A backup nobody has put back is a hypothesis. A backup job reporting success is evidence about the job |
+| Copies that survive a compromised administrator | `itscp-interview-infrastructure` | `docs/03-replication-matrix.md` | Every copy reachable with one set of credentials is one bad afternoon from no copies at all |
+| Vendor obligations during a recovery | `itscp-interview-continuity` | `checklists/contact-roster.md`, `checklists/risk-register.md` | What a contract actually obliges a supplier to do, and how fast, as distinct from what anyone hopes |
+| Retention obligations and what sets them | `itscp-interview-governance` | `docs/07-standards-alignment.md` | What the organization must keep, named to its regulation or contract. Where it exceeds what the backups keep, two owners have a decision |
+| Drill levels and what each proves | `itscp-interview-governance` | `docs/06-test-environments.md`, `runbooks/RB-04` | A tabletop and a full failover prove different things. Saying which is which stops a walkthrough being reported as a test |
 
 ---
 
