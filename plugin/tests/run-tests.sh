@@ -21,6 +21,9 @@
 #      step writes from their own answer stores.
 #  10. The portfolio holds: recovery time inversions, dependency cycles and
 #      wave ordering are caught above the level of any single plan.
+#  11. The committed manual under docs/manual/ is still what the skills, the
+#      question bank and GETTING-STARTED.md generate, and every field in the
+#      bank is asked by exactly one of its phases.
 #
 # Check 2's round trip is the one that matters over time. The emitter is hand
 # written and tomllib is the standard library's parser; without a property
@@ -46,7 +49,8 @@ if ! "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)
 fi
 
 for module in test_questions test_store test_session test_realization test_example \
-              test_render test_diagrams test_acceptance test_examples test_portfolio; do
+              test_render test_diagrams test_acceptance test_examples test_portfolio \
+              test_manual; do
     if ! "$PYTHON" "${module}.py"; then
         FAILS=$((FAILS + 1))
     fi
