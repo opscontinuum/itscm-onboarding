@@ -22,6 +22,11 @@ It assumes no particular cloud either. Phase 1 is whatever the teams already use
 environment. The read-only walk the toolkit ships is one provider's shortcut, and what
 generalises out of it is the rule that discovery never changes anything.
 
+Alongside the pages it writes ``worksheet.html``: the same questions as one file a browser
+opens with nothing installed, which is what a facilitator types into while somebody is
+talking. The printed worksheets stay, because a laptop is not always allowed in the room and
+is never the thing you want to be debugging in it.
+
 What is generated, and from where:
 
 * the technique is the named sections of the skill that runs each phase, verbatim;
@@ -63,6 +68,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank        # noqa: E402 - after the path insert, deliberately
 import itscp_store as store           # noqa: E402
 import itscp_portfolio as portfolio   # noqa: E402
+import itscp_worksheet as worksheet   # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 PLUGIN = ROOT / "plugin"
@@ -850,9 +856,10 @@ def _worksheet(namespaces: tuple[str, ...]) -> list[str]:
         "",
         "## The worksheet",
         "",
-        "Print this. One line per answer, filled in as it is said rather than afterwards. "
-        "Never leave a cell blank: where nobody in the room can answer, write the name of "
-        "somebody who can. Two columns need a word of explanation.",
+        "Print this, or use [worksheet.html](worksheet.html) and type instead. One line per "
+        "answer, filled in as it is said rather than afterwards. Never leave a cell blank: "
+        "where nobody in the room can answer, write the name of somebody who can. Two columns "
+        "need a word of explanation.",
         "",
         "- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or "
         "read off a screen while you waited. M: confident from experience, never measured. "
@@ -1030,10 +1037,15 @@ def _index_page() -> str:
         "in the plan is a design target, and none of them are commitments until a drill has "
         "measured one.** Schedule the first drill before the approval meeting ends.",
         "",
-        "## What to print",
+        "## What to take into the room",
         "",
-        "Each phase page ends with a worksheet sized for its session. Print the worksheet for "
-        "the session you are running; read the rest of the page before it.",
+        "[worksheet.html](worksheet.html) is the one to type into: open it in any browser, "
+        "straight off the disk. It asks the same questions as the printed sheets, keeps track "
+        "of what is still blank, and writes a JSON file you can reload next session or hand "
+        "to whoever transcribes it. Nothing to install, and it does not need the network.",
+        "",
+        "Each phase page also ends with a worksheet sized for its session, for the room where "
+        "the laptop is not welcome or not working. Read the rest of the page before either.",
         "",
         "- [The method](method.md) — how an answer is captured, and the appendix for typing "
         "the worksheets up afterwards.",
@@ -1271,7 +1283,7 @@ def _fields_page() -> str:
 
 
 def pages() -> dict[str, str]:
-    """Every file of the manual, keyed by its name under ``docs/manual/``."""
+    """Every Markdown page of the manual, keyed by its name under ``docs/manual/``."""
     written = {"README.md": _index_page(), "method.md": _method_page(),
                "fields.md": _fields_page()}
     for phase in PHASES:
@@ -1279,11 +1291,22 @@ def pages() -> dict[str, str]:
     return written
 
 
+def files() -> dict[str, str]:
+    """Everything written under ``docs/manual/``: the pages, and the capture sheet.
+
+    The sheet is not a page. It carries no prose of its own, it is read by a browser rather
+    than by a person scrolling, and the checks that hold the Markdown to its voice would say
+    nothing useful about it. It is generated here anyway, from the same phase list, so that
+    one command produces the whole manual and one check catches a stale one.
+    """
+    return {**pages(), "worksheet.html": worksheet.render(PHASES)}
+
+
 # --------------------------------------------------------------------------- entry point
 
 def main(argv: list[str]) -> int:
     checking = "--check" in argv[1:]
-    written = pages()
+    written = files()
     stale: list[str] = []
     for name, content in sorted(written.items()):
         path = OUTPUT_DIR / name
@@ -1295,7 +1318,9 @@ def main(argv: list[str]) -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
         print(f"wrote docs/manual/{name}")
-    for path in sorted(OUTPUT_DIR.glob("*.md")) if OUTPUT_DIR.exists() else []:
+    stale_sweep = sorted(list(OUTPUT_DIR.glob("*.md")) + list(OUTPUT_DIR.glob("*.html"))) \
+        if OUTPUT_DIR.exists() else []
+    for path in stale_sweep:
         if path.name in written:
             continue
         if checking:

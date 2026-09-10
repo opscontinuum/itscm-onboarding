@@ -24,6 +24,11 @@
 #  11. The committed manual under docs/manual/ is still what the skills, the
 #      question bank and GETTING-STARTED.md generate, and every field in the
 #      bank is asked by exactly one of its phases.
+#  12. The browser worksheet holds the current questions, reaches off the
+#      machine for nothing, and behaves: typing an answer records it, a
+#      question nobody could answer becomes a name, and a reopened page still
+#      has what was typed. The behaviour half needs a JavaScript runtime and
+#      says so when there is none, rather than counting an unrun check.
 #
 # Check 2's round trip is the one that matters over time. The emitter is hand
 # written and tomllib is the standard library's parser; without a property
@@ -50,7 +55,7 @@ fi
 
 for module in test_questions test_store test_session test_realization test_example \
               test_render test_diagrams test_acceptance test_examples test_portfolio \
-              test_manual; do
+              test_manual test_worksheet; do
     if ! "$PYTHON" "${module}.py"; then
         FAILS=$((FAILS + 1))
     fi

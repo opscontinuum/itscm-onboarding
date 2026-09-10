@@ -36,7 +36,7 @@ from harness import Section, equal
 MANUAL_DIR = manual.OUTPUT_DIR
 
 #: A relative link to another page of the manual, which has to resolve.
-_LINK = re.compile(r"\]\((?P<target>[0-9A-Za-z][0-9A-Za-z._-]*\.md)(?:#[-\w]+)?\)")
+_LINK = re.compile(r"\]\((?P<target>[0-9A-Za-z][0-9A-Za-z._-]*\.(?:md|html))(?:#[-\w]+)?\)")
 
 #: The heading of one field's block, which is how a question is counted as asked.
 _FIELD_HEADING = re.compile(r"^#### `(?P<key>[a-z0-9_.]+)`$", re.M)
@@ -297,7 +297,7 @@ def _sessions_name_their_room() -> None:
 
 
 def _links_resolve() -> None:
-    pages = manual.pages()
+    pages = manual.files()
     for name, content in sorted(pages.items()):
         for match in _LINK.finditer(content):
             target = match.group("target")
