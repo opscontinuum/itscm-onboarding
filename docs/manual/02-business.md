@@ -8,11 +8,11 @@
 
 **How long:** 90 minutes for one application suite. Half a day if the suite spans several business functions with different tolerances.
 
-**This one is not a tabletop, and holding that line is the whole point of the phase.** Tiers, maximum tolerable downtime and recovery point are the business's figures. Run in a room full of engineers they become IT's figures, and IT deciding what it is allowed to fail at is the failure this sequence is built to prevent.
+Tiers, maximum tolerable downtime and recovery point are the business's numbers, and they only stay the business's numbers if the business gives them alone. Put the same questions to a room full of engineers and what you get is IT deciding what it is allowed to fail at, which is the failure this whole sequence is arranged to prevent. So this session happens on its own, and keeping it that way is most of the work.
 
-**Do not start the technical segments without a signed tier assignment.** Tier determines standby capacity, replication topology and run cost. Everything after this is built to these numbers and all of it is expensive to change. With the plugin a build step holds that gate; here you hold it.
+**The technical segments do not start until a tier assignment is signed.** Tier decides standby capacity, replication topology and what the thing costs to run. Everything after this is built to those numbers and all of it is expensive to change later. Running the toolkit, a build step holds that gate for you. Here you are the gate.
 
-If the business owner is unavailable for three weeks, wait three weeks. Proceeding on assumed tiers feels productive and is the most costly mistake available here: assumed tiers become real architecture within a day and are never revisited.
+If the business owner cannot meet for three weeks, wait three weeks. Carrying on with assumed tiers feels like progress and is the most expensive mistake on offer: an assumed tier becomes real architecture within a day, and nobody goes back to check it.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -313,12 +313,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### K. Business impact analysis
 

@@ -8,9 +8,9 @@
 
 **How long:** 60 minutes.
 
-**A design describes what would happen; a plan is a design somebody committed to.** The difference is a signature, a review date and a trained population, and this phase is where all three are elicited.
+A design describes what would happen. A plan is a design somebody committed to, and the difference is a signature, a review date and a population that has been trained. This session collects all three.
 
-It is a short session and it does not need the technical teams. It does need somebody who can commit the organization to a review cadence and an exercise schedule, which is why it is not a tabletop segment.
+It is short and it does not need the technical teams. It does need somebody who can commit the organization to a review cadence and an exercise schedule, which is why it sits outside the tabletop rather than inside it.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -288,12 +288,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### Plan Approval statement
 

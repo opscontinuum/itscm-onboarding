@@ -8,11 +8,11 @@
 
 **How long:** 90 minutes. Bring the discovery inventory; it halves the session.
 
-Open by putting phase 1's inventory on the table. The application team corrects a list far faster than it reconstructs one from memory, and the corrections are themselves findings.
+Open by putting phase 1's inventory on the table. A team corrects a list much faster than it rebuilds one from memory, and the corrections are themselves findings worth writing down.
 
-**Bring the deputies.** The backup lead engineer sitting in is the cheapest test available of whether the deputy could really do it, and it usually answers the question before you have to ask it.
+Bring the deputies to this one. A backup lead engineer sitting quietly through the session is the cheapest test you will get of whether the deputy could really do any of it, and it usually answers that question before you have to ask.
 
-**Expect a contradiction with phase 2, and do not resolve it in the room.** The business said four hours; the application owner says batch reprocessing alone takes a day. Write both on the worksheet, write the name of whose decision it is, and take it back to the business owner. A plan with a visible, owned contradiction is honest.
+Expect a contradiction with phase 2 here, and do not settle it in the room. The business said four hours; the application owner says the batch reprocessing alone takes a day. Write both down, write the name of whoever decides between them, and carry it back to the business owner. A plan that shows a contradiction and says who owns it is more honest than one where somebody quietly picked a side.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -387,12 +387,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### 2.1 System description
 

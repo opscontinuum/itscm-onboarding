@@ -8,11 +8,13 @@
 
 **How long:** half a day for a first register, plus an hour per follow-up.
 
-Runs once for the organization, before any plan. It produces the register: every system, the tier ranking, the recovery waves, and what each system needs from the others. Four failures live only above the level of a single plan and none of them are visible from inside one, which is why this comes first rather than after the plan that would have to be rebuilt.
+Once for the organization, before anybody plans anything. You come out of it with a register: every system, how the tiers rank against each other, the recovery waves, and what each system needs from the others.
 
-**Run it on a wall.** One card per system, laid out left to right in recovery waves, with a line drawn for every dependency. The room argues with the wall rather than with a document, and the four failures are things you can see: a line pointing backwards, a loop, a card whose number is smaller than the card it depends on. The blank register and the five checks are at the end of this page.
+Four of the failures this method exists to catch live above the level of a single plan, and none of them can be seen from inside one. That is why this runs first, rather than after the plan that would have to be rebuilt.
 
-**Do not start a per-system plan while a check is failing.** An inversion means two signed figures contradict each other, and a plan built on top of one bakes the contradiction in.
+Do it on a wall. One card per system, laid out left to right in waves, a line drawn for every dependency. A room will argue with a wall in a way it never argues with a document, and the failures turn into things you can point at: a line running backwards, a loop, a card promising to be back sooner than the card it depends on. The blank register and the five checks are at the foot of this page.
+
+**Do not start a per-system plan while a check is still failing.** An inversion means two signed figures contradict each other, and a plan built on top of one carries that contradiction into everything after it.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 

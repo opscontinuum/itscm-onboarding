@@ -4,11 +4,13 @@
 
 **The tabletop.** Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. This segment opens it.
 
-The technical segments go badly from a blank page and well from a list, so the teams bring the list. **Nothing here is a tool you have to install.** Whatever your teams already use to see the environment — the provider console, a CMDB extract, an architecture review, a spreadsheet somebody maintains — is what you print and put on the table.
+The technical segments go badly from a blank page and well from a list, so the teams bring the list. There is nothing to install for this. Whatever your people already use to see the environment will do: the provider console, a CMDB extract, last quarter's architecture review, the spreadsheet somebody keeps. Print it and put it on the table.
 
-Two rules survive whatever you use. **Discovery never changes anything**: read, export, screenshot, and never a command that writes, in an environment that is currently the production one. And **what it cannot find is the point** — the gaps are the interview material. A resource nobody can name, a standby that was supposed to exist, a replication policy covering three buckets of five: write each one on the wall as a question, and put a name against it.
+Two rules matter more than where the list came from. The first is that **discovery never changes anything.** Read, export, screenshot; never run a command that writes, in what is currently somebody's production environment.
 
-If you are on the provider the toolkit supports and somebody has a clone of this repository, the read-only walk it ships will produce the same list faster. That is an accelerator, not the procedure.
+The second is that what the list cannot tell you is most of the reason for bringing it. A resource nobody can name, a standby that was supposed to exist, a replication policy covering three buckets out of five: each one goes on the wall as a question with a name against it, and those questions are what the next two segments are for.
+
+If you happen to be on the provider the toolkit supports, and somebody has a clone of the repository, the read-only walk it ships will build the same list faster. Use it if you have it. The room works the same either way.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -116,12 +118,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### H. Hardware, software and firmware inventory
 

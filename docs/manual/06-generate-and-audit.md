@@ -4,11 +4,11 @@
 
 **You, on your own,** with the worksheets from every session in front of you.
 
-Half a day. There is no renderer here, so this is two jobs: write the documents from the worksheets, then audit what you wrote.
+Half a day on your own, and two jobs rather than one: write the documents out of the worksheets, then audit what you wrote.
 
-**The assembly is mechanical and the map is generated.** [fields.md](fields.md) lists every answer by the file it belongs in, which is the order to write in. The rules below for marking a missing answer, a low-confidence figure and the *Unverified statements* section are the part people skip, and skipping it is how a plan full of gaps comes out looking finished. **A cell your worksheet left open is a marked gap in the document, never a sentence you write to fill the space.**
+The writing is mechanical. [fields.md](fields.md) lists every answer under the document it belongs in, which is also the order to work through them. What people skip is the part below about marking a missing answer, flagging a low-confidence figure and keeping the *Unverified statements* section honest, and skipping it is exactly how a plan riddled with gaps comes out looking finished. **A cell your worksheet left open becomes a marked gap in the document.** It never becomes a sentence you wrote to fill the space.
 
-Then audit, starting from the position that every requirement is unmet until a sentence in your own document proves otherwise. Fix what blocks approval and leave the rest visible.
+Then audit, starting from the position that nothing in the plan is met until a sentence in your own document proves it. Fix whatever blocks approval and leave the rest visible.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
