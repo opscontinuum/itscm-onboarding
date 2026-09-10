@@ -18,10 +18,14 @@ Everything the page needs is inside it: no stylesheet, no font, no script, no im
 out to anything. It saves to the browser's local storage as you type, so a closed tab is not
 a lost session, and it writes a JSON file on demand, so a dead laptop is not one either.
 
+A question holds as many answers as the room gave it. Two people contradicting each other is
+the finding the method most wants kept, so the page records both and asks whose decision it
+is, rather than making the facilitator choose in the moment or bury the second one in a note.
+
 The JSON it writes is the answer store's record shape with the worksheet's own column names:
-value, who said it, confidence, the mechanism behind a figure, the read-back, and an owner
-where nobody in the room could answer. That is what makes the session's output something an
-organization can later transcribe into the toolkit rather than retype.
+what was said, who said it, confidence, the mechanism behind a figure, the read-back, and an
+owner where nobody in the room could answer. That is what makes the session's output something
+an organization can later transcribe into the toolkit rather than retype.
 
 Rendered by :mod:`itscp_manual`, which owns the phase sequence and passes it in. This module
 knows about questions and HTML and nothing about where a phase sits.
@@ -172,6 +176,13 @@ main { max-width: 880px; margin: 0 auto; padding: 24px 20px 96px; }
         padding: 10px 12px; margin: 10px 0; font-size: 15px; }
 .then strong { color: var(--warn); }
 .readback { display: flex; gap: 7px; align-items: center; font-size: 15px; margin-top: 8px; }
+.entry + .entry { border-top: 1px dashed var(--line); margin-top: 14px; padding-top: 12px; }
+.entry-head { display: flex; align-items: center; gap: 10px; font-size: 12px;
+              color: var(--faint); margin-bottom: 6px; }
+.entry-head button { padding: 1px 7px; font-size: 12px; color: var(--faint); }
+.add-answer { margin-top: 4px; font-size: 14px; }
+.disagree { background: var(--warn-bg); border: 1px solid #ecd9b0; border-radius: 6px;
+            padding: 10px 12px; margin-top: 12px; font-size: 15px; }
 .status { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
 .status button { font-size: 13px; padding: 3px 9px; }
 .status button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
@@ -209,6 +220,41 @@ function edit(id, change) {
   save();
 }
 function blankRows(n) { return Array.from({ length: n }, () => ({})); }
+
+// A question holds every answer the room gave it, in the order they were given. One is the
+// ordinary case and the list still has one entry; two is a contradiction, which the method
+// wants recorded openly with the name of whoever decides between them, never averaged and
+// never quietly resolved by whoever is holding the pen.
+function said(a) { return (a.said && a.said.length) ? a.said : [{}]; }
+function setSaid(id, index, key, value) {
+  edit(id, x => {
+    x.said = (x.said && x.said.length) ? x.said : [{}];
+    while (x.said.length <= index) x.said.push({});
+    x.said[index][key] = value;
+  });
+}
+function addSaid(id) {
+  edit(id, x => { x.said = (x.said && x.said.length) ? x.said : [{}]; x.said.push({}); });
+  render();
+}
+function dropSaid(id, index) {
+  edit(id, x => { if (x.said && x.said.length > 1) x.said.splice(index, 1); });
+  render();
+}
+// A file written before a question could hold more than one answer. Fold the single answer
+// into the list rather than dropping it: somebody's session is in there.
+function migrate(answers) {
+  for (const id in answers) {
+    const a = answers[id];
+    if (a.said) continue;
+    const only = {};
+    for (const key of ['value', 'who', 'confidence', 'mechanism', 'readback']) {
+      if (a[key] !== undefined) { only[key] = a[key]; delete a[key]; }
+    }
+    if (Object.keys(only).length) a.said = [only];
+  }
+  return answers;
+}
 function cell(q, index, column, value) {
   edit(q.id, x => {
     x.rows = x.rows || blankRows(3);
@@ -222,13 +268,15 @@ function isDone(q) {
   if (a.status === 'MISSING' || a.status === 'DEFERRED') return !!a.owner;
   if (a.status === 'NOT_APPLICABLE') return !!a.reason;
   if (q.kind === 'rows') return Array.isArray(a.rows) && a.rows.some(r => Object.values(r).some(v => v));
-  return !!(a.value && String(a.value).trim());
+  return said(a).some(s => s.value && String(s.value).trim());
 }
 function isFlagged(q) {
   const a = state.answers[q.id];
   if (!a || !isDone(q) || a.status !== 'ANSWERED') return false;
-  if (q.mechanism && !(a.mechanism || '').trim()) return true;
-  if (q.readback && !a.readback) return true;
+  const given = said(a).filter(s => s.value && String(s.value).trim());
+  if (given.length > 1 && !(a.decision || '').trim()) return true;
+  if (q.mechanism && given.some(s => !(s.mechanism || '').trim())) return true;
+  if (q.readback && given.some(s => !s.readback)) return true;
   return false;
 }
 function save() {
@@ -241,7 +289,10 @@ function save() {
 function restore() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) state = Object.assign(state, JSON.parse(raw));
+    if (raw) {
+      state = Object.assign(state, JSON.parse(raw));
+      state.answers = migrate(state.answers || {});
+    }
   } catch (e) {}
 }
 
@@ -293,39 +344,80 @@ function answerControls(q) {
   }
   if (q.kind === 'rows') return rowsTable(q, a);
 
+  const list = said(a);
+  const kids = list.map((entry, i) => answerBlock(q, entry, i, list.length));
+  kids.push(el('button', { class: 'add-answer', type: 'button',
+    text: '+ another answer', title: 'Somebody else in the room said something different',
+    onclick: () => addSaid(q.id) }));
+  if (list.filter(s => s.value && String(s.value).trim()).length > 1) {
+    kids.push(el('div', { class: 'disagree' }, [
+      el('div', { text: 'Two answers is a finding, not a problem. Record both, and name who '
+                      + 'decides between them. Never average them, and never quietly keep one.' }),
+      el('div', { class: 'field' }, [field('Whose decision is it',
+        textInput(a.decision, v => { edit(q.id, x => { x.decision = v; }); },
+                  'the role who chooses, not the louder person'))])
+    ]));
+  }
+  return el('div', {}, kids);
+}
+
+function answerBlock(q, entry, index, total) {
   let control;
   if (q.kind === 'enum') {
-    control = el('select', { onchange: e => { edit(q.id, x => { x.value = e.target.value; }); render(); } },
+    control = el('select', { onchange: e => { setSaid(q.id, index, 'value', e.target.value); render(); } },
       [el('option', { value: '', text: '—' })].concat(
         q.options.map(o => el('option', { value: o, text: o,
-                                          selected: a.value === o ? 'selected' : null }))));
+                                          selected: entry.value === o ? 'selected' : null }))));
   } else if (q.kind === 'narrative' || q.kind === 'code') {
     control = el('textarea', { rows: '4', placeholder: 'in their words',
-      oninput: e => edit(q.id, x => { x.value = e.target.value; }) });
-    control.value = a.value || '';
+      oninput: e => setSaid(q.id, index, 'value', e.target.value) });
+    control.value = entry.value || '';
   } else if (q.kind === 'date') {
-    control = el('input', { type: 'date', value: a.value || '',
-      oninput: e => { edit(q.id, x => { x.value = e.target.value; }); render(); } });
+    control = el('input', { type: 'date', value: entry.value || '',
+      oninput: e => { setSaid(q.id, index, 'value', e.target.value); render(); } });
   } else {
-    control = textInput(a.value, v => edit(q.id, x => { x.value = v; }),
+    control = textInput(entry.value, v => setSaid(q.id, index, 'value', v),
                         q.unit ? ('in ' + q.unit) : '');
     control.addEventListener('change', render);
   }
-  return el('div', { class: 'field' }, [
+  const kids = [];
+  if (total > 1) {
+    kids.push(el('div', { class: 'entry-head' }, [
+      el('span', { text: 'Answer ' + (index + 1) + ' of ' + total }),
+      el('button', { type: 'button', text: 'remove', onclick: () => dropSaid(q.id, index) })
+    ]));
+  }
+  kids.push(el('div', { class: 'field' }, [
     field(q.unit ? 'Answer (' + q.unit + ')' : 'Answer', control),
-    field('Who said it', textInput(a.who, v => edit(q.id, x => { x.who = v; }),
+    field('Who said it', textInput(entry.who, v => setSaid(q.id, index, 'who', v),
                                    'the role in the room')),
-    el('div', {}, [el('label', { text: 'Sure?' }), sureButtons(q)])
-  ]);
+    el('div', {}, [el('label', { text: 'Sure?' }), sureButtons(q, index, entry)])
+  ]));
+  if (q.mechanism) {
+    const box = el('div', { class: 'then' }, [
+      el('div', {}, [el('strong', { text: 'Then ask: ' }), document.createTextNode(q.mechanism)]),
+      el('textarea', { rows: '2', placeholder: 'what breaks at that number',
+                       oninput: e => setSaid(q.id, index, 'mechanism', e.target.value) })
+    ]);
+    box.querySelector('textarea').value = entry.mechanism || '';
+    kids.push(box);
+  }
+  if (q.readback) {
+    const box = el('input', { type: 'checkbox',
+      onchange: e => { setSaid(q.id, index, 'readback', e.target.checked); render(); } });
+    box.checked = !!entry.readback;
+    kids.push(el('label', { class: 'readback' },
+      [box, document.createTextNode('Said it back in one sentence and got a yes')]));
+  }
+  return el('div', { class: 'entry' }, kids);
 }
 
-function sureButtons(q) {
-  const a = view(q.id);
+function sureButtons(q, index, entry) {
   return el('div', { class: 'sure' }, DATA.confidence.map(c => el('button', {
     type: 'button', title: c.hint, text: c.short,
-    'aria-pressed': String(a.confidence === c.key),
+    'aria-pressed': String(entry.confidence === c.key),
     onclick: () => {
-      edit(q.id, x => { x.confidence = x.confidence === c.key ? '' : c.key; });
+      setSaid(q.id, index, 'confidence', entry.confidence === c.key ? '' : c.key);
       render();
     }
   })));
@@ -375,27 +467,19 @@ function questionCard(q) {
     kids.push(el('div', { class: 'note', text:
       'Often already on the inventory the room brought. Read it back for correction rather than asking cold.' }));
   }
-  if (q.mechanism && a.status === 'ANSWERED') {
-    const box = el('div', { class: 'then' }, [
-      el('div', {}, [el('strong', { text: 'Then ask: ' }), document.createTextNode(q.mechanism)]),
-      el('textarea', { rows: '2', placeholder: 'what breaks at that number',
-                       oninput: e => edit(q.id, x => { x.mechanism = e.target.value; }) })
-    ]);
-    box.querySelector('textarea').value = a.mechanism || '';
-    kids.push(box);
-  }
   if (q.guidance) kids.push(el('div', { class: 'note', text: q.guidance }));
-  if (q.readback && a.status === 'ANSWERED') {
-    const box = el('input', { type: 'checkbox',
-      onchange: e => { edit(q.id, x => { x.readback = e.target.checked; }); render(); } });
-    box.checked = !!a.readback;
-    kids.push(el('label', { class: 'readback' },
-      [box, document.createTextNode('Said it back in one sentence and got a yes')]));
-  }
   kids.push(el('div', { class: 'field' },
     [field('Notes', textInput(a.notes, v => edit(q.id, x => { x.notes = v; }),
                               'who was in the room, what was contested'))]));
   return el('div', { class: cls }, kids);
+}
+
+function whyFlagged(q) {
+  const a = state.answers[q.id];
+  const given = said(a).filter(s => s.value && String(s.value).trim());
+  if (given.length > 1 && !(a.decision || '').trim()) return 'two answers, nobody named to decide';
+  if (q.mechanism && given.some(s => !(s.mechanism || '').trim())) return 'no mechanism';
+  return 'not read back';
 }
 
 function summary() {
@@ -403,7 +487,7 @@ function summary() {
   DATA.phases.forEach(p => p.questions.forEach(q => {
     if (!isDone(q)) open.push('Phase ' + p.number + ' · ' + q.id);
     else if (isFlagged(q)) unsure.push('Phase ' + p.number + ' · ' + q.id +
-      ((state.answers[q.id].mechanism || '').trim() ? ' (not read back)' : ' (no mechanism)'));
+      ' (' + whyFlagged(q) + ')');
   }));
   const kids = [el('p', { text: open.length
     ? open.length + ' answer(s) with nothing written against them. A blank is not a result; ' +
@@ -456,11 +540,15 @@ function download() {
   const answers = {};
   for (const id in state.answers) {
     const a = state.answers[id];
-    const said = Object.keys(a).some(k => k !== 'status' && a[k] !== '' && a[k] !== false &&
-      !(Array.isArray(a[k]) && !a[k].some(r => Object.values(r).some(v => v))));
-    if (said) answers[id] = a;
+    const typed = Object.keys(a).some(k => {
+      if (k === 'status') return false;
+      const v = a[k];
+      if (Array.isArray(v)) return v.some(r => Object.values(r).some(cell => cell));
+      return v !== '' && v !== false && v !== undefined;
+    });
+    if (typed) answers[id] = a;
   }
-  const out = { schema: 'itscp-worksheet/1', system: state.system,
+  const out = { schema: 'itscp-worksheet/2', system: state.system,
                 facilitator: state.facilitator, answers: answers };
   const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -474,7 +562,7 @@ function upload(file) {
   reader.onload = () => {
     try {
       const loaded = JSON.parse(reader.result);
-      state.answers = loaded.answers || {};
+      state.answers = migrate(loaded.answers || {});
       state.system = loaded.system || '';
       state.facilitator = loaded.facilitator || '';
       document.getElementById('system').value = state.system;

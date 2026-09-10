@@ -114,13 +114,15 @@ check("an untouched worksheet records nothing", () => {
   }
 });
 
+function stored(id) { return JSON.parse(store["itscp-worksheet"]).answers[id] || {}; }
+
 check("typing an answer reaches local storage", () => {
   goToPhase("2");
   const input = fieldNamed(cardFor("business.mtd.tier0"), "Answer");
   input.listeners.input[0]({ target: { value: "8h" } });
-  const saved = JSON.parse(store["itscp-worksheet"]).answers;
-  if ((saved["business.mtd.tier0"] || {}).value !== "8h") {
-    throw new Error("not persisted: " + JSON.stringify(saved["business.mtd.tier0"]));
+  const a = stored("business.mtd.tier0");
+  if (!a.said || a.said[0].value !== "8h") {
+    throw new Error("not persisted: " + JSON.stringify(a));
   }
 });
 
@@ -128,11 +130,103 @@ check("who said it and how sure are captured beside the answer", () => {
   goToPhase("2");
   const card = cardFor("business.mtd.tier0");
   fieldNamed(card, "Who said it").listeners.input[0]({ target: { value: "Head of Finance" } });
-  const sure = findAll(card, n => n.className === "sure")[0];
-  sure.children[1].listeners.click[0]();          // M
-  const a = JSON.parse(store["itscp-worksheet"]).answers["business.mtd.tier0"];
-  if (a.who !== "Head of Finance" || a.confidence !== "medium") {
-    throw new Error("not captured: " + JSON.stringify(a));
+  findAll(card, n => n.className === "sure")[0].children[1].listeners.click[0]();   // M
+  const first = stored("business.mtd.tier0").said[0];
+  if (first.who !== "Head of Finance" || first.confidence !== "medium") {
+    throw new Error("not captured: " + JSON.stringify(first));
+  }
+});
+
+check("a second person's answer is added beside the first, not over it", () => {
+  goToPhase("2");
+  const add = findAll(cardFor("business.mtd.tier0"),
+                      n => n.className === "add-answer")[0];
+  if (!add) throw new Error("no way to add a second answer");
+  add.listeners.click[0]();
+  goToPhase("2");
+  const card = cardFor("business.mtd.tier0");
+  const blocks = findAll(card, n => n.className === "entry");
+  if (blocks.length !== 2) throw new Error("expected 2 answer blocks, got " + blocks.length);
+  const second = blocks[1];
+  fieldNamed(second, "Answer").listeners.input[0]({ target: { value: "24h" } });
+  fieldNamed(second, "Who said it").listeners.input[0]({ target: { value: "Application owner" } });
+  const a = stored("business.mtd.tier0");
+  if (a.said.length !== 2 || a.said[0].value !== "8h" || a.said[1].value !== "24h") {
+    throw new Error("both answers not kept: " + JSON.stringify(a.said));
+  }
+  if (a.said[0].who !== "Head of Finance" || a.said[1].who !== "Application owner") {
+    throw new Error("attribution crossed over: " + JSON.stringify(a.said));
+  }
+});
+
+check("each answer carries its own mechanism", () => {
+  goToPhase("2");
+  const blocks = findAll(cardFor("business.mtd.tier0"), n => n.className === "entry");
+  const boxes = blocks.map(b => findAll(b, n => n.className === "then")[0]);
+  if (boxes.some(b => !b)) throw new Error("an answer has no mechanism follow-up");
+  boxes[1].children[1].listeners.input[0]({ target: { value: "Batch cannot rebuild in a day" } });
+  const a = stored("business.mtd.tier0");
+  if (a.said[1].mechanism !== "Batch cannot rebuild in a day" || a.said[0].mechanism) {
+    throw new Error("mechanism landed on the wrong answer: " + JSON.stringify(a.said));
+  }
+});
+
+check("two answers raise the question of who decides", () => {
+  goToPhase("2");
+  const card = cardFor("business.mtd.tier0");
+  if (!findAll(card, n => n.className === "disagree").length) {
+    throw new Error("two answers did not raise the decision question");
+  }
+  if (!(card.className || "").includes("flagged")) {
+    throw new Error("an unresolved pair of answers is not flagged");
+  }
+});
+
+check("a pair is settled only when everything the method wants is there", () => {
+  // Both answers explained, both read back, and a named decision owner. Until all of that is
+  // present the card stays flagged, which is the point: it is the list of what is still owed.
+  goToPhase("2");
+  let card = cardFor("business.mtd.tier0");
+  const blocks = findAll(card, n => n.className === "entry");
+  findAll(blocks[0], n => n.className === "then")[0]
+    .children[1].listeners.input[0]({ target: { value: "Bank file cuts at 18:00" } });
+  goToPhase("2");
+  findAll(cardFor("business.mtd.tier0"), n => n.className === "readback")
+    .forEach(label => label.children[0].listeners.change[0]({ target: { checked: true } }));
+  goToPhase("2");
+  card = cardFor("business.mtd.tier0");
+  if (!(card.className || "").includes("flagged")) {
+    throw new Error("nobody has been named to decide, yet nothing is flagged");
+  }
+  fieldNamed(card, "Whose decision").listeners.input[0]({ target: { value: "Business owner" } });
+  goToPhase("2");
+  if ((cardFor("business.mtd.tier0").className || "").includes("flagged")) {
+    throw new Error("still flagged with both answers explained, read back and a decider named");
+  }
+  if (stored("business.mtd.tier0").decision !== "Business owner") {
+    throw new Error("decision owner not recorded");
+  }
+});
+
+check("a file written before answers could differ still loads", () => {
+  const old = { "business.rpo.tier0": { status: "ANSWERED", value: "15m",
+                                        who: "Head of Finance", confidence: "high" } };
+  store["itscp-worksheet"] = JSON.stringify({ answers: old });
+  byId.sheet.textContent = ""; byId.nav.textContent = "";
+  new Function(script)();
+  goToPhase("2");
+  const card = cardFor("business.rpo.tier0");
+  if (fieldNamed(card, "Answer").attrs.value !== "15m") {
+    throw new Error("an older session was lost: the answer is not on the page");
+  }
+  if (fieldNamed(card, "Who said it").attrs.value !== "Head of Finance") {
+    throw new Error("an older session lost its attribution");
+  }
+  // and once anything is touched, what gets written back is the new shape
+  fieldNamed(card, "Answer").listeners.input[0]({ target: { value: "15m" } });
+  const a = stored("business.rpo.tier0");
+  if (!a.said || a.said[0].who !== "Head of Finance" || a.value !== undefined) {
+    throw new Error("migrated record written back wrong: " + JSON.stringify(a));
   }
 });
 
@@ -169,8 +263,9 @@ check("a table question keeps the cell you typed in", () => {
 });
 
 check("a reopened page restores what was typed", () => {
-  byId.sheet.textContent = "";
-  byId.nav.textContent = "";
+  store["itscp-worksheet"] = JSON.stringify({ answers: {
+    "business.mtd.tier0": { status: "ANSWERED", said: [{ value: "8h", who: "Head of Finance" }] } } });
+  byId.sheet.textContent = ""; byId.nav.textContent = "";
   new Function(script)();
   goToPhase("2");
   const input = fieldNamed(cardFor("business.mtd.tier0"), "Answer");
