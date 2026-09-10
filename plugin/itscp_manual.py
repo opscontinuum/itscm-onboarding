@@ -1,32 +1,43 @@
-"""DERIVED: the manual engagement, assembled from the skills and the question bank.
+"""DERIVED: the tabletop, assembled from the skills and the question bank.
 
-``docs/manual/`` is the same onboarding a loaded plugin runs, written for somebody working
-from a printed page instead: the phases in order, the technique for each one, and the field
-checklist that says what to record and who owes it.
+``docs/manual/`` is this engagement run as a facilitated exercise: the application and
+infrastructure teams in one room, a printed worksheet on the table, and nothing to install.
+It covers the same phases the plugin runs and asks the same questions, because it is generated
+from the same files.
 
-It is generated rather than written, for the reason the answer store's example is generated.
-A hand-written manual is a second copy of the method, and a second copy drifts the first time
-a skill improves and nobody remembers the manual exists. What a reader would then have is a
-document that is wrong in exactly the places the toolkit recently got better, which is worse
-than not shipping one. So every sentence here comes from a file that is already the source of
-truth for it:
+Three things it is deliberately not.
 
-* the phase technique is the body of the skill that runs that phase, demoted a heading level
-  and otherwise verbatim;
-* the field checklist is :mod:`itscp_questions`, the same bank ``answers.example.toml`` is
-  emitted from, so the manual asks exactly what the interview asks;
-* the orientation material is ``GETTING-STARTED.md``, extracted by heading.
+**It is not a transcript of the skills.** The skills are written for an agent with the plugin
+loaded, so they say *invoke this*, *run that script*, *write it to the answer store*. A room
+has none of those. Sections that are only about driving the toolkit are left out by name in
+:data:`SKIPPED_SECTIONS`, and every remaining mention of a tool is answered in the page's own
+*Running this without the toolkit* table, rendered from :data:`TRANSLATIONS` against the text
+that actually got embedded. A reference nothing translates fails the build.
 
-Only the phase sequence and a lead paragraph per phase are written here, because the sequence
-is this module's own claim and nothing else states it in one place.
+**It does not produce TOML.** The plugin's answer store is a file; the tabletop's answer store
+is the stack of worksheets, which hold the same things in columns — the answer, who gave it,
+how sure they were, what breaks at that number. Transcribing into the toolkit later is
+possible and is an appendix, not the procedure.
 
-Two consequences, both deliberate:
+**It does not assume a cloud.** Phase 1 is what the teams bring to the room, gathered however
+they already gather it. The read-only walk the toolkit ships is one option for one provider,
+and the part of it that generalises is the rule that discovery never changes anything.
 
-* **Editing ``docs/manual/`` by hand is a change the next regeneration deletes.** Change the
-  skill, the bank or the getting-started guide, and regenerate.
-* **A skill restructured past what the extractors expect fails loudly.** Every extraction
-  raises :class:`ManualError` when the heading or field it needs is gone, so a renamed section
-  is a failing test rather than a silently truncated manual.
+What is generated, and from where:
+
+* the technique is the named sections of the skill that runs each phase, verbatim;
+* the questions, the worksheets and the field index are :mod:`itscp_questions`, the bank
+  ``answers.example.toml`` is emitted from;
+* the register's shape is :mod:`itscp_portfolio`, the module that validates it;
+* the orientation is ``GETTING-STARTED.md``, extracted by heading.
+
+Written here and nowhere else: the phase sequence, the room each phase needs, and the by-hand
+procedures that replace a script. Those are this module's own claims.
+
+Freshness is enforced, not remembered. ``test_manual`` rebuilds every page and fails on the
+first differing line, and it fails too when a skill grows a section nobody has classified as
+embedded or skipped. Every extractor raises :class:`ManualError` rather than guessing, so a
+restructured skill is a failing build instead of a manual with a hole in it.
 
 Run it:
 
@@ -65,202 +76,377 @@ class ManualError(Exception):
     """A source file no longer holds what the manual extracts from it. Never a crash."""
 
 
+# --------------------------------------------------------------------------- what to embed
+
+@dataclass(frozen=True)
+class Embed:
+    """One skill, and the sections of it this page carries, in the order it carries them."""
+
+    skill: str
+    sections: tuple[str, ...]
+    #: Carry the skill's opening text as well, the part before its first ``##``. Off by
+    #: default, because for most skills that text is a *Read first* pointer and an
+    #: ``Interviewee`` line the manual states in its own words. On for the scaffold, whose
+    #: opening text is the directory tree — the one thing phase 6 cannot be run without.
+    preamble: bool = False
+
+
+#: Every interview skill ends by listing the fields it produces and where they land. The
+#: manual has that list twice already, generated from the bank rather than restated: once as
+#: the page's own checklist and once in ``fields.md``. Carrying the section as well would put
+#: a third, hand-maintained copy in front of a facilitator.
+_OUTPUT_SKIP = ("Output",
+                "Lists the fields the session produces. The page's own checklist and "
+                "fields.md are that list, generated from the bank.")
+
+#: Sections deliberately left out, with the reason, one entry per skill that has any. The
+#: reason is not decoration: a later reader deciding whether to put a section back needs to
+#: know it was a decision. ``test_manual`` asserts that every ``##`` heading of an embedded
+#: skill is either carried by a page or named here, so a skill that grows a section fails the
+#: build until somebody classifies it.
+SKIPPED_SECTIONS: dict[str, tuple[tuple[str, str], ...]] = {
+    "itscp-discover": (
+        ("Prerequisites", "The tool's credentials and CLI. A room brings what it already has."),
+        ("Running it", "Invocations of a tool nobody in the room has loaded."),
+        ("One walk, many systems", "How the tool's output is reused across plans."),
+        ("Handling commands that do not exist",
+         "How the script degrades when an API is missing. Nothing to degrade by hand."),
+        ("Output", "The files the tool writes."),
+    ),
+    "itscp-interview-business": (_OUTPUT_SKIP,),
+    "itscp-interview-application": (_OUTPUT_SKIP,),
+    "itscp-interview-infrastructure": (_OUTPUT_SKIP,),
+    "itscp-interview-continuity": (_OUTPUT_SKIP,),
+    "itscp-interview-governance": (_OUTPUT_SKIP,),
+    "itscp-portfolio": (
+        ("What a register holds",
+         "The file's field list. Rendered from itscp_portfolio instead, so the manual "
+         "describes the register the validator actually enforces."),
+    ),
+    "_method/answer-store": (
+        ("Why a store at all", "Argues for a file. The tabletop's answer is the worksheet."),
+        ("Shape", "The record's TOML shape. Carried in the transcription appendix instead."),
+        ("Coverage", "How the plugin counts coverage. Counted from the worksheets by hand."),
+    ),
+}
+
+#: Every tool, file or command the embedded text still names, and what the room does instead.
+#: Rendered per page against the text that was actually embedded, so a row appears only where
+#: it is needed and disappears when a skill stops saying it. ``test_manual`` scans the other
+#: way as well: a command-shaped reference nothing here covers fails the build.
+TRANSLATIONS: tuple[tuple[str, str, str], ...] = (
+    ("itscp_portfolio.py", "`python3 itscp_portfolio.py`",
+     "Check the register by hand. [Five passes over the wall](00-portfolio.md#checking-the-register-by-hand), "
+     "each one a question you can answer from the cards in front of you."),
+    ("itscp_discover_oci", "`itscp_discover_oci`",
+     "A read-only walk for one cloud provider. Bring the equivalent from whatever your teams "
+     "already use: a console export, a CMDB extract, last quarter's architecture review. What "
+     "generalises is the rule, not the tool — discovery never changes anything."),
+    (".sh", "a script under `plugin/scripts/`",
+     "Nothing to run. Whatever produced your inventory is what you bring."),
+    ("picoagent", "`picoagent -e ...`",
+     "Nothing to load. A tabletop needs the pages you are holding, a wall, and the people."),
+    ("itscp-build", "`itscp-build`",
+     "There is no generator in a tabletop. Phase 6 is you writing the documents, and "
+     "[fields.md](fields.md) is the map of which answer goes into which one."),
+    ("portfolio.toml", "`portfolio.toml`",
+     "The register is the wall: one card per system, one line per dependency. The file is "
+     "only how it gets stored if somebody types it up afterwards."),
+    ("answer store", "the answer store",
+     "The stack of worksheets. It holds the same things — the answer, who gave it, how sure "
+     "they were — in columns rather than in keys."),
+    ("answers.yaml", "`answers.yaml` in the tree",
+     "The worksheets. Nothing to create; the stack of paper is the store."),
+    ("the store", "\"the store\"", "The worksheet in front of you."),
+)
+
+
 # --------------------------------------------------------------------------- the sequence
 
 @dataclass(frozen=True)
 class Phase:
-    """One file of the manual: a phase, the skills that carry it, the fields it records."""
+    """One page: a phase, the room it needs, the technique it carries, the fields it records."""
 
     slug: str
-    #: What the phase is called in ``GETTING-STARTED.md``. A label, not an index: ``0`` is a
-    #: phase and ``3`` is two of them.
+    #: What the phase is called in ``GETTING-STARTED.md``. A label, not an index.
     number: str
     title: str
-    #: Skill directory names under ``plugin/skills/``, embedded in order.
-    skills: tuple[str, ...]
-    #: Answer-store namespaces this phase records. Empty means the phase writes no fields:
-    #: phase 0 writes the register, phase 6 writes the plan.
+    #: Which session this is, in the manual's own words. The tabletop is one exercise in
+    #: segments; two phases are deliberately not part of it.
+    room: str
+    embeds: tuple[Embed, ...]
+    #: Answer-store namespaces this phase records. Empty means the phase records no fields.
     namespaces: tuple[str, ...]
-    #: This module's own claim about where the phase sits. Everything else is extracted.
+    #: This module's own claim about where the phase sits and how it is run.
     lead: str
-    #: Whether to pull the ``Interviewee`` and ``Time`` lines from the first skill.
+    #: What the session comes away with, where counting worksheet lines does not say it. A
+    #: phase that records no fields still produces something, and two that do record fields
+    #: produce more than the count suggests.
+    produces: str = ""
+    #: Whether to pull the ``Interviewee`` and ``Time`` lines from the first embedded skill.
     session: bool = True
 
+
+_TABLETOP = ("**The tabletop.** Application and infrastructure teams in the room together, "
+             "with the DR process owner. One exercise in segments; run it in a single long "
+             "sitting or across several, but keep both teams present for all of it.")
 
 PHASES: tuple[Phase, ...] = (
     Phase(
         "00-portfolio", "0", "The portfolio and the dependency map",
-        ("itscp-portfolio", "itscp-dependencies"),
+        "**A workshop, before the tabletop.** Whoever can see the whole environment, which is "
+        "usually two or three people and never one.",
+        (
+            Embed("itscp-portfolio", ("Why this exists", "Run order", "Then, per system",
+                                      "Red flags")),
+            Embed("itscp-dependencies", ("Three kinds of edge", "Eliciting recovery "
+                                         "dependencies", "Checking the graph", "What to record",
+                                         "Red flags")),
+        ),
         (),
-        "Runs once for the organization, before any plan. It produces `portfolio.toml`: the "
-        "register of systems, the comparative tier ranking, the recovery waves, and the "
-        "dependency graph between them. Four failures live only above the level of a single "
-        "plan and none of them are visible from inside one, which is why this comes first "
-        "rather than after the plan that would have to be rebuilt.\n\n"
-        "**Nothing in this phase is recorded in an answer store.** A register of systems is a "
-        "different shape from a set of facts about one system, so it is written by hand into "
-        "`portfolio.toml` and checked with `python3 plugin/itscp_portfolio.py portfolio.toml`. "
-        "The fields that file holds are listed at the end of this page.\n\n"
-        "**Do not start a per-system plan while the validator reports errors.** An inversion "
-        "means two signed figures contradict each other, and a plan built on top of one bakes "
-        "the contradiction in.",
+        "Runs once for the organization, before any plan. It produces the register: every "
+        "system, the tier ranking, the recovery waves, and what each system needs from the "
+        "others. Four failures live only above the level of a single plan and none of them "
+        "are visible from inside one, which is why this comes first rather than after the "
+        "plan that would have to be rebuilt.\n\n"
+        "**Run it on a wall.** One card per system, laid out left to right in recovery waves, "
+        "with a line drawn for every dependency. The room argues with the wall rather than "
+        "with a document, and the four failures are things you can see: a line pointing "
+        "backwards, a loop, a card whose number is smaller than the card it depends on. The "
+        "blank register and the five checks are at the end of this page.\n\n"
+        "**Do not start a per-system plan while a check is failing.** An inversion means two "
+        "signed figures contradict each other, and a plan built on top of one bakes the "
+        "contradiction in.",
+        produces="the register, on a wall",
         session=True,
     ),
     Phase(
-        "01-discovery", "1", "Discovery",
-        ("itscp-discover",),
+        "01-discovery", "1", "What the room brings",
+        _TABLETOP + " This segment opens it.",
+        (Embed("itscp-discover", ("The hard rule: discovery never mutates",
+                                  "What it collects, and why each matters to the plan",
+                                  "What it deliberately does not collect",
+                                  "What discovery cannot tell you")),),
         ("discovery",),
-        "Sixty read-only minutes against the tenancy, run before the technical interviews so "
-        "that those interviews start from a list rather than a blank page. Every call is a "
-        "`list` or a `get`.\n\n"
-        "The skill below drives a tool; by hand you run the same script the tool spawns, from "
-        "your clone. Prove it is read-only first, then show the customer the dry run before "
-        "the real walk:\n\n"
-        "```bash\n"
-        "bash plugin/scripts/discover/test-readonly.sh\n"
-        "bash plugin/scripts/discover/oci-discover.sh \\\n"
-        "    --compartment <ocid> --regions <primary>,<standby> \\\n"
-        "    --out discovery-output --dry-run\n"
-        "bash plugin/scripts/discover/oci-discover.sh \\\n"
-        "    --compartment <ocid> --regions <primary>,<standby> --out discovery-output\n"
-        "```\n\n"
-        "**Working manually, the output that matters is `gaps.md`, not the inventory.** The "
-        "gaps are interview material: resources nobody can name, a standby that was supposed "
-        "to exist, a replication policy covering three of five buckets. Take that file into "
-        "phase 3 and ask about each line.\n\n"
-        "Discovery may prefill a handful of interview fields. Each one is marked in the "
-        "checklists that follow, and a prefilled value is **read back for correction, never "
-        "recorded as though somebody said it.**",
+        "The technical segments go badly from a blank page and well from a list, so the "
+        "teams bring the list. **Nothing here is a tool you have to install.** Whatever your "
+        "teams already use to see the environment — the provider console, a CMDB extract, an "
+        "architecture review, a spreadsheet somebody maintains — is what you print and put on "
+        "the table.\n\n"
+        "Two rules survive whatever you use. **Discovery never changes anything**: read, "
+        "export, screenshot, and never a command that writes, in an environment that is "
+        "currently the production one. And **what it cannot find is the point** — the gaps "
+        "are the interview material. A resource nobody can name, a standby that was supposed "
+        "to exist, a replication policy covering three buckets of five: write each one on the "
+        "wall as a question, and put a name against it.\n\n"
+        "If you are on the provider the toolkit supports and somebody has a clone of this "
+        "repository, the read-only walk it ships will produce the same list faster. That is "
+        "an accelerator, not the procedure.",
+        produces="the inventory and the gaps in it",
         session=False,
     ),
     Phase(
-        "02-business", "2", "The business interview, which gates the rest",
-        ("itscp-interview-business",),
+        "02-business", "2", "The business figures, which gate everything after them",
+        "**Not the tabletop.** A separate session with the business or process owner, before "
+        "the technical segments. Deliberately not in the room with the IT teams.",
+        (Embed("itscp-interview-business",
+               ("Tiering is comparative, and this interview does not set the budget",
+                "Why this interview gates the others", "Run order",
+                "The cost conversation, once", "Red flags")),),
         ("business",),
-        "**Do not proceed past this phase without a signed tier assignment.** Tier determines "
-        "standby capacity, replication topology and run cost. Everything after this is built "
-        "to these numbers and all of it is expensive to change.\n\n"
+        "**This one is not a tabletop, and holding that line is the whole point of the "
+        "phase.** Tiers, maximum tolerable downtime and recovery point are the business's "
+        "figures. Run in a room full of engineers they become IT's figures, and IT deciding "
+        "what it is allowed to fail at is the failure this sequence is built to prevent.\n\n"
+        "**Do not start the technical segments without a signed tier assignment.** Tier "
+        "determines standby capacity, replication topology and run cost. Everything after "
+        "this is built to these numbers and all of it is expensive to change. With the plugin "
+        "a build step holds that gate; here you hold it.\n\n"
         "If the business owner is unavailable for three weeks, wait three weeks. Proceeding "
         "on assumed tiers feels productive and is the most costly mistake available here: "
         "assumed tiers become real architecture within a day and are never revisited.",
         session=True,
     ),
     Phase(
-        "03a-application", "3a", "The application interview",
-        ("itscp-interview-application",),
+        "03a-application", "3a", "The application segment",
+        _TABLETOP + " The application team leads this segment; keep the infrastructure team "
+        "in the room, because half the corrections come from them.",
+        (Embed("itscp-interview-application",
+               ("Open with the inventory, not a blank page", "What to elicit", "Hand-offs",
+                "Red flags")),),
         ("system", "app"),
-        "Phase 3 is two interviews that do not depend on each other. Run them in either order "
-        "or in parallel with different people. This is the first.\n\n"
-        "**Bring the deputy to at least one of the two.** The backup lead engineer sitting in "
-        "is the cheapest test available of whether the deputy could really do it, and it "
-        "usually answers the question before you have to ask it.\n\n"
-        "**Expect a contradiction with phase 2, and do not resolve it yourself.** The business "
-        "said four hours; the application owner says batch reprocessing alone takes a day. "
-        "Record both, name whose decision it is, and take it back to the business owner.",
+        "Open by putting phase 1's inventory on the table. The application team corrects a "
+        "list far faster than it reconstructs one from memory, and the corrections are "
+        "themselves findings.\n\n"
+        "**Bring the deputies.** The backup lead engineer sitting in is the cheapest test "
+        "available of whether the deputy could really do it, and it usually answers the "
+        "question before you have to ask it.\n\n"
+        "**Expect a contradiction with phase 2, and do not resolve it in the room.** The "
+        "business said four hours; the application owner says batch reprocessing alone takes "
+        "a day. Write both on the worksheet, write the name of whose decision it is, and take "
+        "it back to the business owner. A plan with a visible, owned contradiction is honest.",
         session=True,
     ),
     Phase(
-        "03b-infrastructure", "3b", "The infrastructure interview",
-        ("itscp-interview-infrastructure",),
+        "03b-infrastructure", "3b", "The infrastructure segment",
+        _TABLETOP + " The infrastructure team leads this segment, with the lead engineer "
+        "present for anything measured.",
+        (Embed("itscp-interview-infrastructure",
+               ("Start from the targets, not the technology", "What to elicit",
+                "The conversation where targets meet price", "Red flags")),),
         ("infra",),
-        "The second half of phase 3, and the one that turns the signed targets into a topology "
-        "and a monthly figure. Bring the lead engineer for anything measured and for anything "
-        "that has actually been executed rather than designed.\n\n"
-        "**Take `gaps.md` from phase 1 into this session.** It is the difference between "
-        "reconstructing the environment for forty minutes and correcting a list for ten.",
+        "The segment that turns the signed targets into a topology and a monthly figure. "
+        "Read the tier targets from phase 2 out loud before anything else, so the design "
+        "conversation starts from what it has to meet.\n\n"
+        "**The lead engineer answers the measured questions, not the owner.** The difference "
+        "between a replication design and a replication design that has been executed is the "
+        "difference between most of this plan being real and most of it being intended, and "
+        "only the person who has run it knows which.\n\n"
+        "**Keep the gaps from phase 1 visible on the wall through this segment.** They are "
+        "the questions this room can actually close.",
         session=True,
     ),
     Phase(
-        "04-continuity", "4", "The continuity interview",
-        ("itscp-interview-continuity",),
+        "04-continuity", "4", "The continuity segment",
+        _TABLETOP + " The DR process owner leads this segment, with their deputy, and both "
+        "technical teams still in the room.",
+        (Embed("itscp-interview-continuity",
+               ("The one question this interview exists to answer",
+                "Part 1 — Roles and succession (§2.3)", "Part 2 — Activation criteria (§3.1)",
+                "Part 3 — Notification (§3.2)", "Part 4 — Outage assessment (§3.3)",
+                "Part 5 — Escalation thresholds (§4.3) and deactivation (§5.4)", "Red flags")),),
         ("continuity",),
-        "Runs after phase 3, because escalation thresholds need real recovery steps to "
-        "threshold against.\n\n"
-        "This is where most organizations discover that **nobody owns the declaration "
-        "decision.** That is not a failure of the interview; it is the single most valuable "
-        "thing it produces.\n\n"
-        "The succession elicited here and the deputy roster from phase 0 must agree. Where "
-        "they do not, that is a recorded conflict with a named decision owner, not something "
-        "to reconcile quietly.",
+        "Runs last of the technical segments, because escalation thresholds need real "
+        "recovery steps to threshold against. By now the room has the steps.\n\n"
+        "This is the segment where most organizations discover that **nobody owns the "
+        "declaration decision.** That is not a failure of the exercise; it is the single most "
+        "valuable thing it produces, and a tabletop surfaces it faster than an interview "
+        "because everybody who assumed somebody else owned it is sitting in the room.\n\n"
+        "The succession named here and the deputy roster from phase 0 must agree. Where they "
+        "do not, write both down with the decision owner named, rather than reconciling it "
+        "quietly at the whiteboard.",
         session=True,
     ),
     Phase(
-        "05-governance", "5", "The governance interview",
-        ("itscp-interview-governance",),
+        "05-governance", "5", "Approval, review and training",
+        "**Not the tabletop.** A separate session with governance, risk or audit, after the "
+        "technical segments.",
+        (Embed("itscp-interview-governance",
+               ("The distinction that frames the whole interview", "What to elicit",
+                "Red flags")),),
         ("governance",),
         "**A design describes what would happen; a plan is a design somebody committed to.** "
-        "The difference is a signature, a review date and a trained population, and this phase "
-        "is where all three are elicited.",
+        "The difference is a signature, a review date and a trained population, and this "
+        "phase is where all three are elicited.\n\n"
+        "It is a short session and it does not need the technical teams. It does need "
+        "somebody who can commit the organization to a review cadence and an exercise "
+        "schedule, which is why it is not a tabletop segment.",
         session=True,
     ),
     Phase(
-        "06-generate-and-audit", "6", "Assemble and audit",
-        ("itscp-audit",),
+        "06-generate-and-audit", "6", "Writing it up, and auditing what you wrote",
+        "**You, on your own,** with the worksheets from every session in front of you.",
+        (
+            Embed("_method/repo-scaffold", ("Rendering rules",
+                                            "Sections every generated document carries"),
+                  preamble=True),
+            Embed("itscp-audit", ("The rule that makes this an audit rather than a review",
+                                  "Verdicts", "Coverage-derived findings", "Portfolio findings",
+                                  "Scope", "Output", "Red flags")),
+        ),
         (),
-        "Half a day, on your own. Working manually there is no renderer, so this phase is two "
-        "jobs rather than one: write the repository from the answers you hold, then audit what "
-        "you wrote.\n\n"
-        "**The assembly is mechanical and the map for it is generated.** Every recorded field "
-        "names the file it lands in; [`fields.md`](fields.md) lists them the other way round, "
-        "file by file, which is the order you write in. The tree to create is below, and so "
-        "are the rendering rules for a `MISSING` field, a low-confidence value and the "
-        "*Unverified statements* section. A manually written plan that quietly omits its gaps "
-        "has thrown away the thing this method produces.\n\n"
-        "Then audit. Fix what blocks approval and leave the rest visible.",
+        "Half a day. There is no renderer here, so this is two jobs: write the documents from "
+        "the worksheets, then audit what you wrote.\n\n"
+        "**The assembly is mechanical and the map is generated.** [fields.md](fields.md) "
+        "lists every answer by the file it belongs in, which is the order to write in. The "
+        "rules below for marking a missing answer, a low-confidence figure and the "
+        "*Unverified statements* section are the part people skip, and skipping it is how a "
+        "plan full of gaps comes out looking finished. **A cell your worksheet left open is a "
+        "marked gap in the document, never a sentence you write to fill the space.**\n\n"
+        "Then audit, starting from the position that every requirement is unmet until a "
+        "sentence in your own document proves otherwise. Fix what blocks approval and leave "
+        "the rest visible.",
+        produces="the written plan",
         session=False,
     ),
 )
 
-#: Embedded whole in ``06-generate-and-audit.md``, ahead of the audit skill, because a manual
-#: assembly needs the tree and the marker rules ``itscp-build`` would otherwise apply.
-SCAFFOLD_SKILL = "_method/repo-scaffold"
-
-#: Embedded whole in ``method.md``. The discipline every phase is run under.
+#: Embedded whole in ``method.md``. The discipline every phase is run under, and the one file
+#: here that needed no adaptation: it is about how people answer, not about what runs.
 METHOD_SKILL = "_method/interview"
 
 #: Also embedded in ``method.md``: what a complete plan contains, element by element.
 COVERAGE_SKILL = "_method/coverage-map"
 
-#: The answer-store rules, embedded in ``method.md`` under the record shape.
+#: Embedded in ``method.md``'s appendix, for a room that later types its worksheets up.
 STORE_SKILL = "_method/answer-store"
 
-#: Sections lifted verbatim from ``GETTING-STARTED.md`` into the manual's index page. The
-#: guide is the source for all three; repeating them here would be the drift this module
-#: exists to avoid.
+METHOD_EMBEDS: tuple[Embed, ...] = (
+    Embed(METHOD_SKILL, ("The Iron Rule", "Every field starts REFUTED",
+                         "Ask for the observable, not the abstraction",
+                         "Never accept a number without a mechanism", "One question at a time",
+                         "\"I don't know\" is data, and it is often the most valuable answer",
+                         "Separate what they know from what they are guessing",
+                         "Read back before you write", "Provenance on every fact",
+                         "Interviews resume; they do not restart",
+                         "Contradictions are surfaced, never resolved silently",
+                         "Red flags — stop and re-read this file",
+                         "What a finished interview looks like")),
+)
+
+COVERAGE_EMBEDS: tuple[Embed, ...] = (
+    Embed(COVERAGE_SKILL, ("Portfolio scope (above any single plan)", "Front matter",
+                           "1. Introduction", "2. Concept of Operations",
+                           "3. Activation and Notification", "4. Recovery", "5. Reconstitution",
+                           "Appendices", "Beyond NIST", "Not yet covered")),
+)
+
+STORE_EMBEDS: tuple[Embed, ...] = (
+    Embed(STORE_SKILL, ("Writing rules", "Reading rules")),
+)
+
+#: Sections lifted verbatim from ``GETTING-STARTED.md`` into the index page. The guide is the
+#: source for all three; repeating them here would be the drift this module exists to avoid.
 GETTING_STARTED_SECTIONS: tuple[str, ...] = (
     "Before you start",
     "What good looks like after one pass",
     "Common ways this goes wrong",
 )
 
-#: What the guide's own words do not say, because the guide assumes a loaded plugin and this
-#: document does not. Rendered above the extracted section rather than folded into it, so a
-#: reader can see which sentences are the guide's.
+#: What the guide's own words do not say, because it assumes a loaded plugin.
 GETTING_STARTED_PREFACE: dict[str, str] = {
     "Before you start": (
-        "Working by hand, the first of the four is optional: you need a clone of this "
-        "repository for the validator and the discovery script, not a loaded plugin. **The "
-        "other three are not optional, and the fourth is the one people skip.**"
+        "Running this as a tabletop, the first of the four does not apply: there is nothing "
+        "to install and nothing to load. **The other three do, and the fourth is the one "
+        "people skip.**"
     ),
 }
 
-#: One line per :class:`itscp_store.Record` field, for the recording table in ``method.md``.
-#: A test asserts this covers the dataclass exactly, so a new field on the record is a failing
-#: test rather than a column the manual quietly stops mentioning.
+#: The findings the validator reports, which the by-hand checks below reproduce. Named here so
+#: that ``test_manual`` can assert each one is still a finding the module raises: a check that
+#: survives in the manual after the code stopped making it would be a procedure for finding
+#: something nobody considers a problem any more.
+REGISTER_FINDINGS: tuple[str, ...] = (
+    "rto-inversion", "recovery-cycle", "runtime-cycle", "wave-inversion", "wave-concurrency",
+    "tier-budget-exceeded", "undeclared-shared-service",
+)
+
+#: One line per :class:`itscp_store.Record` field, for the transcription appendix. A test
+#: asserts this covers the dataclass exactly.
 RECORD_FIELD_NOTES: dict[str, str] = {
-    "key": "The field being answered. One of the keys in this manual's checklists, and never anything else.",
-    "status": "`MISSING`, `ANSWERED`, `DEFERRED` or `NOT_APPLICABLE`. Every field carries one; none are absent.",
-    "value": "What they said. Absent on anything but `ANSWERED`.",
-    "mechanism": "What changes on either side of a figure. Required on every duration, count and currency amount.",
-    "provenance": "Where it came from: `interview:<role>:<YYYY-MM-DD>`, `oci-discovery:<Operation>`, `document:<path>` or `operator`.",
-    "confidence": "`high`, `medium` or `low`, assigned from how the answer arrived rather than from how plausible it sounds.",
-    "owner": "The role who can answer. Required on `MISSING` and `DEFERRED`; a gap with no owner is not a finding, it is a hole.",
-    "due": "When a `DEFERRED` answer is expected. A deferral with no date is a `MISSING` wearing a suit.",
-    "reason": "Why a field is `DEFERRED` or `NOT_APPLICABLE`. Never the interviewer's opinion on its own.",
-    "notes": "Anything a later reader needs: who was in the room, what was contested, what the answer depends on.",
-    "readback": "`not_required`, `confirmed` or `corrected`. A draft nobody has confirmed is not an answer and does not belong here.",
-    "conflict": "The other answer, when two people gave different ones: its value, its provenance, and the named owner of the decision.",
-    "superseded": "What this answer replaced, and why. Corrections are appended; nothing is overwritten in place.",
+    "key": "The field. One of the keys in this manual's checklists, and never anything else.",
+    "status": "`MISSING`, `ANSWERED`, `DEFERRED` or `NOT_APPLICABLE`. Every field carries one.",
+    "value": "The **Answer** column.",
+    "mechanism": "The **What breaks at that number** column.",
+    "provenance": "The **Who said it** column, as `interview:<role>:<YYYY-MM-DD>`.",
+    "confidence": "The **Sure?** column: `high`, `medium` or `low`.",
+    "owner": "The name written in an unanswered row. Required on `MISSING` and `DEFERRED`.",
+    "due": "When a deferred answer is expected. A deferral with no date is a gap in disguise.",
+    "reason": "Why a row was deferred or ruled out. Never the facilitator's opinion alone.",
+    "notes": "Who was in the room, what was contested, what the answer depends on.",
+    "readback": "`not_required`, `confirmed` or `corrected`. What happened when you said it back.",
+    "conflict": "The second answer, when two people gave different ones, and whose call it is.",
+    "superseded": "What an answer replaced, and why. Corrections are appended, never rubbed out.",
 }
 
 
@@ -336,10 +522,97 @@ def _section(text: str, heading: str, path: Path) -> str:
     return match.group("body").strip("\n")
 
 
-def _skill(name: str) -> tuple[dict[str, str], str, Path]:
+def skill_preamble(name: str) -> str:
+    """A skill's opening text: everything before its first ``##`` heading."""
     path = SKILLS / name / "SKILL.md"
-    text = _read(path)
-    return _frontmatter(text, path), _body(text, path), path
+    body = _body(_read(path), path)
+    opening: list[str] = []
+    fenced = False
+    for line in body.splitlines():
+        if _FENCE.match(line):
+            fenced = not fenced
+        if not fenced and line.startswith("## "):
+            break
+        opening.append(line)
+    text = "\n".join(opening).strip("\n")
+    if not text:
+        raise ManualError(f"{path} has no text before its first section")
+    return text
+
+
+def skill_sections(name: str) -> dict[str, str]:
+    """Every ``##`` section of a skill, by heading, in file order.
+
+    Anything before the first heading is dropped: it is the skill's own lead, its *Read
+    first* pointer and its ``Interviewee`` and ``Time`` lines, and the manual supplies its
+    own lead and reads those two fields separately.
+    """
+    path = SKILLS / name / "SKILL.md"
+    body = _body(_read(path), path)
+    sections: dict[str, str] = {}
+    heading: str | None = None
+    buffer: list[str] = []
+    fenced = False
+
+    def close() -> None:
+        if heading is None:
+            return
+        while buffer and buffer[-1].strip() in ("", "---"):
+            buffer.pop()
+        sections[heading] = "\n".join(buffer).strip("\n")
+
+    for line in body.splitlines():
+        if _FENCE.match(line):
+            fenced = not fenced
+        if not fenced and line.startswith("## "):
+            close()
+            heading = line[3:].strip()
+            buffer = []
+            continue
+        if heading is not None:
+            buffer.append(line)
+    close()
+    return sections
+
+
+def _embedded(embeds: tuple[Embed, ...]) -> list[tuple[str, str, str]]:
+    """``(skill, heading, text)`` for every section a page carries, in page order."""
+    carried: list[tuple[str, str, str]] = []
+    for embed in embeds:
+        available = skill_sections(embed.skill)
+        if embed.preamble:
+            carried.append((embed.skill, "", skill_preamble(embed.skill)))
+        for heading in embed.sections:
+            if heading not in available:
+                raise ManualError(
+                    f"{embed.skill} has no '## {heading}' section. It was renamed or removed; "
+                    "update the page that carries it, or add it to SKIPPED_SECTIONS.")
+            carried.append((embed.skill, heading, available[heading]))
+    return carried
+
+
+# --------------------------------------------------------------------------- translation
+
+def _translations_for(text: str) -> list[tuple[str, str]]:
+    """The substitutions a page needs, from what its embedded text actually says."""
+    return [(label, note) for marker, label, note in TRANSLATIONS if marker in text]
+
+
+def _translation_table(text: str) -> list[str]:
+    found = _translations_for(text)
+    if not found:
+        return []
+    return [
+        "### Running this without the toolkit",
+        "",
+        "The technique below is the skills' own words, and the skills assume a loaded plugin. "
+        "You do not have one. These are the substitutions in effect on this page.",
+        "",
+        "| Where it says | In the room you |",
+        "|---|---|",
+        *[f"| {label} | {note} |" for label, note in found],
+        "",
+    ]
 
 
 # --------------------------------------------------------------------------- field blocks
@@ -350,13 +623,14 @@ def _answer_shape(question: bank.Question) -> str:
     if question.kind == "enum":
         return "one of " + ", ".join(f"`{option}`" for option in question.options)
     if question.kind == "rows":
-        return "one row per item, columns " + " | ".join(f"`{column}`" for column in question.columns)
+        return "one row per item, columns " + " | ".join(
+            f"`{column}`" for column in question.columns)
     if question.kind == "narrative":
         return "several paragraphs, in their words"
     if question.kind == "code":
-        return "exact text, reproduced byte for byte or not at all"
+        return "exact text, written down as dictated or not at all"
     if question.kind == "date":
-        return "a date, `YYYY-MM-DD`"
+        return "a date"
     if question.kind == "list":
         return "a list"
     if question.kind in ("duration", "number", "currency"):
@@ -365,14 +639,14 @@ def _answer_shape(question: bank.Question) -> str:
 
 
 def _question_block(question: bank.Question) -> list[str]:
-    asked = question.prompt.startswith("Not asked")
+    unasked = question.prompt.startswith("Not asked")
     lines = [
         f"#### `{question.id}`",
         "",
-        f"*{question.prompt}*" if asked else f"> \"{question.prompt}\"",
+        f"*{question.prompt}*" if unasked else f"> \"{question.prompt}\"",
         "",
         f"- **Records:** {question.records}",
-        f"- **Owner:** {question.owner_role} · **Answer:** {_answer_shape(question)}",
+        f"- **Answers:** {question.owner_role} · **Shape:** {_answer_shape(question)}",
     ]
     for column, options in sorted(question.enum_columns.items()):
         lines.append(f"- **`{column}` is one of:** "
@@ -381,27 +655,27 @@ def _question_block(question: bank.Question) -> list[str]:
         lines.append(f"- **Every `{figure}` owes a `{explains}`.** A target with no stated "
                      "consequence is a number nobody has to meet.")
     if question.mechanism_required:
-        lines.append(f"- **Then ask:** \"{question.mechanism_prompt}\" Record the answer in "
-                     "`mechanism`. Without one the figure is `confidence: low`.")
+        lines.append(f"- **Then ask:** \"{question.mechanism_prompt}\" It goes in the **what "
+                     "breaks at that number** column. An empty one makes the figure a guess, "
+                     "and the row is marked low confidence.")
     if question.readback_required:
-        lines.append("- **Read it back** in one sentence and get a yes before recording it.")
+        lines.append("- **Say it back** in one sentence and get a yes before you write it.")
     if question.seedable:
-        lines.append(f"- **Discovery may prefill this** (`{question.seed_operation}`). Read "
-                     "the value back for correction rather than asking cold; a value the "
-                     "interviewee did not confirm keeps its discovery provenance and never "
-                     "gains theirs.")
+        lines.append("- **Often already on the inventory** the room brought. Read it back for "
+                     "correction rather than asking cold, and if nobody confirms it, it stays "
+                     "the inventory's claim rather than becoming theirs.")
     if question.guidance:
         lines.append(f"- **Note:** {question.guidance}")
-    lines.append(f"- **Lands in:** {question.written_to}")
+    lines.append(f"- **Goes into:** {question.written_to}")
     if question.structural_provenance == "nist":
         lines.append(f"- **NIST:** {question.nist_heading} ({question.nist_source})")
     elif question.structural_provenance == "ours":
-        lines.append("- **No NIST slot.** This element is one the toolkit carries "
-                     "deliberately; the answer in it is elicited like any other.")
+        lines.append("- **No NIST slot.** An element this toolkit carries deliberately; the "
+                     "answer in it is elicited like any other.")
     else:
-        lines.append("- **The toolkit supplies this element's words, not the customer.** They "
-                     "render as the toolkit's own and are never presented as something "
-                     f"anybody said: {question.method_statement}")
+        lines.append("- **These words are the toolkit's, not the room's.** They render as its "
+                     "own and are never presented as something anybody in the room said: "
+                     f"{question.method_statement}")
     if question.crosswalk_note:
         lines.append(f"- **Terminology:** {question.crosswalk_note}")
     lines.append("")
@@ -409,19 +683,21 @@ def _question_block(question: bank.Question) -> list[str]:
 
 
 def _checklist(namespaces: tuple[str, ...]) -> list[str]:
-    """Every field the phase records, grouped by the coverage row it feeds."""
-    questions = [entry for namespace in namespaces for entry in bank.for_namespace(namespace)]
+    """Every field the phase records, grouped by the section of the plan it feeds."""
+    questions = _questions_for(namespaces)
     if not questions:
         return []
     lines = [
         "---",
         "",
-        "## The field checklist",
+        "## What this segment has to come away with",
         "",
-        f"{len(questions)} fields, in the order the bank holds them, grouped by the section of "
-        "the plan each one feeds. Every one of them ends the session with a status. A field "
-        "nobody could answer is `MISSING` against a named owner, which is a result and not a "
-        "failure; a field left absent is an error.",
+        f"{len(questions)} answers, grouped by the section of the plan each one feeds. Read "
+        "this before the session; the worksheet at the end is what you take into it.",
+        "",
+        "Every one of them leaves the room with something written against it. An answer "
+        "nobody in the room could give is a **name** — whoever can — which is a result and "
+        "not a failure. A blank is neither.",
         "",
     ]
     for row in dict.fromkeys(question.coverage_row for question in questions):
@@ -429,6 +705,151 @@ def _checklist(namespaces: tuple[str, ...]) -> list[str]:
         for question in (entry for entry in questions if entry.coverage_row == row):
             lines += _question_block(question)
     return lines
+
+
+# --------------------------------------------------------------------------- worksheets
+
+_WORKSHEET_HEAD = "| What it records | Answer | Who said it | Sure? | What breaks at that number |"
+_WORKSHEET_RULE = "|---|---|---|---|---|"
+_WORKSHEET_BLANK = "|  |  | H / M / L |  |"
+
+
+def _questions_for(namespaces: tuple[str, ...]) -> list[bank.Question]:
+    return [entry for namespace in namespaces for entry in bank.for_namespace(namespace)]
+
+
+def _worksheet(namespaces: tuple[str, ...]) -> list[str]:
+    """The printable sheet: one line per answer, blank, in the order they are asked."""
+    questions = _questions_for(namespaces)
+    if not questions:
+        return []
+    lines = [
+        "---",
+        "",
+        "## The worksheet",
+        "",
+        "Print this. One line per answer, filled in as it is said rather than afterwards.",
+        "",
+        "- **Never leave a cell blank.** No answer means write the name of who can give one.",
+        "- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have "
+        "measured it or read it off a screen while you waited. M: confident from experience, "
+        "never measured. L: worked out in the room just now. Ask when you cannot tell.",
+        "- **What breaks at that number** is what makes a figure arguable rather than "
+        "arbitrary. A duration with an empty cell beside it is a guess, and is marked L.",
+        "- Two people, two answers: **write both**, and write whose decision it is.",
+        "",
+    ]
+    for row in dict.fromkeys(question.coverage_row for question in questions):
+        lines += [f"### {row}", ""]
+        scalars = [entry for entry in questions
+                   if entry.coverage_row == row and entry.kind != "rows"]
+        tables = [entry for entry in questions
+                  if entry.coverage_row == row and entry.kind == "rows"]
+        if scalars:
+            lines += [_WORKSHEET_HEAD, _WORKSHEET_RULE]
+            for question in scalars:
+                lines.append(f"| {question.records} (`{question.id}`) {_WORKSHEET_BLANK}")
+            lines.append("")
+        for question in tables:
+            columns = list(question.columns) + ["Who said it", "Sure?"]
+            lines += [
+                f"**{question.records}** (`{question.id}`) — one row each, add as many as the "
+                "room needs",
+                "",
+                "| " + " | ".join(columns) + " |",
+                "|" + "---|" * len(columns),
+            ]
+            for _ in range(3):
+                lines.append("| " + " | ".join([" "] * len(question.columns))
+                             + " |  | H / M / L |")
+            lines.append("")
+    return lines
+
+
+# --------------------------------------------------------------------------- by hand
+
+def _register_worksheet() -> list[str]:
+    """The register and its checks, done on a wall instead of by a validator."""
+    return [
+        "---",
+        "",
+        "## The register, on a wall",
+        "",
+        "One card per system, laid out left to right in recovery waves. Everything below is "
+        "what a card carries and what the room checks it against. If somebody types it up "
+        "afterwards the file has these same fields, and then a validator can make these same "
+        "five passes for you.",
+        "",
+        "### Once for the organization",
+        "",
+        "| Ask | Write down |",
+        "|---|---|",
+        "| The organization's name | The name that goes on the plan |",
+        "| \"You can have this many systems at each tier.\" | The tier budget. Asked without "
+        "one, every owner answers tier 0 and is not wrong to |",
+        "| \"How many of these can you genuinely bring up at once, with the people you would "
+        "actually have at 3am on a Sunday?\" | The concurrency limit for each wave. It is a "
+        "statement about people far more often than about capacity |",
+        "",
+        "### On each system's card",
+        "",
+        "| Field | What it holds |",
+        "|---|---|",
+        "| Name | What the business calls it, not the hostname |",
+        "| Class | One of " + ", ".join(f"`{item}`" for item in portfolio.SYSTEM_CLASSES) + " |",
+        "| Business owner, application owner | A system with neither is an error, not a gap: "
+        "nobody can sign its recovery target |",
+        "| Tier, RTO, RPO, MTD | Ranked against the other cards, never in isolation |",
+        "| Wave | Which step of the recovery order it belongs to |",
+        "| Where its plan lives | Blank means known about and unplanned, which is worth "
+        "seeing on the wall |",
+        "",
+        "### On each line between cards",
+        "",
+        "| Field | What it holds |",
+        "|---|---|",
+        "| Points at | The card it needs |",
+        "| Kind | One of " + ", ".join(f"`{item}`" for item in portfolio.DEPENDENCY_KINDS)
+        + ". `recovery` is the one almost nobody asks for, and the one that finds the "
+          "circular plans |",
+        "| How badly | " + " or ".join(f"`{item}`" for item in portfolio.CRITICALITIES)
+        + ". Only hard lines constrain the recovery order |",
+        "| What breaks without it | The sentence that survives a reorganization. The card's "
+        "name is only a pointer |",
+        "",
+        "### Checking the register by hand",
+        "",
+        "Five passes over the wall. Each one is a question you can answer by looking, and "
+        "each is a check the toolkit's validator makes under the name in brackets.",
+        "",
+        "1. **Walk every hard line and compare the two numbers.** If a card claims to be back "
+        "before something it cannot run without, that is a contradiction between two signed "
+        "figures. [`rto-inversion`, an error]",
+        "2. **Follow the recovery lines and see if you come back to where you started.** Two "
+        "systems that each need the other recovered first is a deadlock, and neither plan can "
+        "see it because each is separately reasonable. [`recovery-cycle`, an error] Do the "
+        "same walk along the runtime lines: a loop there is only a warning, because mutually "
+        "dependent at runtime means recover them together, which is possible. "
+        "[`runtime-cycle`, a warning]",
+        "3. **Check that every hard line points leftwards.** A dependency scheduled after the "
+        "thing that needs it cannot execute in the order it is written. Same wave is not an "
+        "error but it is unspecified, so say which goes first. [`wave-inversion`, an error; "
+        "`wave-concurrency`, a warning]",
+        "4. **Count the cards in each tier against the budget.** More tier 0 systems than the "
+        "budget allows means the ranking has not happened yet. [`tier-budget-exceeded`]",
+        "5. **Count the hard lines arriving at each card.** "
+        f"{portfolio.SHARED_SERVICE_THRESHOLD} or more makes it a shared service in practice "
+        "whatever it is labelled, and hiding that from the recovery order is how it ends up "
+        "in the wrong wave. [`undeclared-shared-service`]",
+        "",
+        "**Never fix a failing check by editing a number.** The wall would agree with itself "
+        "and the plan would still be impossible; you would have deleted the finding rather "
+        "than the problem. Three honest outcomes: the dependency's target tightens, the "
+        "dependant's relaxes, or the dependency is broken — a cached credential, a read-only "
+        "mode, a queue that absorbs the gap. The third is the best answer and the one nobody "
+        "reaches for unaided, so offer it.",
+        "",
+    ]
 
 
 # --------------------------------------------------------------------------- pages
@@ -447,140 +868,147 @@ def _phase_link(phase: Phase) -> str:
 def _index_page() -> str:
     guide = _read(GETTING_STARTED)
     lines = [
-        "# The manual",
+        "# The tabletop",
         "",
         _BANNER,
         "",
-        "The onboarding run by hand: the same phases in the same order, for somebody working "
-        "from this page rather than from a loaded plugin. Every phase carries the technique "
-        "the corresponding skill carries, and every interview phase ends with the checklist "
-        "of fields it records.",
+        "This engagement run as a facilitated exercise: the application and infrastructure "
+        "teams in one room, a printed worksheet on the table, and nothing to install. It asks "
+        "the same questions the toolkit asks, because it is generated from the same files.",
         "",
-        "**Read [the method](method.md) before the first interview.** It is the discipline "
-        "all of the phases are run under, and the one thing here that is not optional: a plan "
-        "whose numbers nobody gave is worse than one with visible gaps, and the method is "
-        "what keeps the difference legible.",
+        "**Two of the phases are deliberately not tabletop segments.** The business figures "
+        "are elicited on their own, before the room meets, because tiers agreed in front of "
+        "the engineers who will have to meet them stop being the business's figures. "
+        "Governance is elicited afterwards, and needs nobody technical.",
         "",
-        "## The sequence",
+        "**Read [the method](method.md) before the first session.** It is the discipline all "
+        "of this is run under, and the one part that is not optional: a plan whose numbers "
+        "nobody gave is worse than one with visible gaps, and the method is what keeps the "
+        "difference legible.",
         "",
-        "| Phase | Who is in the room | Fields recorded |",
+        "## The running order",
+        "",
+        "| Phase | Session | Answers to come away with |",
         "|---|---|---|",
     ]
     for phase in PHASES:
-        if phase.session:
-            _, body, path = _skill(phase.skills[0])
-            extracted = _bold_field(body, "Interviewee", path)
-            who = extracted[0].upper() + extracted[1:]
-        else:
-            who = "You, on your own"
-        counted = sum(len(bank.for_namespace(namespace)) for namespace in phase.namespaces)
-        lines.append(f"| {_phase_link(phase)} | {who} | "
-                     f"{counted if counted else 'none — see the page'} |")
+        counted = len(_questions_for(phase.namespaces))
+        room = phase.room.split(".")[0].strip().replace("**", "")
+        outcome = f"{counted} answer{'' if counted == 1 else 's'}" if counted else ""
+        if phase.produces:
+            outcome = f"{outcome}, plus {phase.produces}" if outcome else phase.produces
+        lines.append(f"| {_phase_link(phase)} | {room} | {outcome} |")
     lines += [
         "",
         "Phase 7 is not a document. It is the signature, and then the drill: **every duration "
         "in the plan is a design target, and none of them are commitments until a drill has "
         "measured one.** Schedule the first drill before the approval meeting ends.",
         "",
-        "## Supporting pages",
+        "## What to print",
         "",
-        "- [The method](method.md) — the Iron Rule, the statuses, confidence, provenance, and "
-        "how to write a record by hand.",
-        "- [Every field, by the file it lands in](fields.md) — the order to write the plan in, "
-        "and the full index of keys.",
+        "Each phase page ends with a worksheet sized for its session. Print the worksheet for "
+        "the session you are running; read the rest of the page before it.",
+        "",
+        "- [The method](method.md) — how an answer is captured, and the appendix for typing "
+        "the worksheets up afterwards.",
+        "- [Every answer, by the document it belongs in](fields.md) — the order to write the "
+        "plan in, and the full index.",
         "",
         "---",
         "",
     ]
     for heading in GETTING_STARTED_SECTIONS:
+        extracted = _section(guide, heading, GETTING_STARTED)
         lines += [f"## {heading}", ""]
         if heading in GETTING_STARTED_PREFACE:
             lines += [GETTING_STARTED_PREFACE[heading], ""]
-        lines += [_section(guide, heading, GETTING_STARTED), "", "---", ""]
+        lines += _translation_table(extracted)
+        lines += [extracted, "", "---", ""]
     return "\n".join(lines).rstrip("\n") + "\n"
 
 
-def _record_example() -> list[str]:
+def _capture_sheet() -> list[str]:
     return [
-        "```toml",
-        "# Answered, with the mechanism the figure depends on.",
-        '[facts."business.mtd.tier0"]',
-        'status = "ANSWERED"',
-        'value = "8h"',
-        'mechanism = "The overnight bank file cuts at 18:00. Missing it loses a day of settlement."',
-        'provenance = "interview:business-owner:2026-09-10"',
-        'confidence = "medium"',
-        'readback = "confirmed"',
+        "## Capturing what the room says",
         "",
-        "# Nobody in the room knew. This is a result, not a blank.",
-        '[facts."continuity.declaration_authority"]',
-        'status = "MISSING"',
-        'owner = "business owner"',
-        'notes = "Nobody present could name who declares. Raised 2026-09-10."',
+        "There is no file to write and nothing to install. **The answer store is the stack of "
+        "worksheets**, and it holds exactly what the toolkit's store holds — the answer, who "
+        "gave it, how sure they were, and what breaks at that number — in columns instead of "
+        "keys. Where the pages that follow say *write it to the store*, they mean the sheet "
+        "in front of you.",
         "",
-        "# Postponed on purpose, with a date and a reason.",
-        '[facts."infra.failover_cost"]',
-        'status = "DEFERRED"',
-        'owner = "infrastructure owner"',
-        'due = "2026-10-01"',
-        'reason = "Awaiting the standby quote from the account team."',
+        "Every phase page ends with its own worksheet. They all have the same five columns:",
         "",
-        "# Two people, two answers. Both are recorded and the decision is owned.",
-        '[facts."business.rto"]',
-        'status = "ANSWERED"',
-        'value = "4h"',
-        'provenance = "interview:business-owner:2026-09-10"',
-        'confidence = "low"',
+        _WORKSHEET_HEAD,
+        _WORKSHEET_RULE,
+        "| Maximum tolerable downtime for the tier 0 processes | 8h | Head of Finance Systems "
+        "| M | Overnight bank file cuts at 18:00; missing it loses a day of settlement |",
+        "| Who declares a disaster | *nobody in the room knew — **Ops Director** to confirm* "
+        "|  |  | Raised in session, unowned |",
+        "| Time to rebuild from backup | 6h | Lead engineer | L | Never measured. First drill "
+        "objective |",
         "",
-        '[facts."business.rto".conflict]',
-        'value = ">=24h"',
-        'provenance = "interview:application-owner:2026-09-11"',
-        'decision_owner = "business owner"',
-        'notes = "Application owner states batch reprocessing alone exceeds the stated target."',
-        "```",
+        "Four rules, and the first is the one that makes the rest work.",
+        "",
+        "1. **Never leave a cell blank.** An answer nobody has is a name, written in the "
+        "answer column. A room that leaves twelve named unknowns has done more for the "
+        "organization than one that leaves twelve confident inventions.",
+        "2. **Write it as it is said, not afterwards.** A worksheet filled in from memory at "
+        "the end of the day is a worksheet nobody can attribute.",
+        "3. **Sure? is about how the answer arrived**, not how plausible it sounds. \"Is that "
+        "something you have measured, or is it your best read?\" is not a rude question. It "
+        "is the question that decides whether the figure can go in front of an auditor, and "
+        "people are usually relieved to be asked.",
+        "4. **Two answers means two rows**, with the name of whoever decides between them. "
+        "Never average them, never keep the more senior one quietly.",
+        "",
     ]
 
 
 def _method_page() -> str:
-    _, method_body, _ = _skill(METHOD_SKILL)
-    _, store_body, _ = _skill(STORE_SKILL)
-    _, coverage_body, _ = _skill(COVERAGE_SKILL)
     record_fields = [field.name for field in dataclass_fields(store.Record)]
     undescribed = [name for name in record_fields if name not in RECORD_FIELD_NOTES]
     if undescribed:
         raise ManualError("the answer record has fields the manual does not describe: "
                           + ", ".join(undescribed))
+    method_text = _embedded(METHOD_EMBEDS)
+    coverage_text = _embedded(COVERAGE_EMBEDS)
+    store_text = _embedded(STORE_EMBEDS)
+    joined = "\n".join(text for _, _, text in method_text + coverage_text + store_text)
     lines = [
         "# The method",
         "",
         _BANNER,
         "",
-        "Read this before the first interview. It is the discipline every phase is run under, "
-        "and it is the same file the skills read.",
+        "Read this before the first session. It is the discipline every phase is run under, "
+        "and it is the same file the toolkit reads: it is about how people answer, which does "
+        "not change when the facilitator is a person rather than a program.",
         "",
+        "---",
+        "",
+        *_capture_sheet(),
         "---",
         "",
         "## The elicitation discipline",
         "",
-        _demote(method_body),
-        "",
+        *_translation_table(joined),
+        *_sections(method_text),
         "---",
         "",
-        "## Recording an answer by hand",
+        "## What a complete plan contains",
         "",
-        "One `answers.toml` per plan, one table per field, written as the answer arrives "
-        "rather than at the end of the session. **The file is gitignored and must stay that "
-        "way:** it accumulates names, telephone numbers, identifiers, downtime figures and "
-        "the organization's weak points, and it is the most sensitive thing the engagement "
-        "produces.",
+        "The full element list, so that phase 6 is assembly rather than invention.",
         "",
-        "A key that is absent is unanswered. There is no null and no empty stand-in.",
+        *_sections(coverage_text),
+        "---",
         "",
-        *_record_example(),
+        "## Appendix — typing the worksheets up",
         "",
-        "### Every field of a record",
+        "**Optional, and not part of the exercise.** If the organization later adopts the "
+        "toolkit, the worksheets transcribe into its answer store one row per record, and the "
+        "cross-system checks then run for you. The columns map like this.",
         "",
-        "| Field | What it holds |",
+        "| Store field | Worksheet |",
         "|---|---|",
         *[f"| `{name}` | {RECORD_FIELD_NOTES[name]} |" for name in record_fields],
         "",
@@ -588,90 +1016,40 @@ def _method_page() -> str:
         f"Confidence: {', '.join(f'`{level}`' for level in bank.CONFIDENCES)}. "
         f"Read-back: {', '.join(f'`{state}`' for state in bank.READBACKS)}.",
         "",
-        "The seven roles an `owner` may name, each of which also owes a deputy: "
+        "The seven roles a name may be recorded against, each of which also owes a deputy: "
         + ", ".join(f"`{role}`" for role in bank.ROLES) + ".",
         "",
-        "---",
-        "",
-        "## The store's own rules",
-        "",
-        _demote(store_body),
-        "",
-        "---",
-        "",
-        "## What a complete plan contains",
-        "",
-        _demote(coverage_body),
-        "",
+        *_sections(store_text),
     ]
     return "\n".join(lines).rstrip("\n") + "\n"
 
 
-def _portfolio_fields() -> list[str]:
-    """The register's shape, named from the module that validates it."""
-    return [
-        "---",
-        "",
-        "## What `portfolio.toml` holds",
-        "",
-        "Written by hand and checked with `python3 plugin/itscp_portfolio.py portfolio.toml`. "
-        "`plugin/portfolio.example.toml` is a fourteen-system register in this shape.",
-        "",
-        "**Once for the organization**",
-        "",
-        "| Field | What it holds |",
-        "|---|---|",
-        "| `organization` | The organization's name |",
-        "| `tier_budget` | How many systems each tier may hold. The budget is what makes the "
-        "ranking comparative; without one every owner answers tier 0, and is not wrong to |",
-        "| `wave` | One block per step of the recovery order: `id`, `name`, `purpose`, and "
-        "`max_concurrent` — how many of that wave's systems can genuinely be recovered at "
-        "once, which is a statement about people far more often than about capacity |",
-        "",
-        "**Once per system**",
-        "",
-        "| Field | What it holds |",
-        "|---|---|",
-        "| `slug`, `name` | The name the business uses, not the hostname |",
-        "| `class` | One of " + ", ".join(f"`{item}`" for item in portfolio.SYSTEM_CLASSES) + " |",
-        "| `business_owner`, `application_owner` | A system with neither is an error, not a "
-        "gap: nobody can sign its recovery target |",
-        "| `tier`, `rto`, `rpo`, `mtd` | Ranked against the other systems, never in isolation. "
-        "Durations as people write them: `0`, `30m`, `4h`, `2d` |",
-        "| `wave` | Which step of the recovery order it belongs to |",
-        "| `plan_repo` | Where its plan lives. Empty means known about and unplanned |",
-        "| `notes` | Anything the register would otherwise lose |",
-        "",
-        "**Once per dependency, under the system that has it**",
-        "",
-        "| Field | What it holds |",
-        "|---|---|",
-        "| `on` | The slug of the system depended on. A slug not in the register is an error |",
-        "| `kind` | One of " + ", ".join(f"`{item}`" for item in portfolio.DEPENDENCY_KINDS)
-        + ". `recovery` is the one almost nobody asks for, and the one that finds the "
-          "circular plans |",
-        "| `criticality` | " + " or ".join(f"`{item}`" for item in portfolio.CRITICALITIES)
-        + ". Only hard edges constrain the recovery order |",
-        "| `notes` | What breaks without it. This is what survives a reorganization; the slug "
-        "is only a pointer |",
-        "",
-        f"A system with {portfolio.SHARED_SERVICE_THRESHOLD} or more hard dependants is a "
-        "shared service in practice, whatever its declared class, and the validator says so.",
-        "",
-    ]
+def _sections(carried: list[tuple[str, str, str]]) -> list[str]:
+    """Embedded sections, each under its own heading, demoted to sit under the page's."""
+    lines: list[str] = []
+    for _, heading, text in carried:
+        if heading:
+            lines.append(f"### {heading}")
+            lines.append("")
+        lines += [_demote(text), ""]
+    return lines
 
 
 def _phase_page(phase: Phase) -> str:
+    carried = _embedded(phase.embeds)
+    joined = "\n".join(text for _, _, text in carried)
     lines = [
         f"# Phase {phase.number} — {phase.title}",
         "",
         _BANNER,
         "",
+        phase.room,
+        "",
     ]
     if phase.session:
-        _, body, path = _skill(phase.skills[0])
+        _, body, path = _skill_body(phase.embeds[0].skill)
         lines += [
-            f"**Who is in the room:** {_bold_field(body, 'Interviewee', path)}",
+            f"**Whose answers these are:** {_bold_field(body, 'Interviewee', path)}",
             "",
             f"**How long:** {_bold_field(body, 'Time', path)}",
             "",
@@ -679,42 +1057,34 @@ def _phase_page(phase: Phase) -> str:
     lines += [
         phase.lead,
         "",
-        "**Run under [the method](method.md).** No fact enters the plan unless a human said "
-        "it, a read-only API returned it, or it is marked `MISSING` against a named owner.",
+        "**Run under [the method](method.md).** Nothing enters the plan unless somebody in "
+        "the room said it, an inventory shows it, or it is written down as a gap with a name "
+        "against it.",
+        "",
+        "---",
         "",
     ]
-    if phase.slug == "06-generate-and-audit":
-        front, body, _ = _skill(SCAFFOLD_SKILL)
-        lines += [
-            "---",
-            "",
-            f"## The repository to write — `{front['name']}`",
-            "",
-            f"*{front['description']}*",
-            "",
-            _demote(body),
-            "",
-        ]
-    for name in phase.skills:
-        front, body, _ = _skill(name)
-        lines += [
-            "---",
-            "",
-            f"## The technique — `{front['name']}`",
-            "",
-            f"*{front['description']}*",
-            "",
-            _demote(body),
-            "",
-        ]
+    lines += _translation_table(joined)
+    lines += ["## The technique", ""]
+    for skill in dict.fromkeys(skill for skill, _, _ in carried):
+        front = _frontmatter(_read(SKILLS / skill / "SKILL.md"), SKILLS / skill / "SKILL.md")
+        lines += [f"*From `{front['name']}`: {front['description']}*", ""]
+        lines += _sections([entry for entry in carried if entry[0] == skill])
     if phase.slug == "00-portfolio":
-        lines += _portfolio_fields()
+        lines += _register_worksheet()
     lines += _checklist(phase.namespaces)
+    lines += _worksheet(phase.namespaces)
     return "\n".join(lines).rstrip("\n") + "\n"
 
 
+def _skill_body(name: str) -> tuple[dict[str, str], str, Path]:
+    path = SKILLS / name / "SKILL.md"
+    text = _read(path)
+    return _frontmatter(text, path), _body(text, path), path
+
+
 def _landing_files(written_to: str) -> list[str]:
-    """The files one field lands in, with any trailing section number dropped."""
+    """The files one answer belongs in, with any trailing section number dropped."""
     return [token.split(" ")[0] for token in written_to.split(", ")]
 
 
@@ -737,21 +1107,22 @@ def _fields_page() -> str:
     phase_of = {namespace: phase for phase in PHASES for namespace in phase.namespaces}
 
     lines = [
-        "# Every field, and where it lands",
+        "# Every answer, and the document it belongs in",
         "",
         _BANNER,
         "",
-        f"The {len(bank.QUESTIONS)} fields of the starter plan, listed twice: by the file each "
-        "one is written into, which is the order phase 6 assembles in, and then as a flat "
-        "index. A field feeding two files appears under both.",
+        f"The {len(bank.QUESTIONS)} answers a first plan is built from, listed twice: by the "
+        "document each one is written into, which is the order to write in, and then as a "
+        "flat index. An answer feeding two documents appears under both.",
         "",
         "---",
         "",
-        "## By file",
+        "## By document",
         "",
     ]
     for path in sorted(by_file):
-        lines += [f"### `{path}`", "", "| Field | Records | Owner |", "|---|---|---|"]
+        lines += [f"### `{path}`", "", "| Answer | What it records | Who gives it |",
+                  "|---|---|---|"]
         for question in by_file[path]:
             lines.append(f"| `{question.id}` | {question.records} | {question.owner_role} |")
         lines.append("")
@@ -760,7 +1131,7 @@ def _fields_page() -> str:
         "",
         "## The full index",
         "",
-        "| Field | Phase | Answer | Owner | Section of the plan |",
+        "| Answer | Phase | Shape | Who gives it | Section of the plan |",
         "|---|---|---|---|---|",
     ]
     for question in bank.QUESTIONS:
@@ -769,10 +1140,12 @@ def _fields_page() -> str:
                      f"{question.kind} | {question.owner_role} | {question.coverage_row} |")
     lines += [
         "",
-        f"Figures owing a mechanism: {sum(q.mechanism_required for q in bank.QUESTIONS)}. "
-        f"Answers to read back before recording: "
+        f"Figures that owe a *what breaks at that number*: "
+        f"{sum(q.mechanism_required for q in bank.QUESTIONS)}. "
+        f"Answers to say back before writing them down: "
         f"{sum(q.readback_required for q in bank.QUESTIONS)}. "
-        f"Fields discovery may prefill: {sum(q.seedable for q in bank.QUESTIONS)}.",
+        f"Answers the inventory usually already holds: "
+        f"{sum(q.seedable for q in bank.QUESTIONS)}.",
         "",
     ]
     return "\n".join(lines).rstrip("\n") + "\n"
