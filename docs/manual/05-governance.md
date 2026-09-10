@@ -138,7 +138,7 @@ the cloud provider commits to in a regional event, and whether anyone has read i
 
 ## What this segment has to come away with
 
-12 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+13 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
 
 Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
@@ -221,6 +221,18 @@ Every one of them leaves the room with something written against it. An answer n
 - **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
 - **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The boundary most plans raise against themselves and never close. Where it is the same person, ask what they stop doing during a recovery; where it is two, ask who decides which one a given incident is.
+- **Goes into:** docs/07-standards-alignment.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+### Retention obligations and what sets them
+
+#### `governance.retention_obligation`
+
+> "What are you required to keep, for how long, and who says so? Name the regulation, the contract or the policy rather than the practice."
+
+- **Records:** Each retention obligation, its minimum period, what imposes it and who confirms it
+- **Answers:** governance/risk contact · **Shape:** one row per item, columns `data_or_records` | `minimum_retention` | `what_requires_it` | `who_confirms`
+- **Note:** Elicited here rather than from the infrastructure owner, because what a backup schedule keeps and what the organization is obliged to keep are set by different people and routinely disagree. Where a retention in the backup table is shorter than an obligation in this one, that contradiction is a finding with two named owners, and it is not the interviewer's to resolve.
 - **Goes into:** docs/07-standards-alignment.md
 - **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
@@ -316,6 +328,16 @@ Where two people give two answers, write both, and write whose decision it is.
 |---|---|---|---|---|
 | The route from a drill finding to a change in the plan (`governance.finding_to_change_route`) |  |  | H / M / L |  |
 | Where day-to-day availability ends and continuity begins, and who owns each side (`governance.availability_boundary`) |  |  | H / M / L |  |
+
+### Retention obligations and what sets them
+
+**Each retention obligation, its minimum period, what imposes it and who confirms it** (`governance.retention_obligation`) — one row each, add as many as the room needs
+
+| data_or_records | minimum_retention | what_requires_it | who_confirms | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
 
 ### Risk register
 

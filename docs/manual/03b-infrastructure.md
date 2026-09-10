@@ -152,7 +152,7 @@ until the invocation.
 
 ## What this segment has to come away with
 
-18 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+23 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
 
 Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
@@ -371,6 +371,66 @@ Every one of them leaves the room with something written against it. An answer n
 - **Goes into:** docs/10-phase-reconstitution.md, docs/03-replication-matrix.md
 - **NIST:** 5.8 Data Backup (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
+#### `infra.backup_strategy`
+
+> "Somebody deletes a table this morning and nobody notices until tomorrow. What do you reach for? Now the whole region is gone instead. What do you reach for then?"
+
+- **Records:** What protects each part of the system, and which loss each protection answers
+- **Answers:** infrastructure owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
+- **Note:** Two different failures, and organizations routinely have an answer for the second and none for the first. Replication is not a backup: it copies the deletion faithfully and at once. If the answer to both questions is the same mechanism, that is the finding.
+- **Goes into:** docs/03-replication-matrix.md
+- **NIST:** 5.8 Data Backup (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+#### `infra.backup_matrix`
+
+> "Take the pieces one at a time. For each: what is copied, by what, how often, and how long is the copy kept before it is thrown away?"
+
+- **Records:** Per component: what is backed up, how, what kind of copy, how often and for how long
+- **Answers:** infrastructure owner · **Shape:** one row per item, columns `component` | `method` | `type` | `frequency` | `retention` | `where_it_lands`
+- **`type` is one of:** `full`, `differential`, `incremental`, `snapshot`, `log or journal`, `continuous`, `none`
+- **Note:** One row per piece, and 'none' is a legal value in the type column: a component nobody backs up is a decision somebody made, and it belongs on the page rather than in an assumption. Frequency and retention are what make the row usable. A daily full kept for seven days and an hourly incremental kept for a year describe very different recoveries, and the difference decides what a recovery point objective is actually worth.
+- **Goes into:** docs/03-replication-matrix.md
+- **NIST:** 5.8 Data Backup (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+### Measured durations on the recovery critical path
+
+#### `infra.backup_restore_duration`
+
+> "Take the largest piece. If you had to rebuild it from a copy rather than fail over, how long from the decision to somebody being able to use it?"
+
+- **Records:** How long a restore of the largest component takes, end to end
+- **Answers:** lead engineer · **Shape:** a duration in hours
+- **Then ask:** "Is that measured or estimated? At what data volume, and which part of it takes the longest?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
+- **Note:** This is the number that decides whether restoring is a real option during an invocation or only on paper. Where it exceeds the recovery time objective, the plan cannot use restore as its answer and has to say so.
+- **Goes into:** docs/03-replication-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+### Restores actually performed
+
+#### `infra.backup_last_restore`
+
+> "When did somebody last put a copy back, for real rather than checking the backup job reported success? What did they restore, and how long did it take?"
+
+- **Records:** Each restore actually performed: what, from which copy, when, and how long it took
+- **Answers:** lead engineer · **Shape:** one row per item, columns `what_was_restored` | `from_which_copy` | `when` | `how_long_it_took` | `who_did_it`
+- **Note:** A backup nobody has restored is a hypothesis, and a backup job reporting success is evidence about the job rather than about the copy. An empty table is an honest and common answer, and it is the first thing the drill programme should fix.
+- **Goes into:** docs/06-test-environments.md, runbooks/RB-04-dr-drill.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+### Copies that survive a compromised administrator
+
+#### `infra.backup_immutability`
+
+> "Somebody has your administrator credentials and wants every copy gone. Which copy survives them, and who holds what is needed to bring it back?"
+
+- **Records:** The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it
+- **Answers:** infrastructure owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
+- **Note:** A continuity plan whose every copy is reachable with one set of credentials has one failure away from nothing. NOT_APPLICABLE is not available here; where no such copy exists the honest answer is that none does, named as a risk with an owner, and it usually becomes the most expensive finding in the engagement.
+- **Goes into:** docs/03-replication-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
 ---
 
 ## The worksheet
@@ -463,3 +523,34 @@ Where two people give two answers, write both, and write whose decision it is.
 | What it records | Answer | Who said it | Sure? | What breaks at that number |
 |---|---|---|---|---|
 | How the recovered system is protected again, when, and who confirms it (`infra.post_recovery_backup`) |  |  | H / M / L |  |
+| What protects each part of the system, and which loss each protection answers (`infra.backup_strategy`) |  |  | H / M / L |  |
+
+**Per component: what is backed up, how, what kind of copy, how often and for how long** (`infra.backup_matrix`) — one row each, add as many as the room needs
+
+| component | method | type | frequency | retention | where_it_lands | Who said it | Sure? |
+|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |   |  | H / M / L |
+
+### Measured durations on the recovery critical path
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| How long a restore of the largest component takes, end to end (`infra.backup_restore_duration`) |  |  | H / M / L |  |
+
+### Restores actually performed
+
+**Each restore actually performed: what, from which copy, when, and how long it took** (`infra.backup_last_restore`) — one row each, add as many as the room needs
+
+| what_was_restored | from_which_copy | when | how_long_it_took | who_did_it | Who said it | Sure? |
+|---|---|---|---|---|---|---|
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
+
+### Copies that survive a compromised administrator
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it (`infra.backup_immutability`) |  |  | H / M / L |  |

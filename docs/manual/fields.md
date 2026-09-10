@@ -4,7 +4,7 @@
      GETTING-STARTED.md. Regenerate with: python3 plugin/itscp_manual.py -->
 > **Generated page.** It is assembled from the interview skills and the question bank, so that it asks what they ask. An edit made here is overwritten; change the source.
 
-The 82 answers a first plan is built from, listed twice: by the document each one is written into, which is the order to write in, and then as a flat index. An answer feeding two documents appears under both.
+The 91 answers a first plan is built from, listed twice: by the document each one is written into, which is the order to write in, and then as a flat index. An answer feeding two documents appears under both.
 
 ---
 
@@ -119,6 +119,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `system.releases` | The release of each major component, and any upgrade in flight | application owner |
 | `system.operating_systems` | The operating system of each tier, and what that constrains | infrastructure owner |
 | `system.instances` | Whether the production environment is one instance or several, and how they are split | application owner |
+| `app.playbook_reachability` | Where the procedures can be read from during an invocation, and what that depends on | lead engineer |
 | `infra.primary_region` | The primary region | infrastructure owner |
 | `infra.standby_region` | The standby region | infrastructure owner |
 | `infra.region_locked_naming` | Which names are region-locked and what changing them costs in recovery time | infrastructure owner |
@@ -153,6 +154,10 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `infra.irreversible_choices` | Each decision that cannot be cheaply reversed, what reversing it costs and who may take it | lead engineer |
 | `infra.offsite_storage` | Each backup copy, where it is held, how long it is kept and how it is retrieved | infrastructure owner |
 | `infra.post_recovery_backup` | How the recovered system is protected again, when, and who confirms it | infrastructure owner |
+| `infra.backup_strategy` | What protects each part of the system, and which loss each protection answers | infrastructure owner |
+| `infra.backup_matrix` | Per component: what is backed up, how, what kind of copy, how often and for how long | infrastructure owner |
+| `infra.backup_restore_duration` | How long a restore of the largest component takes, end to end | lead engineer |
+| `infra.backup_immutability` | The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it | infrastructure owner |
 
 ### `docs/04-monitoring.md`
 
@@ -173,6 +178,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 
 | Answer | What it records | Who gives it |
 |---|---|---|
+| `infra.backup_last_restore` | Each restore actually performed: what, from which copy, when, and how long it took | lead engineer |
 | `governance.drill_levels` | Each exercise level, what it proves and what it does not | governance/risk contact |
 
 ### `docs/07-standards-alignment.md`
@@ -180,6 +186,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | Answer | What it records | Who gives it |
 |---|---|---|
 | `system.impact_level` | The assigned availability impact level, which selects the template this plan is graded against | governance/risk contact |
+| `governance.retention_obligation` | Each retention obligation, its minimum period, what imposes it and who confirms it | governance/risk contact |
 | `governance.associated_plans` | Each related plan, who owns it and how it relates to this one | governance/risk contact |
 | `governance.availability_boundary` | Where day-to-day availability ends and continuity begins, and who owns each side | governance/risk contact |
 
@@ -204,6 +211,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 |---|---|---|
 | `app.wrt_activities` | Each work-recovery activity, its duration, and whether it runs in parallel with bring-up | application owner |
 | `app.concurrent_processing` | Whether concurrent processing is performed, and the reason either way | application owner |
+| `app.reconstitution_order` | The reconstitution order, where it is written and who owns it | lead engineer |
 | `app.validation_data_tests` | Each data validation check, what it proves and who signs it off | application owner |
 | `app.unsafe_reruns` | Each scheduled job, whether it is safe to resubmit, and what a second run does | application owner |
 | `infra.post_recovery_backup` | How the recovered system is protected again, when, and who confirms it | infrastructure owner |
@@ -233,6 +241,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 |---|---|---|
 | `app.start_order` | The component start order and what depends on what | lead engineer |
 | `app.recovery_procedures` | The recovery procedure at the level of what is actually typed, in order | lead engineer |
+| `app.component_playbooks` | Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised | lead engineer |
 | `app.reconfiguration_duration` | How long a full application-tier reconfiguration takes, measured | lead engineer |
 
 ### `runbooks/RB-02-failover.md`
@@ -244,11 +253,18 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `continuity.declaration_authority` | The single individual with declaration authority, and their named deputy | DR process owner |
 | `continuity.activation_criteria` | The activation criteria, each one observable | DR process owner |
 
+### `runbooks/RB-03-failback.md`
+
+| Answer | What it records | Who gives it |
+|---|---|---|
+| `app.reconstitution_order` | The reconstitution order, where it is written and who owns it | lead engineer |
+
 ### `runbooks/RB-04-dr-drill.md`
 
 | Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.last_end_to_end_execution` | The date of the last end-to-end execution and who performed it | lead engineer |
+| `infra.backup_last_restore` | Each restore actually performed: what, from which copy, when, and how long it took | lead engineer |
 | `governance.event_documentation` | How a real event is written up, by whom, and where the record goes | governance/risk contact |
 | `governance.drill_cadence` | How often the plan is exercised, in practice | governance/risk contact |
 | `governance.drill_levels` | Each exercise level, what it proves and what it does not | governance/risk contact |
@@ -292,6 +308,9 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `app.wrt_activities` | [3a](03a-application.md) | rows | application owner | Minimum business continuity objective per tier |
 | `app.concurrent_processing` | [3a](03a-application.md) | narrative | application owner | 5.1 Concurrent processing |
 | `app.recovery_procedures` | [3a](03a-application.md) | code | lead engineer | 4.2 Recovery procedures |
+| `app.component_playbooks` | [3a](03a-application.md) | rows | lead engineer | Playbooks, runbooks and where they live |
+| `app.playbook_reachability` | [3a](03a-application.md) | narrative | lead engineer | Playbooks, runbooks and where they live |
+| `app.reconstitution_order` | [3a](03a-application.md) | narrative | lead engineer | Playbooks, runbooks and where they live |
 | `app.validation_data_tests` | [3a](03a-application.md) | rows | application owner | 5.2 Validation data testing |
 | `app.interface_landing` | [3a](03a-application.md) | narrative | lead engineer | Interface landing and replication of inbound data |
 | `app.unsafe_reruns` | [3a](03a-application.md) | rows | application owner | Interface landing and replication of inbound data |
@@ -314,6 +333,11 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `infra.licensing` | [3b](03b-infrastructure.md) | rows | infrastructure owner | Cost model and posture economics |
 | `infra.offsite_storage` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.7 Offsite data storage |
 | `infra.post_recovery_backup` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | 5.8 Data backup |
+| `infra.backup_strategy` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | 5.8 Data backup |
+| `infra.backup_matrix` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.8 Data backup |
+| `infra.backup_restore_duration` | [3b](03b-infrastructure.md) | duration | lead engineer | Measured durations on the recovery critical path |
+| `infra.backup_last_restore` | [3b](03b-infrastructure.md) | rows | lead engineer | Restores actually performed |
+| `infra.backup_immutability` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | Copies that survive a compromised administrator |
 | `continuity.declaration_authority` | [4](04-continuity.md) | text | DR process owner | 3.1 Activation criteria and procedure; who may activate |
 | `continuity.succession` | [4](04-continuity.md) | rows | DR process owner | 2.3 Roles and responsibilities |
 | `continuity.activation_criteria` | [4](04-continuity.md) | narrative | DR process owner | 3.1 Activation criteria and procedure; who may activate |
@@ -339,6 +363,7 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `governance.review_cadence` | [5](05-governance.md) | text | governance/risk contact | J. Test, training and exercise documentation |
 | `governance.training_program` | [5](05-governance.md) | narrative | governance/risk contact | J. Test, training and exercise documentation |
 | `governance.finding_to_change_route` | [5](05-governance.md) | narrative | governance/risk contact | Plan review and maintenance cadence |
+| `governance.retention_obligation` | [5](05-governance.md) | rows | governance/risk contact | Retention obligations and what sets them |
 | `governance.risk_register` | [5](05-governance.md) | rows | governance/risk contact | Risk register |
 | `governance.event_documentation` | [5](05-governance.md) | narrative | governance/risk contact | 5.9 Event documentation |
 | `governance.associated_plans` | [5](05-governance.md) | rows | governance/risk contact | K. Associated plans and procedures |
@@ -349,4 +374,4 @@ The 82 answers a first plan is built from, listed twice: by the document each on
 | `governance.breach_disclosure_clock` | [5](05-governance.md) | narrative | governance/risk contact | Risk register |
 | `discovery.completed` | [1](01-discovery.md) | date | infrastructure owner | H. Hardware, software and firmware inventory |
 
-Figures that owe a *what breaks at that number*: 10. Answers to say back before writing them down: 48. Answers the inventory usually already holds: 5.
+Figures that owe a *what breaks at that number*: 11. Answers to say back before writing them down: 52. Answers the inventory usually already holds: 5.
