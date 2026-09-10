@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# oci-discover.sh — read-only walk of an OCI tenancy for ISCP Appendix H and I.
+# discover.sh — read-only walk of an OCI tenancy for ISCP Appendix H and I.
 #
 # Every call goes through ro_oci() in lib/readonly-guard.sh, which refuses any
 # operation that is not a list or a get. See the itscp-discover skill.
 #
-#   ./oci-discover.sh --compartment <ocid> --regions us-ashburn-1,us-phoenix-1 --out discovery-output/
-#   ./oci-discover.sh --compartment <ocid> --regions us-ashburn-1 --dry-run
+#   ./discover.sh --compartment <ocid> --regions us-ashburn-1,us-phoenix-1 --out discovery-output/
+#   ./discover.sh --compartment <ocid> --regions us-ashburn-1 --dry-run
 #
 # --dry-run prints every command without executing. Show a customer the dry run
 # before the real run; it turns "an AI will look at production" into a list they

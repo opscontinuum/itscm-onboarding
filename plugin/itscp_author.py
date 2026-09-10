@@ -14,7 +14,7 @@ Why the discovery script is a tool rather than a documented command
 -------------------------------------------------------------------
 Tools run with the *user's project* as their working directory, never the directory the
 plugin was installed into. A skill that told the model to run
-``scripts/discover/oci-discover.sh`` therefore pointed at a path inside the customer's own
+``scripts/discover/oci/discover.sh`` therefore pointed at a path inside the customer's own
 repository, where nothing of the sort exists. Worse, a deployment that sets
 ``confine_to_project`` refuses an absolute path into an installed plugin outright, so
 telling the model the absolute path instead would fail exactly where it matters most.
@@ -30,7 +30,7 @@ Read-only by construction
 Every OCI call the script makes goes through its read-only guard, which refuses any
 operation that is not a list or a get. That guard, and the three checks that prove it holds,
 are the reason this plugin can be pointed at a production tenancy at all. This module must
-never grow a way around it: it spawns ``oci-discover.sh`` and nothing else, and it has no
+never grow a way around it: it spawns ``oci/discover.sh`` and nothing else, and it has no
 code path that calls ``oci``.
 
 No network calls are made by this module. It reads files, spawns one vetted script, and
@@ -47,7 +47,7 @@ from picoagent.core.tools import PathRefused, resolve_path, truncate
 from picoagent.core.types import ToolResult
 
 #: The discovery entry point, relative to the plugin root.
-DISCOVER_SCRIPT = Path("scripts") / "discover" / "oci-discover.sh"
+DISCOVER_SCRIPT = Path("scripts") / "discover" / "oci" / "discover.sh"
 
 #: Where discovery writes when the caller does not say. Relative to the user's project,
 #: because the inventory belongs to the plan being built rather than to this plugin.
