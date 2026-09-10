@@ -18,6 +18,7 @@ follow-up that asks what breaks, on the same record as the figure it explains.
 from __future__ import annotations
 
 import sys
+import re
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -69,6 +70,37 @@ DELIBERATE_EXTRA_ROW_FIELDS = (
     "app.component_playbooks",
     "governance.retention_obligation",
 )
+
+#: The map every element is checked against.
+COVERAGE_MAP = Path(__file__).resolve().parent.parent / "skills" / "_method" / "coverage-map" / "SKILL.md"
+
+#: A NIST section or appendix identifier: ``5.10``, ``A.``, ``App.``. Anything else is a row
+#: this toolkit carries beyond NIST, which has no identifier and is matched by name.
+_IDENTIFIED = re.compile(r"^(?:\d+(?:\.\d+)?|[A-Z]\.)$")
+
+#: Columns that appear in more than one table on purpose, because they are how one table
+#: points at another: a row identifies a component, a role, a tier, a process or a copy that
+#: another table describes in full. Everything else appearing twice is the same fact asked of
+#: the same person twice, which produces two answers and no way to tell which the plan should
+#: believe.
+#:
+#: Named rather than counted, for the reason the row fields are: a second table growing a
+#: `retention` column should be a decision somebody wrote down, not something that turns up in
+#: a worksheet. Adding a name here is cheap; the check exists so that adding it is deliberate.
+JOIN_COLUMNS: dict[str, str] = {
+    "component": "a piece of the system, described once in the inventory",
+    "copy": "a backup copy, described once in the table of copies at 5.7",
+    "role": "a role, described once in the contact roster",
+    "tier": "a recovery tier, defined once in the tier targets",
+    "process": "a business process, described once in the impact analysis",
+    "organization": "a vendor, described once in the vendor contacts",
+    "owner": "who owns the row; every table that has rows to own carries one",
+    "held_by": "who holds a role, in the two tables that assign them",
+    "reached_by": "how somebody is contacted, in the two tables that hold contacts",
+    "check": "a validation step, in the pack and in the data tests that share its shape",
+    "duration": "how long a step takes, in the two tables that time steps",
+    "what_it_proves": "what a test demonstrates, in the two tables that hold tests",
+}
 
 #: The plan rows that had no question at all, as the NIST headings a question now has to
 #: cite. Nine were named in the brief; three more turned up in the same sweep and are here
@@ -216,6 +248,11 @@ def main() -> None:
     section.check("the seven annotated list fields are all rows", _yaml_list_fields_are_rows)
 
     section.check("no field is rows by accident", _row_fields_are_the_declared_ones)
+
+    section.check("no fact is asked in two tables", _shared_columns_are_declared_joins)
+
+    section.check("every element the bank elicits is on the coverage map",
+                  _coverage_rows_are_on_the_map)
 
     section.check("enum questions offer options", _every_question(
         _enums_offer_options, "options"))
@@ -443,6 +480,51 @@ def _prompt_and_guidance_are_present(question) -> None:
 def _yaml_list_fields_are_rows() -> None:
     for key in YAML_LIST_FIELDS:
         equal(bank.BY_ID[key].kind, "rows", f"kind of {key}")
+
+
+def _coverage_rows_are_on_the_map() -> None:
+    """The coverage map calls itself the authoritative list. This is what makes that true.
+
+    A NIST row is matched by its identifier rather than its wording, because the map says
+    "5.5 User notification" where the bank says "5.5 Notification (users)" and neither is
+    wrong. A row the toolkit carries beyond NIST has no identifier to match on, so it is
+    matched in full: the bank's wording is the name of the thing, and the map repeating it
+    exactly is what lets a reader move between the two.
+    """
+    text = (COVERAGE_MAP).read_text(encoding="utf-8")
+    absent = []
+    for row in dict.fromkeys(question.coverage_row for question in bank.QUESTIONS):
+        identifier = row.split(" ", 1)[0]
+        found = identifier in text if _IDENTIFIED.match(identifier) else row in text
+        if not found:
+            absent.append(row)
+    assert not absent, (
+        "elicited by the bank and absent from the coverage map: " + "; ".join(absent)
+        + ". The map is the list an auditor is pointed at and the list itscp-build reports "
+          "against, so an element missing from it is elicited into a plan nothing accounts "
+          "for.")
+
+
+def _shared_columns_are_declared_joins() -> None:
+    """Every column in two tables is a declared join, or it is a fact asked twice."""
+    tables: dict[str, list[str]] = {}
+    for question in bank.row_questions():
+        for column in question.columns:
+            tables.setdefault(column, []).append(question.id)
+    shared = {column: ids for column, ids in tables.items() if len(ids) > 1}
+    undeclared = sorted(column for column in shared if column not in JOIN_COLUMNS)
+    assert not undeclared, (
+        "asked in more than one table and not declared as a join: "
+        + "; ".join(f"{column} ({', '.join(shared[column])})" for column in undeclared)
+        + ". Two tables carrying the same column are filled in by the same person in the same "
+          "hour and can disagree, and nothing downstream can tell which answer the plan "
+          "should believe. Either move the fact to one table and point at it from the other, "
+          "or add it to JOIN_COLUMNS with what it points at.")
+    unused = sorted(column for column in JOIN_COLUMNS if column not in shared)
+    assert not unused, (
+        "declared as joins and no longer in two tables: " + ", ".join(unused)
+        + ". Drop the entry rather than leaving a rule about something that stopped "
+          "happening.")
 
 
 def _row_fields_are_the_declared_ones() -> None:
