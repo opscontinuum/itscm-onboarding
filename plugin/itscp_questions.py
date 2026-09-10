@@ -1044,6 +1044,49 @@ QUESTIONS: tuple[Question, ...] = (
         nist_heading="4.2 Recovery Procedures", nist_source=_A3,
     ),
     Question(
+        "app.component_playbooks", "app", "Beyond NIST",
+        "Playbooks, runbooks and where they live", "runbooks/RB-01-switchover.md",
+        "Take the pieces one at a time. For each, is there a written procedure for bringing it "
+        "back, where does that document live, and who keeps it current?",
+        "Per component: the procedure for recovering it, where it is held, who maintains it "
+        "and when it was last exercised",
+        "lead engineer", "ours", kind="rows",
+        columns=("component", "procedure", "where_it_lives", "who_maintains",
+                 "last_exercised"),
+        guidance="'It is in somebody's head' is an answer, and it is the one worth writing "
+                 "down: it names a person the plan depends on being reachable. A procedure "
+                 "nobody has exercised in two years is a different finding from one that does "
+                 "not exist, so keep the last-exercised column honest rather than blank.",
+    ),
+    Question(
+        "app.playbook_reachability", "app", "Beyond NIST",
+        "Playbooks, runbooks and where they live", "docs/01-architecture.md",
+        "It is three in the morning and the primary region is gone. Where is the copy of the "
+        "procedure you would actually be reading, and can you reach it without the systems "
+        "that are down?",
+        "Where the procedures can be read from during an invocation, and what that depends on",
+        "lead engineer", "ours", kind="narrative", readback_required=True,
+        guidance="The question that separates what a system needs to run from what it needs "
+                 "to be recovered. Source control in the failed region, a wiki behind the "
+                 "identity provider that is also down, a bookmark on one laptop: each is a "
+                 "recovery dependency, and each belongs on the register as an edge rather "
+                 "than in a footnote here.",
+    ),
+    Question(
+        "app.reconstitution_order", "app", "Beyond NIST",
+        "Playbooks, runbooks and where they live",
+        "docs/10-phase-reconstitution.md, runbooks/RB-03-failback.md",
+        "Coming back to the primary is not the same trip in reverse. What says the order to "
+        "bring the pieces up in for the return, and who wrote it?",
+        "The reconstitution order, where it is written and who owns it",
+        "lead engineer", "ours", kind="narrative", readback_required=True,
+        guidance="Distinct from the cold start order, which answers a different question. A "
+                 "return has data moving the other way, a cutover window somebody has to "
+                 "agree, and a decision about what happens to the standby afterwards. Where "
+                 "the answer is that nobody has written it, that is the honest record and a "
+                 "drill objective.",
+    ),
+    Question(
         "app.validation_data_tests", "app", "5.2", "5.2 Validation data testing",
         "checklists/validation-pack.md, docs/10-phase-reconstitution.md",
         "Once it is back up, how would you satisfy yourself that the data is right, as "
@@ -1329,6 +1372,78 @@ QUESTIONS: tuple[Question, ...] = (
                  "goes home. Until this is done a second event is unrecoverable, so the "
                  "answer needs a name and a time attached to it, not an intention.",
         nist_heading="5.8 Data Backup", nist_source=_A3,
+    ),
+    Question(
+        "infra.backup_strategy", "infra", "5.8", "5.8 Data backup",
+        "docs/03-replication-matrix.md",
+        "Somebody deletes a table this morning and nobody notices until tomorrow. What do you "
+        "reach for? Now the whole region is gone instead. What do you reach for then?",
+        "What protects each part of the system, and which loss each protection answers",
+        "infrastructure owner", "nist", kind="narrative", readback_required=True,
+        guidance="Two different failures, and organizations routinely have an answer for the "
+                 "second and none for the first. Replication is not a backup: it copies the "
+                 "deletion faithfully and at once. If the answer to both questions is the "
+                 "same mechanism, that is the finding.",
+        nist_heading="5.8 Data Backup", nist_source=_A3,
+    ),
+    Question(
+        "infra.backup_matrix", "infra", "5.8", "5.8 Data backup",
+        "docs/03-replication-matrix.md",
+        "Take the pieces one at a time. For each: what is copied, by what, how often, and how "
+        "long is the copy kept before it is thrown away?",
+        "Per component: what is backed up, how, what kind of copy, how often and for how long",
+        "infrastructure owner", "nist", kind="rows",
+        columns=("component", "method", "type", "frequency", "retention", "where_it_lands"),
+        enum_columns={"type": ("full", "differential", "incremental", "snapshot",
+                               "log or journal", "continuous", "none")},
+        guidance="One row per piece, and 'none' is a legal value in the type column: a "
+                 "component nobody backs up is a decision somebody made, and it belongs on "
+                 "the page rather than in an assumption. Frequency and retention are what "
+                 "make the row usable. A daily full kept for seven days and an hourly "
+                 "incremental kept for a year describe very different recoveries, and the "
+                 "difference decides what a recovery point objective is actually worth.",
+        nist_heading="5.8 Data Backup", nist_source=_A3,
+    ),
+    Question(
+        "infra.backup_restore_duration", "infra", "Beyond NIST",
+        "Measured durations on the recovery critical path", "docs/03-replication-matrix.md",
+        "Take the largest piece. If you had to rebuild it from a copy rather than fail over, "
+        "how long from the decision to somebody being able to use it?",
+        "How long a restore of the largest component takes, end to end",
+        "lead engineer", "ours", kind="duration", unit="hours", mechanism_required=True,
+        mechanism_prompt="Is that measured or estimated? At what data volume, and which part "
+                         "of it takes the longest?",
+        guidance="This is the number that decides whether restoring is a real option during "
+                 "an invocation or only on paper. Where it exceeds the recovery time "
+                 "objective, the plan cannot use restore as its answer and has to say so.",
+    ),
+    Question(
+        "infra.backup_last_restore", "infra", "Beyond NIST", "Restores actually performed",
+        "docs/06-test-environments.md, runbooks/RB-04-dr-drill.md",
+        "When did somebody last put a copy back, for real rather than checking the backup job "
+        "reported success? What did they restore, and how long did it take?",
+        "Each restore actually performed: what, from which copy, when, and how long it took",
+        "lead engineer", "ours", kind="rows",
+        columns=("what_was_restored", "from_which_copy", "when", "how_long_it_took",
+                 "who_did_it"),
+        guidance="A backup nobody has restored is a hypothesis, and a backup job reporting "
+                 "success is evidence about the job rather than about the copy. An empty "
+                 "table is an honest and common answer, and it is the first thing the drill "
+                 "programme should fix.",
+    ),
+    Question(
+        "infra.backup_immutability", "infra", "Beyond NIST",
+        "Copies that survive a compromised administrator", "docs/03-replication-matrix.md",
+        "Somebody has your administrator credentials and wants every copy gone. Which copy "
+        "survives them, and who holds what is needed to bring it back?",
+        "The copy that cannot be deleted or encrypted by a compromised administrator, and who "
+        "holds access to it",
+        "infrastructure owner", "ours", kind="narrative", readback_required=True,
+        guidance="A continuity plan whose every copy is reachable with one set of credentials "
+                 "has one failure away from nothing. NOT_APPLICABLE is not available here; "
+                 "where no such copy exists the honest answer is that none does, named as a "
+                 "risk with an owner, and it usually becomes the most expensive finding in "
+                 "the engagement.",
     ),
     # ------------------------------------------------ continuity.* - DR process owner
     Question(
@@ -1632,6 +1747,20 @@ QUESTIONS: tuple[Question, ...] = (
         "The route from a drill finding to a change in the plan",
         "governance/risk contact", "ours", kind="narrative", readback_required=True,
         guidance="If there is no route, the drills are theater.",
+    ),
+    Question(
+        "governance.retention_obligation", "governance", "Beyond NIST",
+        "Retention obligations and what sets them", "docs/07-standards-alignment.md",
+        "What are you required to keep, for how long, and who says so? Name the regulation, "
+        "the contract or the policy rather than the practice.",
+        "Each retention obligation, its minimum period, what imposes it and who confirms it",
+        "governance/risk contact", "ours", kind="rows",
+        columns=("data_or_records", "minimum_retention", "what_requires_it", "who_confirms"),
+        guidance="Elicited here rather than from the infrastructure owner, because what a "
+                 "backup schedule keeps and what the organization is obliged to keep are set "
+                 "by different people and routinely disagree. Where a retention in the backup "
+                 "table is shorter than an obligation in this one, that contradiction is a "
+                 "finding with two named owners, and it is not the interviewer's to resolve.",
     ),
     Question(
         "governance.risk_register", "governance", "Beyond NIST", "Risk register",
