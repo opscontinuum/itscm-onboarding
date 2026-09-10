@@ -474,6 +474,19 @@ function questionCard(q) {
   return el('div', { class: cls }, kids);
 }
 
+// A list long enough to need trimming says what it trimmed. A page that shows forty of
+// eighty-nine and stops reads as if forty were all of them, which is the wrong thing to
+// believe about your own gaps.
+const SHOWN = 40;
+function listing(kids, items) {
+  kids.push(el('ul', {}, items.slice(0, SHOWN).map(t => el('li', { text: t }))));
+  if (items.length > SHOWN) {
+    kids.push(el('p', { class: 'saved',
+      text: 'Showing the first ' + SHOWN + '. ' + (items.length - SHOWN) +
+            ' more are open and not listed here.' }));
+  }
+}
+
 function whyFlagged(q) {
   const a = state.answers[q.id];
   const given = said(a).filter(s => s.value && String(s.value).trim());
@@ -493,10 +506,10 @@ function summary() {
     ? open.length + ' answer(s) with nothing written against them. A blank is not a result; ' +
       'an answer nobody has is a name.'
     : 'Every answer has something written against it.' })];
-  if (open.length) kids.push(el('ul', {}, open.slice(0, 40).map(t => el('li', { text: t }))));
+  if (open.length) listing(kids, open);
   if (unsure.length) {
     kids.push(el('p', { text: unsure.length + ' answered without the thing that makes it hold up:' }));
-    kids.push(el('ul', {}, unsure.slice(0, 40).map(t => el('li', { text: t }))));
+    listing(kids, unsure);
   }
   return el('div', { class: 'summary' }, kids);
 }

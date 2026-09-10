@@ -274,10 +274,15 @@ check("a reopened page restores what was typed", () => {
   }
 });
 
-check("every question in the bank is on some phase", () => {
-  const ids = new Set();
-  data.phases.forEach(p => p.questions.forEach(q => ids.add(q.id)));
-  if (ids.size !== 82) throw new Error("expected 82 questions, embedded " + ids.size);
+check("every question appears once, on exactly one phase", () => {
+  // How many there should be is checked in Python against the bank itself. Pinning the
+  // number here as well would be a second copy of it, drifting the first time one is added.
+  const seen = new Map();
+  data.phases.forEach(p => p.questions.forEach(q => {
+    if (seen.has(q.id)) throw new Error(q.id + " is on phase " + seen.get(q.id) + " and " + p.number);
+    seen.set(q.id, p.number);
+  }));
+  if (!seen.size) throw new Error("the page carries no questions at all");
 });
 
 check("the exported file is the record shape", () => {
