@@ -152,25 +152,54 @@ first improvement to a skill that nobody remembers to mirror. What a reader woul
 a document that is stale in exactly the places the toolkit recently got better.
 
 So `docs/manual/` is assembled by `plugin/itscp_manual.py` from the files that are already
-authoritative: the skill bodies for the technique, `itscp_questions` for the fields, and
-`GETTING-STARTED.md` for the orientation. **Only the phase sequence is written in the
-generator**, because nothing else states it in one place.
+authoritative: named sections of the skills for the technique, `itscp_questions` for the
+questions and the worksheets, `itscp_portfolio` for the register's shape, and
+`GETTING-STARTED.md` for the orientation. **Only the phase sequence, the room each phase
+needs, and the by-hand procedures that replace a script are written in the generator**,
+because nothing else states those in one place.
 
 Freshness is enforced rather than remembered. `test_manual` rebuilds every page and fails on
 the first differing line, so changing a skill without regenerating is a failing test — the
 same guard `examples/` is held to, for the same reason.
 
-**Rejected — a manual that links to the skills instead of embedding them.** It is trivially
-drift-free and it is an index, not a manual. Somebody running an interview from a printed page
-needs the technique on that page.
+**The manual is a tabletop, and that is not a formatting choice.** A manual run is a room:
+the application and infrastructure teams together, a facilitator, and paper. Three things
+follow, and each is enforced rather than intended.
 
-**Rejected — extracting the interview questions from the skill prose.** The bank already is
-the schema, and the skills carry the conversational probes around it. The manual takes each
-from where it lives rather than parsing one out of the other.
+*It produces no TOML.* The plugin's answer store is a file; the tabletop's is the stack of
+worksheets, holding the same things in columns — the answer, who gave it, how sure they were,
+what breaks at that number. Transcription into the store is an appendix for an organization
+that later adopts the toolkit, never the procedure.
+
+*It tells nobody to run anything.* The skills are written for an agent with the plugin
+loaded, so they name scripts, tools and files a room does not have. Sections that are only
+about driving the toolkit are excluded by name with a stated reason; every surviving mention
+is answered by the page's own *Running this without the toolkit* table. A test scans each page
+for command-shaped text with a pattern written independently of that table, so a reference
+nothing translates fails the build. Where a script did real work — the register's five
+cross-system checks — the manual carries the procedure by hand, and a further test asserts
+each check still names a finding the validator actually raises.
+
+*It assumes no particular cloud.* Phase 1 is what the teams bring, gathered however they
+already gather it. The read-only walk is one provider's accelerator; what generalizes is the
+rule that discovery never changes anything.
+
+**Rejected — a manual that links to the skills instead of embedding them.** It is trivially
+drift-free and it is an index, not a manual. Somebody facilitating from a printed page needs
+the technique on that page.
+
+**Rejected — embedding the skills whole.** The first version did, and it shipped a document
+that told a room to run `oci-discover.sh` and hand-write `answers.toml`. Verbatim is the right
+instinct for drift and the wrong unit: the unit is the section, and which sections belong is a
+decision that has to be recorded and tested, not assumed.
+
+**Rejected — extracting the questions from the skill prose.** The bank already is the schema,
+and the skills carry the conversational probes around it. The manual takes each from where it
+lives rather than parsing one out of the other.
 
 The extractors refuse rather than guess: a missing heading, frontmatter field or `**Label:**`
-line raises. A restructured skill therefore fails the build loudly instead of producing a
-manual with a section silently missing.
+line raises. A skill that grows a section fails the build too, until somebody says whether the
+manual carries it.
 
 ## Known limitations
 
