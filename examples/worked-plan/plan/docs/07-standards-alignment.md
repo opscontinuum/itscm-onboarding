@@ -8,6 +8,10 @@ This document is generated from the answer store. Correct it by correcting the i
 
 - **The assigned availability impact level, which selects the template this plan is graded against**: **[MISSING — owner: governance/risk contact]**
 
+## Recorded for this plan
+
+- **Each retention obligation, its minimum period, what imposes it and who confirms it**: **[MISSING — owner: governance/risk contact]**
+
 ## APPENDIX K ASSOCIATED PLANS AND PROCEDURES
 
 - **Each related plan, who owns it and how it relates to this one**: **[MISSING — owner: governance/risk contact]**
@@ -27,5 +31,6 @@ No value in this document has a recorded source yet.
 Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The assigned availability impact level, which selects the template this plan is graded against**: **[MISSING — owner: governance/risk contact]**
+- **Each retention obligation, its minimum period, what imposes it and who confirms it**: **[MISSING — owner: governance/risk contact]**
 - **Each related plan, who owns it and how it relates to this one**: **[MISSING — owner: governance/risk contact]**
 - **Where day-to-day availability ends and continuity begins, and who owns each side**: **[MISSING — owner: governance/risk contact]**

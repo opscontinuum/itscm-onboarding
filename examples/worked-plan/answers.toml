@@ -593,6 +593,38 @@ confidence = "high"
 notes = "Transcribed from the switchover runbook's manual fallback block, which is the one block in the reference plan carrying the sequence end to end with its real flags. Comment wrapping is adjusted to the store's line width and nothing else is changed. The credential in step 2 is masked in the reference plan itself. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
 
+# app.component_playbooks - asked of the lead engineer
+# 'It is in somebody's head' is an answer, and it is the one worth writing down: it
+# names a person the plan depends on being reachable. A procedure nobody has exercised
+# in two years is a different finding from one that does not exist, so keep the
+# last-exercised column honest rather than blank.
+[facts."app.component_playbooks"]
+status = "MISSING"
+owner = "lead engineer"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+# app.playbook_reachability - asked of the lead engineer
+# The question that separates what a system needs to run from what it needs to be
+# recovered. Source control in the failed region, a wiki behind the identity provider
+# that is also down, a bookmark on one laptop: each is a recovery dependency, and each
+# belongs on the register as an edge rather than in a footnote here.
+# Read this back and get a yes before recording it.
+[facts."app.playbook_reachability"]
+status = "MISSING"
+owner = "lead engineer"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+# app.reconstitution_order - asked of the lead engineer
+# Distinct from the cold start order, which answers a different question. A return has
+# data moving the other way, a cutover window somebody has to agree, and a decision
+# about what happens to the standby afterwards. Where the answer is that nobody has
+# written it, that is the honest record and a drill objective.
+# Read this back and get a yes before recording it.
+[facts."app.reconstitution_order"]
+status = "MISSING"
+owner = "lead engineer"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
 # app.validation_data_tests - asked of the application owner
 # Not the same as the functional pack, and the difference is the point. A database
 # opening read-write proves the system is up. Only somebody who runs the process can
@@ -975,6 +1007,61 @@ provenance = "document:oci-itscp/docs/03-replication-matrix.md"
 decision_owner = "infrastructure owner"
 notes = "The Exadata service documentation permits automatic backups on a standby-role database in general; the release note the plan follows permits them only when the primary's backup destination is Object Storage, which it is not here. The plan resolves this by scheduling a customer-run RMAN backup of the standby instead, and marks that design unverified."
 
+# infra.backup_strategy - asked of the infrastructure owner
+# Two different failures, and organizations routinely have an answer for the second
+# and none for the first. Replication is not a backup: it copies the deletion
+# faithfully and at once. If the answer to both questions is the same mechanism, that
+# is the finding.
+# Read this back and get a yes before recording it.
+[facts."infra.backup_strategy"]
+status = "MISSING"
+owner = "infrastructure owner"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+# infra.backup_matrix - asked of the infrastructure owner
+# One row per piece, and 'none' is a legal value in the type column: a component
+# nobody backs up is a decision somebody made, and it belongs on the page rather than
+# in an assumption. Frequency and retention are what make the row usable. A daily full
+# kept for seven days and an hourly incremental kept for a year describe very
+# different recoveries, and the difference decides what a recovery point objective is
+# actually worth.
+[facts."infra.backup_matrix"]
+status = "MISSING"
+owner = "infrastructure owner"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one. The offsite-storage rows in this same store record three copies with their retention, which is part of what this table wants."
+
+# infra.backup_restore_duration - asked of the lead engineer
+# This is the number that decides whether restoring is a real option during an
+# invocation or only on paper. Where it exceeds the recovery time objective, the plan
+# cannot use restore as its answer and has to say so.
+# The figure needs its mechanism beside it. Ask:
+# Is that measured or estimated? At what data volume, and which part of it takes the
+# longest?
+[facts."infra.backup_restore_duration"]
+status = "MISSING"
+owner = "lead engineer"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+# infra.backup_last_restore - asked of the lead engineer
+# A backup nobody has restored is a hypothesis, and a backup job reporting success is
+# evidence about the job rather than about the copy. An empty table is an honest and
+# common answer, and it is the first thing the drill programme should fix.
+[facts."infra.backup_last_restore"]
+status = "MISSING"
+owner = "lead engineer"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+# infra.backup_immutability - asked of the infrastructure owner
+# A continuity plan whose every copy is reachable with one set of credentials has one
+# failure away from nothing. NOT_APPLICABLE is not available here; where no such copy
+# exists the honest answer is that none does, named as a risk with an owner, and it
+# usually becomes the most expensive finding in the engagement.
+# Read this back and get a yes before recording it.
+[facts."infra.backup_immutability"]
+status = "MISSING"
+owner = "infrastructure owner"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one. The offsite-storage rows in this same store already record an Autonomous Recovery Service copy with a retention lock, which is where a re-derivation should start."
+
 # continuity.declaration_authority - asked of the DR process owner
 # Exactly one individual, and one named deputy. Not 'the incident team', which is
 # nobody, and not a rota, which is not a name.
@@ -1320,6 +1407,17 @@ provenance = "document:oci-itscp/runbooks/RB-04-dr-drill.md"
 confidence = "medium"
 notes = "Confidence is medium because the reference plan answers this for drills and records the equivalent for a real event as a known gap in the same revision. No interview took place and no draft was read back to anybody. The read-back is recorded as confirmed because the store requires one on this question; the value is quoted from the cited file rather than drafted on someone's behalf."
 readback = "confirmed"
+
+# governance.retention_obligation - asked of the governance/risk contact
+# Elicited here rather than from the infrastructure owner, because what a backup
+# schedule keeps and what the organization is obliged to keep are set by different
+# people and routinely disagree. Where a retention in the backup table is shorter than
+# an obligation in this one, that contradiction is a finding with two named owners,
+# and it is not the interviewer's to resolve.
+[facts."governance.retention_obligation"]
+status = "MISSING"
+owner = "governance/risk contact"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
 
 # governance.risk_register - asked of the governance/risk contact
 # Material assumptions and design risks, owned and reviewed rather than scattered.

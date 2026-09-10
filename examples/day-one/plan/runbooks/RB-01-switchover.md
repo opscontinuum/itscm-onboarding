@@ -14,6 +14,7 @@ This document is generated from the answer store. Correct it by correcting the i
 
 ## Recorded for this plan
 
+- **Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised**: **[MISSING — owner: lead engineer]**
 - **How long a full application-tier reconfiguration takes, measured**: **[MISSING — owner: lead engineer]**
 
 ## References
@@ -28,4 +29,5 @@ Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The component start order and what depends on what**: **[MISSING — owner: lead engineer]**
 - **The recovery procedure at the level of what is actually typed, in order**: **[MISSING — owner: lead engineer]**
+- **Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised**: **[MISSING — owner: lead engineer]**
 - **How long a full application-tier reconfiguration takes, measured**: **[MISSING — owner: lead engineer]**

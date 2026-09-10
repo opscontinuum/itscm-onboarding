@@ -8,6 +8,10 @@ This document is generated from the answer store. Correct it by correcting the i
 
 - **The date of the last end-to-end execution and who performed it**: Never, by construction. The reference plan documents a hypothetical corporation and states that it is not validated against a live environment. Its Terraform has never been applied and plan and apply were never run. Its plan-approval statement carries the date of the last drill as an unfilled placeholder, its evidence directory is a structural placeholder, and its record of changes carries no row for a drill or an event. Nobody has run it.
 
+## Recorded for this plan
+
+- **Each restore actually performed: what, from which copy, when, and how long it took**: **[MISSING — owner: lead engineer]**
+
 ## 5.9 Event Documentation
 
 - **How a real event is written up, by whom, and where the record goes**: It has never been done, and the reference plan states plainly that it could not be. There is no after-action report template. The standard asks for one explicitly, and the repository has the inputs, the drill timing sheet, the recovery-point attestation script, the replication-state capture and the evidence directory, but no document that assembles them into a report and no defined route from a finding to a plan change beyond the record of changes. The drill runbook covers evidence and improvement for a drill; a real event is not covered. Where the record would go is stated, the timing sheet, replication-state capture and after-action narrative to the evidence directory with the record of changes updated with what the event taught, and both are exit-checklist items. Who writes it for a real event is not stated in the reference plan, beyond the assessment team contributing to the after-action record and risk and audit receiving the evidence. The record of changes carries no row for a drill or an event.
@@ -42,4 +46,5 @@ Sources for every value above, as recorded when the value was given.
 
 Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
+- **Each restore actually performed: what, from which copy, when, and how long it took**: **[MISSING — owner: lead engineer]**
 - **How often the plan is exercised, in practice**: **[MISSING — owner: governance/risk contact]**

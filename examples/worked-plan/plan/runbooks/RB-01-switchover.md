@@ -38,6 +38,7 @@ powershell -File scripts/windows/Start-EBSAppTier.ps1 -Node ALL -RunCmClean
 
 ## Recorded for this plan
 
+- **Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised**: **[MISSING — owner: lead engineer]**
 - **How long a full application-tier reconfiguration takes, measured**: About 20 to 40 minutes when the EBS logical host names are preserved, because application-tier recovery is then just starting the services. About 3 to 5 hours when they are not, because the documented Oracle sequence for a role transition has to run: purge FND_NODES, then AutoConfig on the database tier, then AutoConfig on both the run and patch filesystems of every application-tier node. *(low confidence; not measured)*
 
 ## References
@@ -52,4 +53,5 @@ Sources for every value above, as recorded when the value was given.
 
 Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
+- **Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised**: **[MISSING — owner: lead engineer]**
 - **How long a full application-tier reconfiguration takes, measured**:  *(low confidence; not measured)*

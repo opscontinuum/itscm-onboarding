@@ -8,6 +8,10 @@ This document is generated from the answer store. Correct it by correcting the i
 
 - **The date of the last end-to-end execution and who performed it**: **[MISSING — owner: lead engineer]**
 
+## Recorded for this plan
+
+- **Each restore actually performed: what, from which copy, when, and how long it took**: **[MISSING — owner: lead engineer]**
+
 ## 5.9 Event Documentation
 
 - **How a real event is written up, by whom, and where the record goes**: **[MISSING — owner: governance/risk contact]**
@@ -33,6 +37,7 @@ No value in this document has a recorded source yet.
 Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The date of the last end-to-end execution and who performed it**: **[MISSING — owner: lead engineer]**
+- **Each restore actually performed: what, from which copy, when, and how long it took**: **[MISSING — owner: lead engineer]**
 - **How a real event is written up, by whom, and where the record goes**: **[MISSING — owner: governance/risk contact]**
 - **How often the plan is exercised, in practice**: **[MISSING — owner: governance/risk contact]**
 - **Each exercise level, what it proves and what it does not**: **[MISSING — owner: governance/risk contact]**
