@@ -38,7 +38,7 @@ fi
 #
 # `scripts` is deliberately on this list even though the *generated plan* also
 # has a scripts/ directory for recovery automation. A bare `scripts/` is that
-# one and is left alone; `scripts/discover/oci-discover.sh` is ours. The rule
+# one and is left alone; `scripts/discover/oci/discover.sh` is ours. The rule
 # below is the discriminator: one segment is the plan's, two or more is ours.
 BUNDLED_ROOTS='skills|scripts|templates|tests|plugin'
 
