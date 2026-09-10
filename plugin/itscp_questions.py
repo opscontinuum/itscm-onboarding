@@ -1080,10 +1080,12 @@ QUESTIONS: tuple[Question, ...] = (
         "bring the pieces up in for the return, and who wrote it?",
         "The reconstitution order, where it is written and who owns it",
         "lead engineer", "ours", kind="narrative", readback_required=True,
-        guidance="Distinct from the cold start order, which answers a different question. A "
-                 "return has data moving the other way, a cutover window somebody has to "
-                 "agree, and a decision about what happens to the standby afterwards. Where "
-                 "the answer is that nobody has written it, that is the honest record and a "
+        guidance="The cold start order at 4.1 answers what to bring up first when "
+                 "everything is off. This answers a different question and usually has a "
+                 "different answer: a return has data moving the other way, a cutover window "
+                 "somebody has to agree, and a decision about what happens to the standby "
+                 "afterwards. Ask it separately rather than assuming the first answer "
+                 "reversed. Where nobody has written it down, that is the honest record and a "
                  "drill objective.",
     ),
     Question(
@@ -1355,10 +1357,13 @@ QUESTIONS: tuple[Question, ...] = (
         "Each backup copy, where it is held, how long it is kept and how it is retrieved",
         "infrastructure owner", "nist", kind="rows",
         columns=("copy", "where_it_is_held", "retention", "how_it_is_retrieved"),
-        guidance="NOT_APPLICABLE with a reason is a legitimate and common answer where "
+        guidance="This is the table of copies, and the backup rows at 5.8 point into it by "
+                 "name. NOT_APPLICABLE with a reason is a legitimate and common answer where "
                  "nothing is on physical media, and it is a better answer than an invented "
                  "courier. What is never legitimate is leaving retention blank: a retention "
-                 "shorter than the records the business has to keep is a finding on its own.",
+                 "shorter than the records the business has to keep is a finding on its own, "
+                 "and the obligation it has to clear is elicited from governance rather than "
+                 "from you.",
         nist_heading="5.7 Offsite Data Storage", nist_source=_A3,
     ),
     Question(
@@ -1393,15 +1398,17 @@ QUESTIONS: tuple[Question, ...] = (
         "long is the copy kept before it is thrown away?",
         "Per component: what is backed up, how, what kind of copy, how often and for how long",
         "infrastructure owner", "nist", kind="rows",
-        columns=("component", "method", "type", "frequency", "retention", "where_it_lands"),
+        columns=("component", "what_is_copied", "method", "type", "frequency", "copy"),
         enum_columns={"type": ("full", "differential", "incremental", "snapshot",
                                "log or journal", "continuous", "none")},
         guidance="One row per piece, and 'none' is a legal value in the type column: a "
                  "component nobody backs up is a decision somebody made, and it belongs on "
-                 "the page rather than in an assumption. Frequency and retention are what "
-                 "make the row usable. A daily full kept for seven days and an hourly "
-                 "incremental kept for a year describe very different recoveries, and the "
-                 "difference decides what a recovery point objective is actually worth.",
+                 "the page rather than in an assumption. The last column names the copy the "
+                 "backup lands in, from the table of copies at 5.7 offsite storage; where a "
+                 "component's copy is not in that table yet, add it there. How long anything "
+                 "is kept is a property of the copy and is asked once, there, so that two "
+                 "tables filled in by the same person in the same hour cannot end up "
+                 "disagreeing about it.",
         nist_heading="5.8 Data Backup", nist_source=_A3,
     ),
     Question(
@@ -1413,9 +1420,12 @@ QUESTIONS: tuple[Question, ...] = (
         "lead engineer", "ours", kind="duration", unit="hours", mechanism_required=True,
         mechanism_prompt="Is that measured or estimated? At what data volume, and which part "
                          "of it takes the longest?",
-        guidance="This is the number that decides whether restoring is a real option during "
-                 "an invocation or only on paper. Where it exceeds the recovery time "
-                 "objective, the plan cannot use restore as its answer and has to say so.",
+        guidance="The number that decides whether restoring is a real option during an "
+                 "invocation or only on paper. Where it exceeds the recovery time objective, "
+                 "the plan cannot use restore as its answer and has to say so. Where the "
+                 "table of restores actually performed already holds a real figure for this "
+                 "component, that figure is the answer here; do not estimate over the top of "
+                 "a measurement somebody took.",
     ),
     Question(
         "infra.backup_last_restore", "infra", "Beyond NIST", "Restores actually performed",
