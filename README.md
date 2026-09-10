@@ -75,10 +75,11 @@ output says so, by name.
 
 **Start here:** [`GETTING-STARTED.md`](GETTING-STARTED.md).
 
-**Running it without the plugin:** [`docs/manual/`](docs/manual/README.md) is the same
-engagement as a set of pages you can print — every phase in order, the technique for each one,
-and the checklist of every field it records, down to the question to ask and the role who owes
-the answer. It is generated from the skills and the question bank, so it says what they say.
+**Running it as a tabletop:** [`docs/manual/`](docs/manual/README.md) is the same engagement
+facilitated by a person — the application and infrastructure teams in one room, a printed
+worksheet on the table, and nothing to install. Every phase in order, the technique for each,
+the question to ask, the role who owes the answer, and a blank line to write it on. It is
+generated from the skills and the question bank, so it asks exactly what they ask.
 
 ---
 
