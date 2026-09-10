@@ -164,7 +164,7 @@ real architecture within a day and are never revisited.
 
 ---
 
-## Phase 3 — The technical interviews (90–120 minutes each)
+## Phase 3 — The technical interviews (about 2 hours each)
 
 Independent of each other; run in either order or in parallel with different people.
 
@@ -202,7 +202,7 @@ decision owner, not something to reconcile quietly.
 
 ---
 
-## Phase 5 — The governance interview (60 minutes)
+## Phase 5 — The governance interview (80 minutes)
 
 Invoke `itscp-interview-governance`. Approval, review cadence, training, exercises, evidence,
 risk register.
