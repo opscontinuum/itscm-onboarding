@@ -76,10 +76,14 @@ output says so, by name.
 **Start here:** [`GETTING-STARTED.md`](GETTING-STARTED.md).
 
 **Running it as a tabletop:** [`docs/manual/`](docs/manual/README.md) is the same engagement
-facilitated by a person — the application and infrastructure teams in one room, a printed
-worksheet on the table, and nothing to install. Every phase in order, the technique for each,
-the question to ask, the role who owes the answer, and a blank line to write it on. It is
-generated from the skills and the question bank, so it asks exactly what they ask.
+facilitated by a person, with the application and infrastructure teams in one room. Every
+phase in order, the technique for each, the question to ask and the role who owes the answer,
+all generated from the skills and the question bank so it asks exactly what they ask.
+
+The room types into [`worksheet.html`](docs/manual/worksheet.html): one file, opened straight
+off the disk, no install and no network. It tracks what is still blank and writes a JSON file
+to reload next session or hand to whoever transcribes it. Every phase page also carries a
+printable worksheet, for the room where a laptop is not welcome or not working.
 
 ---
 
