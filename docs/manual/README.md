@@ -1,36 +1,48 @@
-# The manual
+# The tabletop
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-The onboarding run by hand: the same phases in the same order, for somebody working from this page rather than from a loaded plugin. Every phase carries the technique the corresponding skill carries, and every interview phase ends with the checklist of fields it records.
+This engagement run as a facilitated exercise: the application and infrastructure teams in one room, a printed worksheet on the table, and nothing to install. It asks the same questions the toolkit asks, because it is generated from the same files.
 
-**Read [the method](method.md) before the first interview.** It is the discipline all of the phases are run under, and the one thing here that is not optional: a plan whose numbers nobody gave is worse than one with visible gaps, and the method is what keeps the difference legible.
+**Two of the phases are deliberately not tabletop segments.** The business figures are elicited on their own, before the room meets, because tiers agreed in front of the engineers who will have to meet them stop being the business's figures. Governance is elicited afterwards, and needs nobody technical.
 
-## The sequence
+**Read [the method](method.md) before the first session.** It is the discipline all of this is run under, and the one part that is not optional: a plan whose numbers nobody gave is worse than one with visible gaps, and the method is what keeps the difference legible.
 
-| Phase | Who is in the room | Fields recorded |
+## The running order
+
+| Phase | Session | Answers to come away with |
 |---|---|---|
-| [Phase 0 — The portfolio and the dependency map](00-portfolio.md) | Whoever can see the whole portfolio — enterprise architect, head of infrastructure, or the CIO. Usually two or three people together, because nobody has the complete picture alone. That gap is itself the first finding. | none — see the page |
-| [Phase 1 — Discovery](01-discovery.md) | You, on your own | 1 |
-| [Phase 2 — The business interview, which gates the rest](02-business.md) | The business or process owner. Not IT. If the only person available is from IT, stop and say so: an MTD signed by IT is IT telling itself what it is allowed to fail at. | 11 |
-| [Phase 3a — The application interview](03a-application.md) | The application owner — whoever is accountable for the application working, not for the infrastructure under it. In an ERP context this is usually the functional lead or applications DBA rather than the cloud team. | 19 |
-| [Phase 3b — The infrastructure interview](03b-infrastructure.md) | The cloud or infrastructure owner, with the lead engineer. The owner holds the design and the budget; the lead engineer holds the measured figures and the answer to section 6, and those are the parts of this interview that decide how much of the plan is real. | 18 |
-| [Phase 4 — The continuity interview](04-continuity.md) | The DR process owner, incident manager, or whoever would actually be running the bridge at 3am, with their deputy in the room where one is named. If nobody holds that role, you have found the most important gap in the engagement; say so before continuing. | 21 |
-| [Phase 5 — The governance interview](05-governance.md) | Governance, risk, audit, or compliance. In a smaller organization this may be the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that should be stated rather than discovered at audit. | 12 |
-| [Phase 6 — Assemble and audit](06-generate-and-audit.md) | You, on your own | none — see the page |
+| [Phase 0 — The portfolio and the dependency map](00-portfolio.md) | A workshop, before the tabletop | the register, on a wall |
+| [Phase 1 — What the room brings](01-discovery.md) | The tabletop | 1 answer, plus the inventory and the gaps in it |
+| [Phase 2 — The business figures, which gate everything after them](02-business.md) | Not the tabletop | 11 answers |
+| [Phase 3a — The application segment](03a-application.md) | The tabletop | 19 answers |
+| [Phase 3b — The infrastructure segment](03b-infrastructure.md) | The tabletop | 18 answers |
+| [Phase 4 — The continuity segment](04-continuity.md) | The tabletop | 21 answers |
+| [Phase 5 — Approval, review and training](05-governance.md) | Not the tabletop | 12 answers |
+| [Phase 6 — Writing it up, and auditing what you wrote](06-generate-and-audit.md) | You, on your own, with the worksheets from every session in front of you | the written plan |
 
 Phase 7 is not a document. It is the signature, and then the drill: **every duration in the plan is a design target, and none of them are commitments until a drill has measured one.** Schedule the first drill before the approval meeting ends.
 
-## Supporting pages
+## What to print
 
-- [The method](method.md) — the Iron Rule, the statuses, confidence, provenance, and how to write a record by hand.
-- [Every field, by the file it lands in](fields.md) — the order to write the plan in, and the full index of keys.
+Each phase page ends with a worksheet sized for its session. Print the worksheet for the session you are running; read the rest of the page before it.
+
+- [The method](method.md) — how an answer is captured, and the appendix for typing the worksheets up afterwards.
+- [Every answer, by the document it belongs in](fields.md) — the order to write the plan in, and the full index.
 
 ---
 
 ## Before you start
 
-Working by hand, the first of the four is optional: you need a clone of this repository for the validator and the discovery script, not a loaded plugin. **The other three are not optional, and the fourth is the one people skip.**
+Running this as a tabletop, the first of the four does not apply: there is nothing to install and nothing to load. **The other three do, and the fourth is the one people skip.**
+
+### Running this without the toolkit
+
+The technique below is the skills' own words, and the skills assume a loaded plugin. You do not have one. These are the substitutions in effect on this page.
+
+| Where it says | In the room you |
+|---|---|
+| `picoagent -e ...` | Nothing to load. A tabletop needs the pages you are holding, a wall, and the people. |
 
 Four things, and the last is the one people skip.
 
@@ -95,6 +107,14 @@ guessed rather than elicited.** Be suspicious of your own output if it looks fin
 ---
 
 ## Common ways this goes wrong
+
+### Running this without the toolkit
+
+The technique below is the skills' own words, and the skills assume a loaded plugin. You do not have one. These are the substitutions in effect on this page.
+
+| Where it says | In the room you |
+|---|---|
+| the answer store | The stack of worksheets. It holds the same things — the answer, who gave it, how sure they were — in columns rather than in keys. |
 
 | Mistake | Consequence |
 |---|---|
