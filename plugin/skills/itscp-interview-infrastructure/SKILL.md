@@ -16,7 +16,7 @@ signed tier assignment. This interview is where the business's targets meet phys
 design and the budget; the lead engineer holds the measured figures and the answer to section 6,
 and those are the parts of this interview that decide how much of the plan is real.
 
-**Time:** 90–120 minutes.
+**Time:** 2 hours, and it runs long rather than short. The backup and restore segment is the one people underestimate, because the first answer is usually the replication design again.
 
 ---
 
@@ -67,7 +67,44 @@ a multi-day project, and almost nobody has costed it. Ask explicitly:
 
 If the answer is unknown, it is a `MISSING` and a Tier B test objective, not an assumption.
 
-### 3. Latency and distance (10 min)
+### 3. Backups, which are not replication (20 min)
+
+Replication answers "the region is gone". It does not answer "somebody dropped the table at
+nine this morning and nobody noticed until Thursday", because it copied that faithfully and
+at once. Ask both, in that order, and watch for the answer that covers one and assumes the
+other:
+
+> "Somebody deletes a table this morning and nobody notices until tomorrow. What do you reach
+> for? Now the whole region is gone instead. What do you reach for then?"
+
+Then the table, a row per component, because a schedule stated for the system as a whole
+hides the piece nobody covered:
+
+| Column | What to press on |
+|---|---|
+| Component | Every piece, including the ones that feel too small to matter |
+| What is copied | Data, configuration, both. A database with no copy of its configuration restores into nothing |
+| Method | The mechanism, named. Not "we back it up" |
+| Type | Full, differential, incremental, snapshot, log, continuous — or `none`, which is a legal and useful answer |
+| Frequency | The rhythm. Compare it against the recovery point objective the business signed |
+| Copy | Which copy it lands in, from the offsite storage table. How long anything is kept is asked once, there |
+
+**A component whose type is `none` is a decision, not an omission.** Write it down as a
+decision with somebody's name against it, and it stops being a surprise during an invocation.
+
+Two questions that decide whether any of this is real:
+
+> "When did somebody last put a copy back, for real, rather than checking the backup job
+> reported success?"
+
+> "Somebody has your administrator credentials and wants every copy gone. Which copy survives
+> them, and who holds what brings it back?"
+
+The first separates a backup from a hypothesis. The second usually has no answer, and where it
+does not, that is often the most expensive finding of the engagement: a plan whose every copy
+is reachable with one set of credentials is one bad afternoon from having none.
+
+### 4. Latency and distance (10 min)
 
 Synchronous replication waits for the far side to acknowledge. Beyond a certain distance that
 cost lands on every commit.
@@ -79,7 +116,7 @@ If unmeasured, mark it `confidence: low` and make measuring it a prerequisite, n
 follow-up. A design that assumes synchronous replication over an unmeasured link is a design
 with an unexploded assumption in the middle of it.
 
-### 4. Standby posture and the cost floor (20 min)
+### 5. Standby posture and the cost floor (20 min)
 
 > "What does the standby cost today, and what's the cheapest it can be while still meeting the
 > RPO the business signed?"
@@ -91,7 +128,7 @@ conversation to have now rather than at renewal.
 
 Then: can the posture change on a schedule, and who is allowed to change it?
 
-### 5. Naming, addressing and the biggest RTO lever (15 min)
+### 6. Naming, addressing and the biggest RTO lever (15 min)
 
 > "When you bring the application up in the standby region, does it know it moved?"
 
@@ -100,7 +137,7 @@ recovery into a half-day reconfiguration. Establish what is region-locked and wh
 locally. This is frequently the single largest RTO lever available and it is usually cheaper
 to fix than any amount of extra standby capacity.
 
-### 6. Orchestration and drills (10 min)
+### 7. Orchestration and drills (10 min)
 
 What exists today: orchestration service, scripts, or a document. Then the question that
 decides how much of the plan is real:
@@ -117,7 +154,7 @@ Then the question that turns drill history into a roster finding:
 One name is an availability requirement on a person, sitting inside a document written to
 remove single points of failure. Record it against the lead engineer and their deputy.
 
-### 7. Alternate site and telecommunications — Appendix C (10 min)
+### 8. Alternate site and telecommunications — Appendix C (10 min)
 
 For cloud environments most of NIST's Appendix C is answered by the provider. Record which parts
 the provider owns, which the organization owns, and which are genuinely not applicable —
