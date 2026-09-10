@@ -75,6 +75,11 @@ output says so, by name.
 
 **Start here:** [`GETTING-STARTED.md`](GETTING-STARTED.md).
 
+**Running it without the plugin:** [`docs/manual/`](docs/manual/README.md) is the same
+engagement as a set of pages you can print — every phase in order, the technique for each one,
+and the checklist of every field it records, down to the question to ask and the role who owes
+the answer. It is generated from the skills and the question bank, so it says what they say.
+
 ---
 
 ## Installing
