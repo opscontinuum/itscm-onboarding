@@ -8,9 +8,10 @@ from the same files.
 It is not a transcript of the skills. They are written for an agent with the plugin loaded, so
 they say *invoke this*, *run that script*, *write it to the answer store*, and a room has none
 of those. Sections that only drive the toolkit are left out by name in
-:data:`SKIPPED_SECTIONS`. Every mention that survives is answered in the page's own *Running
-this without the toolkit* table, rendered from :data:`TRANSLATIONS` against the text that
-actually got embedded, and a reference nothing translates fails the build.
+:data:`SKIPPED_SECTIONS`; the handful of sentences elsewhere that name a script or a file are
+replaced, one at a time and with a reason, in :data:`SUBSTITUTIONS`. Cross-references between
+skills become the phase that carries them. Nothing in the finished manual tells a room to run
+anything, and a test fails the build if that stops being true.
 
 Nor does it produce TOML. The plugin's answer store is a file; the tabletop's is the stack of
 worksheets, holding the same things in columns: the answer, who gave it, how sure they were,
@@ -128,35 +129,137 @@ SKIPPED_SECTIONS: dict[str, tuple[tuple[str, str], ...]] = {
     ),
 }
 
-#: Every tool, file or command the embedded text still names, and what the room does instead.
-#: Rendered per page against the text that was actually embedded, so a row appears only where
-#: it is needed and disappears when a skill stops saying it. ``test_manual`` scans the other
-#: way as well: a command-shaped reference nothing here covers fails the build.
-TRANSLATIONS: tuple[tuple[str, str, str], ...] = (
-    ("itscp_portfolio.py", "`python3 itscp_portfolio.py`",
-     "Check the register by hand. [Five passes over the wall](00-portfolio.md#checking-the-register-by-hand), "
-     "each one a question you can answer from the cards in front of you."),
-    ("itscp_discover_oci", "`itscp_discover_oci`",
-     "A read-only walk for one cloud provider. Bring the equivalent from whatever your teams "
-     "already use: a console export, a CMDB extract, last quarter's architecture review. What "
-     "generalises is the rule, not the tool — discovery never changes anything."),
-    (".sh", "a script under `plugin/scripts/`",
-     "Nothing to run. Whatever produced your inventory is what you bring."),
-    ("picoagent", "`picoagent -e ...`",
-     "Nothing to load. A tabletop needs the pages you are holding, a wall, and the people."),
-    ("itscp-build", "`itscp-build`",
-     "There is no generator in a tabletop. Phase 6 is you writing the documents, and "
-     "[fields.md](fields.md) is the map of which answer goes into which one."),
-    ("portfolio.toml", "`portfolio.toml`",
-     "The register is the wall: one card per system, one line per dependency. The file is "
-     "only how it gets stored if somebody types it up afterwards."),
-    ("answer store", "the answer store",
-     "The stack of worksheets. It holds the same things — the answer, who gave it, how sure "
-     "they were — in columns rather than in keys."),
-    ("answers.yaml", "`answers.yaml` in the tree",
-     "The worksheets. Nothing to create; the stack of paper is the store."),
-    ("the store", "\"the store\"", "The worksheet in front of you."),
-)
+#: Passages replaced before a page is rendered, keyed by the skill and section they come from,
+#: each with the reason it could not be quoted as written.
+#:
+#: The skills are written for an agent with the plugin loaded, so a handful of their sentences
+#: name a script to run, a module that checks something, or a file the toolkit writes. A room
+#: has none of that, and an instruction it cannot follow is worse than no instruction: it tells
+#: a facilitator the manual was not written for them. Those passages say what the room does
+#: instead. Everything around them is still the skill's own words.
+#:
+#: Each entry is (exact text from the source, what replaces it, why). The exact text must still
+#: be present or the build fails, so a skill that rewrites one of these sentences cannot quietly
+#: reinstate an instruction nobody can follow.
+SUBSTITUTIONS: dict[tuple[str, str], tuple[tuple[str, str, str], ...]] = {
+    ("itscp-portfolio", "Why this exists"): ((
+        "`itscp_portfolio.py` checks all four mechanically. Your job is to elicit the register it\nchecks.",
+        "The five checks at the foot of this page catch all four. Your job in the workshop is to\nelicit the register they run against.",
+        "names the module that validates the register",
+    ),),
+    ("itscp-portfolio", "Run order"): ((
+        "### 5. Validate, and read the findings out loud\n\n```bash\npython3 itscp_portfolio.py portfolio.toml\n```\n\nExit 0 clean, 1 warnings, 2 errors. Errors",
+        "### 5. Check the wall, and read the findings out loud\n\nThe five passes are at the foot of this page. Errors",
+        "runs the validator; the room walks the wall instead",
+    ),),
+    ("itscp-portfolio", "Then, per system"): ((
+        "`itscp-build` runs once per system, in wave order, generating a plan repository each. The\nregister is the input:",
+        "Then the systems are planned one at a time, in wave order. The register is the input:",
+        "names the generator",
+    ), (
+        "Re-validate after each plan is signed,",
+        "Walk the checks again after each plan is signed,",
+        "same, in the sentence that follows",
+    )),
+    ("itscp-dependencies", "Checking the graph"): ((
+        "```bash\npython3 itscp_portfolio.py portfolio.toml\n```\n\n",
+        "Walk the wall against each of these. They are the five passes at the foot of this "
+        "page,\nnamed as the register's own findings.\n\n",
+        "runs the validator over the register",
+    ),),
+    ("itscp-discover", "The hard rule: discovery never mutates"): ((
+        "Every OCI call this skill makes is a `list` or a `get`.",
+        "Every call a discovery walk makes is a `list` or a `get`.",
+        "scopes the rule to one provider and to the skill rather than to the walk",
+    ), (
+        "`itscp_discover_oci` is the only way this skill reaches a tenancy, and it enforces the rule: the\nwrapper it runs behind rejects any invocation whose operation is not `list*` or `get*`, before\nthe call reaches the CLI. It fails closed.",
+        "Where a script does the walking it should enforce that rather than promise it. The ones in\nthis repository reject any operation that is not `list*` or `get*` before the call reaches the\nprovider's CLI, and they fail closed. By hand, the equivalent is to export and screenshot, and\nto run nothing that could write.",
+        "names the discovery tool and describes its internals",
+    ),),
+    ("itscp-interview-business", "Why this interview gates the others"): ((
+        "`itscp-build` will not run\nthe technical interviews until the output of this one is signed.",
+        "Nothing downstream starts until the output\nof this one is signed, and in a tabletop you are what holds that.",
+        "names the generator as the thing enforcing the gate",
+    ),),
+    ("_method/repo-scaffold", ""): ((
+        "The tree `itscp-build` creates, and which skill fills each file.",
+        "The tree to create, and which session fills each file.",
+        "names the generator",
+    ), (
+        "\u251c\u2500\u2500 .itscm/\n\u2502   \u2514\u2500\u2500 answers.yaml                   the answer store (gitignored)",
+        "\u251c\u2500\u2500 .itscm/\n\u2502   \u2514\u2500\u2500 worksheets/                    scans of the filled-in sheets (gitignored)",
+        "the store is a file the toolkit writes; the room's is paper",
+    )),
+    ("_method/repo-scaffold", "Rendering rules"): ((
+        "Applied by `itscp-build` when it writes any of the above.",
+        "Applied to every document above as you write it.",
+        "names the generator",
+    ),),
+    ("itscp-audit", "Portfolio findings"): ((
+        "When a\n`portfolio.toml` exists, run it and fold the result into the report:\n\n```bash\npython3 itscp_portfolio.py portfolio.toml\n```",
+        "Where a register\nexists, walk its five checks again and fold the result into the report:",
+        "runs the validator",
+    ), (
+        "If there is no `portfolio.toml`, say so as a finding in its own right:",
+        "If there is no register at all, say so as a finding in its own right:",
+        "names the register's file",
+    )),
+    ("_method/coverage-map", "Portfolio scope (above any single plan)"): ((
+        "Held in `portfolio.toml` rather than\nin an answer store,",
+        "Held in the register rather than on the\nworksheets,",
+        "names two files the room does not have",
+    ), (
+        "| `portfolio.toml` |",
+        "| the register |",
+        "same, in the table's Written to column",
+    ), (
+        "`itscp_portfolio.validate`",
+        "the five checks",
+        "names the validating function",
+    )),
+    ("_method/coverage-map", "Front matter"): ((
+        "`itscp-build` (from git log)",
+        "you, from the record of changes",
+        "names the generator",
+    ),),
+    ("_method/coverage-map", "2. Concept of Operations"): ((
+        "`itscp-build` (renders from the runbook set)",
+        "you, from the runbook set",
+        "names the generator",
+    ), (
+        "`itscp-build` (Phase 0 roster)",
+        "the phase 0 roster",
+        "same",
+    )),
+    ("_method/coverage-map", "Appendices"): ((
+        "`itscp-build` (Phase 0 roster)",
+        "the phase 0 roster",
+        "names the generator",
+    ),),
+    ("_method/coverage-map", "Not yet covered"): ((
+        "`itscp_discover_oci` writes",
+        "The discovery scripts write",
+        "names the discovery tool",
+    ),),
+    ("GETTING-STARTED.md", "Before you start"): ((
+        "1. **The plugin, loaded.** From wherever you cloned this repository:\n\n   ```bash\n   picoagent -e /path/to/itscm-onboarding/plugin\n   ```\n\n   That trusts it for the one run. For a permanent install, and for the trust fingerprint\n   that will otherwise silently stop it loading after you edit a skill, see\n   [Installing](README.md#installing).",
+        "1. **The pages for the session you are running.** Printed, including the worksheet at the\n   foot of the phase. There is nothing to install and nothing to load.",
+        "installs the plugin, which a tabletop does not use",
+    ),),
+}
+
+
+def _renames() -> dict[str, str]:
+    """Skill names rewritten to the phase that carries them.
+
+    The skills cross-reference each other constantly. That is useful in a manual and useless
+    under the toolkit's own names: a facilitator has no way to act on "elicited by
+    itscp-interview-continuity" and every way to act on "phase 4". Derived from :data:`PHASES`
+    rather than listed, so a phase that moves takes its cross-references with it.
+    """
+    return {embed.skill: f"phase {phase.number}"
+            for phase in PHASES for embed in phase.embeds
+            if not embed.skill.startswith("_method/")}
 
 
 # --------------------------------------------------------------------------- the sequence
@@ -585,44 +688,51 @@ def skill_sections(name: str) -> dict[str, str]:
     return sections
 
 
+def adapt(source: str, heading: str, text: str) -> str:
+    """One section, as the manual carries it: substitutions applied, then skill names renamed.
+
+    Substitutions run first, because they quote the source exactly and would stop matching if
+    a rename had already rewritten a name inside one.
+    """
+    for original, replacement, reason in SUBSTITUTIONS.get((source, heading), ()):
+        if original not in text:
+            raise ManualError(
+                f"{source} '{heading}' no longer contains the passage the manual replaces "
+                f"({reason}). Re-read the section and update SUBSTITUTIONS: the replacement "
+                "is only safe while the text it stands in for is still what was reviewed.")
+        text = text.replace(original, replacement)
+    return rename_skills(text)
+
+
+def rename_skills(text: str) -> str:
+    """Skill names, backticked or bare, rewritten to the phase that carries them.
+
+    The bank's own guidance names skills too ("Set by itscp-discover"), so this runs over the
+    question blocks as well as over the embedded sections. Longest name first, because one
+    skill name is a prefix of another only by accident and a partial rewrite would be worse
+    than none.
+    """
+    for skill, phase in sorted(_renames().items(), key=lambda pair: -len(pair[0])):
+        text = text.replace(f"`{skill}`", phase).replace(skill, phase)
+    return text
+
+
 def _embedded(embeds: tuple[Embed, ...]) -> list[tuple[str, str, str]]:
     """``(skill, heading, text)`` for every section a page carries, in page order."""
     carried: list[tuple[str, str, str]] = []
     for embed in embeds:
         available = skill_sections(embed.skill)
         if embed.preamble:
-            carried.append((embed.skill, "", skill_preamble(embed.skill)))
+            carried.append((embed.skill, "",
+                            adapt(embed.skill, "", skill_preamble(embed.skill))))
         for heading in embed.sections:
             if heading not in available:
                 raise ManualError(
                     f"{embed.skill} has no '## {heading}' section. It was renamed or removed; "
                     "update the page that carries it, or add it to SKIPPED_SECTIONS.")
-            carried.append((embed.skill, heading, available[heading]))
+            carried.append((embed.skill, heading,
+                            adapt(embed.skill, heading, available[heading])))
     return carried
-
-
-# --------------------------------------------------------------------------- translation
-
-def _translations_for(text: str) -> list[tuple[str, str]]:
-    """The substitutions a page needs, from what its embedded text actually says."""
-    return [(label, note) for marker, label, note in TRANSLATIONS if marker in text]
-
-
-def _translation_table(text: str) -> list[str]:
-    found = _translations_for(text)
-    if not found:
-        return []
-    return [
-        "### Running this without the toolkit",
-        "",
-        "The technique below is the skills' own words, and the skills assume a loaded plugin. "
-        "You do not have one. These are the substitutions in effect on this page.",
-        "",
-        "| Where it says | In the room you |",
-        "|---|---|",
-        *[f"| {label} | {note} |" for label, note in found],
-        "",
-    ]
 
 
 # --------------------------------------------------------------------------- field blocks
@@ -653,7 +763,8 @@ def _question_block(question: bank.Question) -> list[str]:
     lines = [
         f"#### `{question.id}`",
         "",
-        f"*{question.prompt}*" if unasked else f"> \"{question.prompt}\"",
+        f"*{rename_skills(question.prompt)}*" if unasked
+        else f"> \"{question.prompt}\"",
         "",
         f"- **Records:** {question.records}",
         f"- **Answers:** {question.owner_role} · **Shape:** {_answer_shape(question)}",
@@ -675,7 +786,7 @@ def _question_block(question: bank.Question) -> list[str]:
                      "correction rather than asking cold, and if nobody confirms it, it stays "
                      "the inventory's claim rather than becoming theirs.")
     if question.guidance:
-        lines.append(f"- **Note:** {question.guidance}")
+        lines.append(f"- **Note:** {rename_skills(question.guidance)}")
     lines.append(f"- **Goes into:** {question.written_to}")
     if question.structural_provenance == "nist":
         lines.append(f"- **NIST:** {question.nist_heading} ({question.nist_source})")
@@ -702,7 +813,8 @@ def _checklist(namespaces: tuple[str, ...]) -> list[str]:
         "",
         "## What this segment has to come away with",
         "",
-        f"{len(questions)} answers, grouped by the section of the plan each one feeds. Read "
+        f"{len(questions)} answer{'' if len(questions) == 1 else 's'}, grouped by the section of the plan each one "
+        "feeds. Read "
         "this before the session; the worksheet at the end is what you take into it.",
         "",
         "Every one of them leaves the room with something written against it. An answer "
@@ -867,9 +979,10 @@ def _register_worksheet() -> list[str]:
 # --------------------------------------------------------------------------- pages
 
 _BANNER = (
-    "> **Generated file.** It is assembled from the skills, the question bank and "
-    "`GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by "
-    "the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`."
+    "<!-- Generated by plugin/itscp_manual.py from the skills, the question bank and\n"
+    "     GETTING-STARTED.md. Regenerate with: python3 plugin/itscp_manual.py -->\n"
+    "> **Generated page.** It is assembled from the interview skills and the question bank, "
+    "so that it asks what they ask. An edit made here is overwritten; change the source."
 )
 
 
@@ -931,11 +1044,11 @@ def _index_page() -> str:
         "",
     ]
     for heading in GETTING_STARTED_SECTIONS:
-        extracted = _section(guide, heading, GETTING_STARTED)
+        extracted = adapt("GETTING-STARTED.md", heading,
+                          _section(guide, heading, GETTING_STARTED))
         lines += [f"## {heading}", ""]
         if heading in GETTING_STARTED_PREFACE:
             lines += [GETTING_STARTED_PREFACE[heading], ""]
-        lines += _translation_table(extracted)
         lines += [extracted, "", "---", ""]
     return "\n".join(lines).rstrip("\n") + "\n"
 
@@ -986,7 +1099,6 @@ def _method_page() -> str:
     method_text = _embedded(METHOD_EMBEDS)
     coverage_text = _embedded(COVERAGE_EMBEDS)
     store_text = _embedded(STORE_EMBEDS)
-    joined = "\n".join(text for _, _, text in method_text + coverage_text + store_text)
     lines = [
         "# The method",
         "",
@@ -1003,7 +1115,6 @@ def _method_page() -> str:
         "",
         "## The elicitation discipline",
         "",
-        *_translation_table(joined),
         *_sections(method_text),
         "---",
         "",
@@ -1049,7 +1160,6 @@ def _sections(carried: list[tuple[str, str, str]]) -> list[str]:
 
 def _phase_page(phase: Phase) -> str:
     carried = _embedded(phase.embeds)
-    joined = "\n".join(text for _, _, text in carried)
     lines = [
         f"# Phase {phase.number} — {phase.title}",
         "",
@@ -1076,11 +1186,8 @@ def _phase_page(phase: Phase) -> str:
         "---",
         "",
     ]
-    lines += _translation_table(joined)
     lines += ["## The technique", ""]
     for skill in dict.fromkeys(skill for skill, _, _ in carried):
-        front = _frontmatter(_read(SKILLS / skill / "SKILL.md"), SKILLS / skill / "SKILL.md")
-        lines += [f"*From `{front['name']}`: {front['description']}*", ""]
         lines += _sections([entry for entry in carried if entry[0] == skill])
     if phase.slug == "00-portfolio":
         lines += _register_worksheet()
