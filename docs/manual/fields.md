@@ -1,16 +1,16 @@
-# Every field, and where it lands
+# Every answer, and the document it belongs in
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-The 82 fields of the starter plan, listed twice: by the file each one is written into, which is the order phase 6 assembles in, and then as a flat index. A field feeding two files appears under both.
+The 82 answers a first plan is built from, listed twice: by the document each one is written into, which is the order to write in, and then as a flat index. An answer feeding two documents appears under both.
 
 ---
 
-## By file
+## By document
 
 ### `README.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.business_name` | The business-facing name for the same system | business owner |
 | `system.categorization` | The impact level or data classification and where it is recorded | governance/risk contact |
@@ -21,7 +21,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/contact-roster.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `continuity.call_tree` | The call tree, its order, and the unreachable procedure | DR process owner |
 | `continuity.bridge` | The incident bridge and its dependencies | DR process owner |
@@ -32,13 +32,13 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/contingency-training.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `governance.training_program` | The training program, distinct from the drill program | governance/risk contact |
 
 ### `checklists/dr-authority-matrix.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `business.freeze_periods` | Each period when failing over costs more than the outage, and who decides during it | business owner |
 | `business.freeze_override_authority` | Who may authorize a failover inside a freeze period, and on what evidence | business owner |
@@ -49,14 +49,14 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/manual-workarounds.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `business.workarounds` | Each process, the workaround used, and how long it is sustainable | business owner |
 | `business.reconstruction_effort` | How long rebuilding the lost work takes, and who does it | business owner |
 
 ### `checklists/outage-assessment.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `continuity.unknown_estimate_default` | The default action when the repair estimate is unknown | DR process owner |
 | `continuity.assessment_procedure` | The outage assessment procedure and where the repair estimate comes from | DR process owner |
@@ -64,7 +64,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/risk-register.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.assumptions` | Each stated assumption, what breaks if it is wrong, who confirms it and by when | lead engineer |
 | `continuity.vendor_obligations` | Each external party, what their contract obliges, how fast, and where the contract is held | governance/risk contact |
@@ -72,7 +72,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/roles-and-responsibilities.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `continuity.succession` | The ordered line of succession and what each hand-off waits for | DR process owner |
 | `continuity.decision_and_recovery_roles` | Each duty in a recovery, the role that holds it and the deputy behind them | DR process owner |
@@ -81,21 +81,21 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `checklists/tier-assignment-workshop.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `business.processes` | Each business process and what its outage costs at one hour, four hours, a day and a week | business owner |
 | `business.tier_assignment` | Each business process, the tier it is assigned to, and the argument for it | business owner |
 
 ### `checklists/validation-pack.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.validation_pack` | Each validation check, its duration and its owner | application owner |
 | `app.validation_data_tests` | Each data validation check, what it proves and who signs it off | application owner |
 
 ### `docs/00-plan-approval.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.business_name` | The business-facing name for the same system | business owner |
 | `governance.signing_authority` | The signatory and the alternate signatory | signing authority |
@@ -103,13 +103,13 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/00-record-of-changes.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `governance.event_documentation` | How a real event is written up, by whom, and where the record goes | governance/risk contact |
 
 ### `docs/01-architecture.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.name` | The system's technical name, as the plan's title and throughout | application owner |
 | `system.assumptions` | Each stated assumption, what breaks if it is wrong, who confirms it and by when | lead engineer |
@@ -126,7 +126,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/02-mtd-tiers.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.categorization` | The impact level or data classification and where it is recorded | governance/risk contact |
 | `system.impact_level` | The assigned availability impact level, which selects the template this plan is graded against | governance/risk contact |
@@ -142,7 +142,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/03-replication-matrix.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.standby_region` | The standby region | infrastructure owner |
 | `infra.measured_rtt_ms` | Measured inter-region round-trip time in milliseconds | lead engineer |
@@ -154,13 +154,13 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/04-monitoring.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.silent_failures` | The failures this environment does not notice, and what would have shown them | lead engineer |
 
 ### `docs/05-cost-and-teardown.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.standby_cost_floor` | The monthly standby cost floor | infrastructure owner |
 | `infra.storage_constraints` | Storage features that constrain what the standby may be built on | lead engineer |
@@ -169,13 +169,13 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/06-test-environments.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `governance.drill_levels` | Each exercise level, what it proves and what it does not | governance/risk contact |
 
 ### `docs/07-standards-alignment.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.impact_level` | The assigned availability impact level, which selects the template this plan is graded against | governance/risk contact |
 | `governance.associated_plans` | Each related plan, who owns it and how it relates to this one | governance/risk contact |
@@ -183,14 +183,14 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/08-phase-activation.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `business.freeze_periods` | Each period when failing over costs more than the outage, and who decides during it | business owner |
 | `governance.breach_disclosure_clock` | Who owns the disclosure clock when the cause is an attack, and how fast it runs | governance/risk contact |
 
 ### `docs/09-phase-recovery.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.start_order` | The component start order and what depends on what | lead engineer |
 | `app.reconfiguration_duration` | How long a full application-tier reconfiguration takes, measured | lead engineer |
@@ -198,7 +198,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/10-phase-reconstitution.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.wrt_activities` | Each work-recovery activity, its duration, and whether it runs in parallel with bring-up | application owner |
 | `app.concurrent_processing` | Whether concurrent processing is performed, and the reason either way | application owner |
@@ -212,7 +212,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/11-inventory.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `system.releases` | The release of each major component, and any upgrade in flight | application owner |
 | `system.operating_systems` | The operating system of each tier, and what that constrains | infrastructure owner |
@@ -220,14 +220,14 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `docs/12-interconnections.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.interconnections` | Each interconnection, its direction, transport, contact and whether it is replayable | application owner |
 | `app.interface_landing` | Where inbound interface data lands today and whether that location is replicated | lead engineer |
 
 ### `runbooks/RB-01-switchover.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.start_order` | The component start order and what depends on what | lead engineer |
 | `app.recovery_procedures` | The recovery procedure at the level of what is actually typed, in order | lead engineer |
@@ -235,7 +235,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `runbooks/RB-02-failover.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `app.recovery_procedures` | The recovery procedure at the level of what is actually typed, in order | lead engineer |
 | `app.unsafe_reruns` | Each scheduled job, whether it is safe to resubmit, and what a second run does | application owner |
@@ -244,7 +244,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `runbooks/RB-04-dr-drill.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.last_end_to_end_execution` | The date of the last end-to-end execution and who performed it | lead engineer |
 | `governance.event_documentation` | How a real event is written up, by whom, and where the record goes | governance/risk contact |
@@ -253,7 +253,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ### `runbooks/RB-05-replication-lifecycle.md`
 
-| Field | Records | Owner |
+| Answer | What it records | Who gives it |
 |---|---|---|
 | `infra.standby_posture` | The standby's steady-state posture and who may change it | infrastructure owner |
 | `infra.warned_posture_time` | How long it takes to move the standby to its warned state | infrastructure owner |
@@ -262,7 +262,7 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 
 ## The full index
 
-| Field | Phase | Answer | Owner | Section of the plan |
+| Answer | Phase | Shape | Who gives it | Section of the plan |
 |---|---|---|---|---|
 | `system.name` | [3a](03a-application.md) | text | application owner | 2.1 System description |
 | `system.business_name` | [3a](03a-application.md) | text | business owner | 1.1 Background |
@@ -347,4 +347,4 @@ The 82 fields of the starter plan, listed twice: by the file each one is written
 | `governance.breach_disclosure_clock` | [5](05-governance.md) | narrative | governance/risk contact | Risk register |
 | `discovery.completed` | [1](01-discovery.md) | date | infrastructure owner | H. Hardware, software and firmware inventory |
 
-Figures owing a mechanism: 10. Answers to read back before recording: 48. Fields discovery may prefill: 5.
+Figures that owe a *what breaks at that number*: 10. Answers to say back before writing them down: 48. Answers the inventory usually already holds: 5.

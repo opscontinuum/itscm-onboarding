@@ -1,37 +1,34 @@
-# Phase 2 — The business interview, which gates the rest
+# Phase 2 — The business figures, which gate everything after them
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-**Who is in the room:** the business or process owner. Not IT. If the only person available is from IT, stop and say so: an MTD signed by IT is IT telling itself what it is allowed to fail at.
+**Not the tabletop.** A separate session with the business or process owner, before the technical segments. Deliberately not in the room with the IT teams.
+
+**Whose answers these are:** the business or process owner. Not IT. If the only person available is from IT, stop and say so: an MTD signed by IT is IT telling itself what it is allowed to fail at.
 
 **How long:** 90 minutes for one application suite. Half a day if the suite spans several business functions with different tolerances.
 
-**Do not proceed past this phase without a signed tier assignment.** Tier determines standby capacity, replication topology and run cost. Everything after this is built to these numbers and all of it is expensive to change.
+**This one is not a tabletop, and holding that line is the whole point of the phase.** Tiers, maximum tolerable downtime and recovery point are the business's figures. Run in a room full of engineers they become IT's figures, and IT deciding what it is allowed to fail at is the failure this sequence is built to prevent.
+
+**Do not start the technical segments without a signed tier assignment.** Tier determines standby capacity, replication topology and run cost. Everything after this is built to these numbers and all of it is expensive to change. With the plugin a build step holds that gate; here you hold it.
 
 If the business owner is unavailable for three weeks, wait three weeks. Proceeding on assumed tiers feels productive and is the most costly mistake available here: assumed tiers become real architecture within a day and are never revisited.
 
-**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
+**Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
 ---
 
-## The technique — `itscp-interview-business`
+### Running this without the toolkit
 
-*Use when a continuity plan needs its business impact analysis, when downtime tiers or MTD, RTO and RPO targets must be agreed with the business rather than assumed by IT, when someone asks how critical a system is or how long it can be down, or when manual workarounds during an outage need documenting.*
+The technique below is the skills' own words, and the skills assume a loaded plugin. You do not have one. These are the substitutions in effect on this page.
 
-The business impact analysis, run as a conversation rather than a form. Produces Appendix K,
-the MTD tiers, the minimum business continuity objective, and Appendix E manual workarounds.
+| Where it says | In the room you |
+|---|---|
+| `itscp-build` | There is no generator in a tabletop. Phase 6 is you writing the documents, and [fields.md](fields.md) is the map of which answer goes into which one. |
 
-**Read first:** the `itscp-method-interview` skill. The method is not optional here — this
-is the interview where invented numbers do the most damage, because everything downstream is
-built to them.
+## The technique
 
-**Interviewee:** the business or process owner. Not IT. If the only person available is from
-IT, stop and say so: an MTD signed by IT is IT telling itself what it is allowed to fail at.
-
-**Time:** 90 minutes for one application suite. Half a day if the suite spans several business
-functions with different tolerances.
-
----
+*From `itscp-interview-business`: Use when a continuity plan needs its business impact analysis, when downtime tiers or MTD, RTO and RPO targets must be agreed with the business rather than assumed by IT, when someone asks how critical a system is or how long it can be down, or when manual workarounds during an outage need documenting.*
 
 ### Tiering is comparative, and this interview does not set the budget
 
@@ -52,8 +49,6 @@ re-rank inside one system's interview: the other owners are not in the room.
 Tier assignment determines standby capacity, replication topology, and run cost. Get it after
 the build and you rebuild to numbers you could have known up front. `itscp-build` will not run
 the technical interviews until the output of this one is signed.
-
----
 
 ### Run order
 
@@ -146,8 +141,6 @@ Then the sentence that makes it real:
 **Get the signature, or record explicitly that it was not given and who owes it.** The
 reference repository is blunt about needing it at audit time.
 
----
-
 ### The cost conversation, once
 
 Somewhere near the end the business will ask for everything back in fifteen minutes. Answer it
@@ -160,17 +153,6 @@ once, honestly, and without negotiating on IT's behalf:
 Do not talk them out of Tier 0 and do not sell it. The tier is theirs to choose; the price is
 IT's to state accurately. Record the tier they chose **and** whether the cost was known when
 they chose it — the second one matters when the invoice arrives.
-
----
-
-### Output
-
-Writes `business.*` in the answer store: process inventory, per-process impact curves,
-step-change mechanisms, tier assignments, MTD/RTO/RPO/WRT targets, MBCO, manual workarounds
-and their durations, sign-off status.
-
-Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
-`checklists/manual-workarounds.md`.
 
 ### Red flags
 
@@ -185,9 +167,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 
 ---
 
-## The field checklist
+## What this segment has to come away with
 
-11 fields, in the order the bank holds them, grouped by the section of the plan each one feeds. Every one of them ends the session with a status. A field nobody could answer is `MISSING` against a named owner, which is a result and not a failure; a field left absent is an error.
+11 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+
+Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
 ### K. Business impact analysis
 
@@ -196,9 +180,9 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "Walk me through what stops if this is down for an hour. Then for a day. Then for a week. Take the processes one at a time."
 
 - **Records:** Each business process and what its outage costs at one hour, four hours, a day and a week
-- **Owner:** business owner · **Answer:** one row per item, columns `name` | `impact_1h` | `impact_4h` | `impact_1d` | `impact_1w`
+- **Answers:** business owner · **Shape:** one row per item, columns `name` | `impact_1h` | `impact_4h` | `impact_1d` | `impact_1w`
 - **Note:** The BIA's first step. Ask about impact at each horizon separately; people answer 'it is critical' to the general question and give you something usable when the horizon is named.
-- **Lands in:** docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md
+- **Goes into:** docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md
 - **NIST:** 3.2.1 Determine Business Processes and Recovery Criticality (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
 - **Terminology:** ITIL calls this session a business impact analysis [glossary]
 
@@ -207,11 +191,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "At what point does this stop being an IT problem and become something the chief executive hears about?"
 
 - **Records:** Maximum tolerable downtime for the tier 0 processes
-- **Owner:** business owner · **Answer:** a duration in hours
-- **Then ask:** "What happens at that hour that does not happen at the hour before it? Name the deadline, the cut-off, the batch that has to run, or the person who picks up the phone." Record the answer in `mechanism`. Without one the figure is `confidence: low`.
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** a duration in hours
+- **Then ask:** "What happens at that hour that does not happen at the hour before it? Name the deadline, the cut-off, the batch that has to run, or the person who picks up the phone." It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** A number without a mechanism is a guess wearing a suit.
-- **Lands in:** docs/02-mtd-tiers.md
+- **Goes into:** docs/02-mtd-tiers.md
 - **NIST:** 3.2.1 Determine Business Processes and Recovery Criticality (SP 800-34 Rev. 1 Appendix A.3 heading, and Appendix B Sample BIA)
 - **Terminology:** ISO 22301's term is maximum tolerable period of disruption (practice guide; not verified)
 
@@ -220,11 +204,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "If we recovered to fifteen minutes before the failure, what work would people have to redo, and who would have to redo it?"
 
 - **Records:** Recovery point objective for the tier 0 processes
-- **Owner:** business owner · **Answer:** a duration in minutes
-- **Then ask:** "What is in those minutes that nobody could rebuild from anywhere else, and who finds out first that it is gone?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** a duration in minutes
+- **Then ask:** "What is in those minutes that nobody could rebuild from anywhere else, and who finds out first that it is gone?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Elicited as: if we lost 15 minutes, who redoes the work, and can they?
-- **Lands in:** docs/02-mtd-tiers.md
+- **Goes into:** docs/02-mtd-tiers.md
 - **NIST:** 3.2.1 Determine Business Processes and Recovery Criticality (SP 800-34 Rev. 1 Appendix A.3 heading, and Appendix B Sample BIA)
 
 #### `business.tier_targets`
@@ -232,21 +216,21 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "For each recovery tier you have: how long may it be down in total, how long may the technical recovery take, how long does the business need afterwards before it can work, and how much data may be lost? And what is the least service that still counts as trading?"
 
 - **Records:** Per tier: maximum tolerable downtime, recovery time, work recovery time, recovery point and the minimum service that counts as trading
-- **Owner:** business owner · **Answer:** one row per item, columns `tier` | `mtd` | `rto` | `wrt` | `rpo` | `minimum_service` | `what_breaks_at_the_mtd`
+- **Answers:** business owner · **Shape:** one row per item, columns `tier` | `mtd` | `rto` | `wrt` | `rpo` | `minimum_service` | `what_breaks_at_the_mtd`
 - **Every `mtd` owes a `what_breaks_at_the_mtd`.** A target with no stated consequence is a number nobody has to meet.
-- **Read it back** in one sentence and get a yes before recording it.
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** One table, filled a row at a time, and the last column is the one that makes the rest worth having. A tier ladder of round numbers with nothing behind them is the single most common defect in a continuity plan: it reads as a measurement and it is a preference. Do not accept a figure until the row beside it says what it collides with.
-- **Lands in:** docs/02-mtd-tiers.md
-- **The toolkit supplies this element's words, not the customer.** They render as the toolkit's own and are never presented as something anybody said: Maximum tolerable downtime is recovery time plus work recovery time. The toolkit decomposes it that way so that a recovery which meets its technical target and still misses what the business can tolerate is visible on paper rather than at four in the morning.
+- **Goes into:** docs/02-mtd-tiers.md
+- **These words are the toolkit's, not the room's.** They render as its own and are never presented as something anybody in the room said: Maximum tolerable downtime is recovery time plus work recovery time. The toolkit decomposes it that way so that a recovery which meets its technical target and still misses what the business can tolerate is visible on paper rather than at four in the morning.
 
 #### `business.tier_assignment`
 
 > "I am going to read you back what this system does. Sort each one into the tiers we just defined, and argue with me where it does not fit."
 
 - **Records:** Each business process, the tier it is assigned to, and the argument for it
-- **Owner:** business owner · **Answer:** one row per item, columns `process` | `tier` | `rationale`
+- **Answers:** business owner · **Shape:** one row per item, columns `process` | `tier` | `rationale`
 - **Note:** The impact question asks what stops. This one asks the business to commit. They are different sessions and people answer them differently: 'it is critical' survives the first and does not survive the second. Record the argument, not just the letter, because the argument is what gets re-examined when the cost lands.
-- **Lands in:** docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md
+- **Goes into:** docs/02-mtd-tiers.md, checklists/tier-assignment-workshop.md
 - **NIST:** 3.2.3 Identify System Resource Recovery Priorities (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
 - **Terminology:** ITIL calls this session a business impact analysis [glossary]
 
@@ -257,11 +241,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "While we are recovering, what is the smallest amount of this service that keeps you trading? Not the full thing. The part you cannot do without for a day."
 
 - **Records:** The minimum service level that must be available during work recovery
-- **Owner:** business owner · **Answer:** free text
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** free text
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Not NIST. What must work to keep trading while recovery runs.
-- **Lands in:** docs/02-mtd-tiers.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** docs/02-mtd-tiers.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 - **Terminology:** ITIL and ISO 22301 both use minimum business continuity objective (practice guide; not verified)
 
 #### `business.reconstruction_effort`
@@ -269,11 +253,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "If we lost the work from the last few minutes before the failure, how long would it take to put it back, and who would be doing it?"
 
 - **Records:** How long rebuilding the lost work takes, and who does it
-- **Owner:** business owner · **Answer:** a duration in hours
-- **Then ask:** "What are they rebuilding it from, and what happens if that source went down with everything else?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Answers:** business owner · **Shape:** a duration in hours
+- **Then ask:** "What are they rebuilding it from, and what happens if that source went down with everything else?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
 - **Note:** This is the recovery point objective turned into work recovery time, which is the half of the sum that never gets costed. If the source they would rebuild from is inside the failed environment, the answer is not a duration, it is a design finding.
-- **Lands in:** docs/02-mtd-tiers.md, checklists/manual-workarounds.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** docs/02-mtd-tiers.md, checklists/manual-workarounds.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### E. Alternate mission/business processing - manual workarounds
 
@@ -282,10 +266,10 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "Last time this was down, what did people actually do? Did anyone write anything on paper, and how long could they keep that up?"
 
 - **Records:** Each process, the workaround used, and how long it is sustainable
-- **Owner:** business owner · **Answer:** one row per item, columns `process` | `workaround` | `sustainable_for` | `what_fails_first`
+- **Answers:** business owner · **Shape:** one row per item, columns `process` | `workaround` | `sustainable_for` | `what_fails_first`
 - **Every `sustainable_for` owes a `what_fails_first`.** A target with no stated consequence is a number nobody has to meet.
 - **Note:** Appendix E. Ask about the last real outage, not the hypothetical one.
-- **Lands in:** checklists/manual-workarounds.md
+- **Goes into:** checklists/manual-workarounds.md
 - **NIST:** APPENDIX D ALTERNATE PROCESSING PROCEDURES (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### Citation and unverified-statement discipline
@@ -295,11 +279,11 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "Have you signed off the tier assignment, or is it still with you? If it is not signed, who owes the signature and by when?"
 
 - **Records:** Whether the tier assignment is signed, and by whom, or who owes it
-- **Owner:** business owner · **Answer:** one of `signed`, `not signed`, `signed with exceptions`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** one of `signed`, `not signed`, `signed with exceptions`
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Signed, or explicitly recorded as not signed and who owes it.
-- **Lands in:** docs/02-mtd-tiers.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** docs/02-mtd-tiers.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### Periods when recovery is more expensive than the outage
 
@@ -308,19 +292,98 @@ Renders `docs/02-mtd-tiers.md`, `checklists/tier-assignment-workshop.md`,
 > "Are there weeks in the year when failing over would be worse than staying down? Period close, year end, a filing deadline?"
 
 - **Records:** Each period when failing over costs more than the outage, and who decides during it
-- **Owner:** business owner · **Answer:** one row per item, columns `period` | `why` | `who_decides`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** one row per item, columns `period` | `why` | `who_decides`
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Nobody volunteers this and everybody has one. It changes the activation criteria for a fortnight a quarter, which is when the plan is most likely to be used and least likely to have been read.
-- **Lands in:** checklists/dr-authority-matrix.md, docs/08-phase-activation.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/dr-authority-matrix.md, docs/08-phase-activation.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `business.freeze_override_authority`
 
 > "If we were inside one of those periods and had to fail over anyway, who is allowed to say yes, and what do they need in front of them first?"
 
 - **Records:** Who may authorize a failover inside a freeze period, and on what evidence
-- **Owner:** business owner · **Answer:** free text
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** business owner · **Shape:** free text
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** A freeze with no override is a plan that stops working four weeks a year. Name one individual and what they need to see; 'the board' is nobody at two in the morning.
-- **Lands in:** checklists/dr-authority-matrix.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/dr-authority-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+---
+
+## The worksheet
+
+Print this. One line per answer, filled in as it is said rather than afterwards.
+
+- **Never leave a cell blank.** No answer means write the name of who can give one.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
+- Two people, two answers: **write both**, and write whose decision it is.
+
+### K. Business impact analysis
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Maximum tolerable downtime for the tier 0 processes (`business.mtd.tier0`) |  |  | H / M / L |  |
+| Recovery point objective for the tier 0 processes (`business.rpo.tier0`) |  |  | H / M / L |  |
+
+**Each business process and what its outage costs at one hour, four hours, a day and a week** (`business.processes`) — one row each, add as many as the room needs
+
+| name | impact_1h | impact_4h | impact_1d | impact_1w | Who said it | Sure? |
+|---|---|---|---|---|---|---|
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
+
+**Per tier: maximum tolerable downtime, recovery time, work recovery time, recovery point and the minimum service that counts as trading** (`business.tier_targets`) — one row each, add as many as the room needs
+
+| tier | mtd | rto | wrt | rpo | minimum_service | what_breaks_at_the_mtd | Who said it | Sure? |
+|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |   |   |  | H / M / L |
+
+**Each business process, the tier it is assigned to, and the argument for it** (`business.tier_assignment`) — one row each, add as many as the room needs
+
+| process | tier | rationale | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+
+### Minimum business continuity objective per tier
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The minimum service level that must be available during work recovery (`business.mbco.tier0`) |  |  | H / M / L |  |
+| How long rebuilding the lost work takes, and who does it (`business.reconstruction_effort`) |  |  | H / M / L |  |
+
+### E. Alternate mission/business processing - manual workarounds
+
+**Each process, the workaround used, and how long it is sustainable** (`business.workarounds`) — one row each, add as many as the room needs
+
+| process | workaround | sustainable_for | what_fails_first | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+
+### Citation and unverified-statement discipline
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Whether the tier assignment is signed, and by whom, or who owes it (`business.tier_signoff`) |  |  | H / M / L |  |
+
+### Periods when recovery is more expensive than the outage
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Who may authorize a failover inside a freeze period, and on what evidence (`business.freeze_override_authority`) |  |  | H / M / L |  |
+
+**Each period when failing over costs more than the outage, and who decides during it** (`business.freeze_periods`) — one row each, add as many as the room needs
+
+| period | why | who_decides | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |

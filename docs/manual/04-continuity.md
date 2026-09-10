@@ -1,43 +1,26 @@
-# Phase 4 — The continuity interview
+# Phase 4 — The continuity segment
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-**Who is in the room:** the DR process owner, incident manager, or whoever would actually be running the bridge at 3am, with their deputy in the room where one is named. If nobody holds that role, you have found the most important gap in the engagement; say so before continuing.
+**The tabletop.** Application and infrastructure teams in the room together, with the DR process owner. One exercise in segments; run it in a single long sitting or across several, but keep both teams present for all of it. The DR process owner leads this segment, with their deputy, and both technical teams still in the room.
+
+**Whose answers these are:** the DR process owner, incident manager, or whoever would actually be running the bridge at 3am, with their deputy in the room where one is named. If nobody holds that role, you have found the most important gap in the engagement; say so before continuing.
 
 **How long:** 90 minutes.
 
-Runs after phase 3, because escalation thresholds need real recovery steps to threshold against.
+Runs last of the technical segments, because escalation thresholds need real recovery steps to threshold against. By now the room has the steps.
 
-This is where most organizations discover that **nobody owns the declaration decision.** That is not a failure of the interview; it is the single most valuable thing it produces.
+This is the segment where most organizations discover that **nobody owns the declaration decision.** That is not a failure of the exercise; it is the single most valuable thing it produces, and a tabletop surfaces it faster than an interview because everybody who assumed somebody else owned it is sitting in the room.
 
-The succession elicited here and the deputy roster from phase 0 must agree. Where they do not, that is a recorded conflict with a named decision owner, not something to reconcile quietly.
+The succession named here and the deputy roster from phase 0 must agree. Where they do not, write both down with the decision owner named, rather than reconciling it quietly at the whiteboard.
 
-**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
-
----
-
-## The technique — `itscp-interview-continuity`
-
-*Use when a continuity plan needs its roles, teams or line of succession defined, when it must be decided who can declare a disaster and on what criteria, when a call tree or notification procedure is needed, or when there is no procedure for assessing an outage and estimating how long it will last.*
-
-Who decides, who is told, and how anyone knows what they are deciding about. Produces §2.3
-roles and succession, §3.1 activation criteria, §3.2 notification, §3.3 outage assessment,
-§4.3 escalation thresholds, and §5.4 deactivation.
-
-**Read first:** the `itscp-method-interview` skill. Run **after** the application and
-infrastructure interviews — escalation thresholds are meaningless until there are real
-recovery steps to threshold, and a call tree is meaningless until you know who does the work.
-
-**Interviewee:** the DR process owner, incident manager, or whoever would actually be running
-the bridge at 3am, with their deputy in the room where one is named. If nobody holds that role,
-you have found the most important gap in the engagement; say so before continuing.
-
-**Bring the Phase 0 role roster.** The deputies named there and the succession elicited here are
-two views of one fact, and this interview is where they get reconciled.
-
-**Time:** 90 minutes.
+**Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
 ---
+
+## The technique
+
+*From `itscp-interview-continuity`: Use when a continuity plan needs its roles, teams or line of succession defined, when it must be decided who can declare a disaster and on what criteria, when a call tree or notification procedure is needed, or when there is no procedure for assessing an outage and estimating how long it will last.*
 
 ### The one question this interview exists to answer
 
@@ -47,8 +30,6 @@ two views of one fact, and this interview is where they get reconciled.
 Everything below is that question decomposed. Most organizations have some of the pieces and
 have never assembled them, so the interview frequently ends with the interviewee saying they
 had not realized nobody owned the decision.
-
----
 
 ### Part 1 — Roles and succession (§2.3)
 
@@ -119,8 +100,6 @@ deputy is the plausible-answer failure with a rota in front of it.
 Then: is there anyone outside that geography who can execute, and is there a contracted vendor
 fallback? Usually unanswered. Record as `MISSING` with an owner; it is a legitimate finding.
 
----
-
 ### Part 2 — Activation criteria (§3.1)
 
 > "What would have to be true for you to declare? Not what you'd feel — what you'd be able to
@@ -141,8 +120,6 @@ that works at 3am and one that stalls. Whichever way they answer, record the rea
 asymmetry between an unnecessary failover and a late declaration is specific to their environment
 and their failback cost, and it must be written down where the person on the bridge will see
 it.
-
----
 
 ### Part 3 — Notification (§3.2)
 
@@ -174,8 +151,6 @@ and when to convene, and the instruction to continue the call tree.
 
 Cross-check against the interconnection register from the application interview. A partner in
 that register with no row here is a gap; say so.
-
----
 
 ### Part 4 — Outage assessment (§3.3)
 
@@ -219,8 +194,6 @@ Reduce the procedure to five questions answerable from memory. NIST requires ass
 perform without the document, and a plan stored only inside the environment it protects is a plan
 with a circular dependency.
 
----
-
 ### Part 5 — Escalation thresholds (§4.3) and deactivation (§5.4)
 
 > "The recovery is running and it's taking longer than expected. At what point does someone
@@ -235,22 +208,6 @@ Then the mirror of declaration:
 
 Declaration and deactivation are a matched pair. An unclosed declaration leaves the
 organization unsure whether it is still in a disaster, which is its own kind of outage.
-
----
-
-### Output
-
-Writes `continuity.*`: leadership roles and the deputy named for each, ordered succession with
-intervals reconciled against the Phase 0 roster, team structure with alternates and their
-capability, geographic and vendor fallback, activation criteria and the
-unknown-case default, decision time budget, call tree, bridge and its dependencies,
-notification script, external notification list, assessment team, time budget, signal list,
-provider escalation path, unknown-estimate rule, closed-book form, escalation thresholds,
-deactivation authority.
-
-Renders `checklists/roles-and-responsibilities.md`, `checklists/contact-roster.md`,
-`checklists/outage-assessment.md`, `checklists/dr-authority-matrix.md`, and the decision gate
-in `runbooks/RB-02`.
 
 ### Red flags
 
@@ -269,9 +226,11 @@ in `runbooks/RB-02`.
 
 ---
 
-## The field checklist
+## What this segment has to come away with
 
-21 fields, in the order the bank holds them, grouped by the section of the plan each one feeds. Every one of them ends the session with a status. A field nobody could answer is `MISSING` against a named owner, which is a result and not a failure; a field left absent is an error.
+21 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+
+Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
 ### 3.1 Activation criteria and procedure; who may activate
 
@@ -280,10 +239,10 @@ in `runbooks/RB-02`.
 > "If this broke at two in the morning and somebody had to say 'we are failing over', who says it? And if they do not answer?"
 
 - **Records:** The single individual with declaration authority, and their named deputy
-- **Owner:** DR process owner · **Answer:** free text
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** free text
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Exactly one individual, and one named deputy. Not 'the incident team', which is nobody, and not a rota, which is not a name.
-- **Lands in:** runbooks/RB-02-failover.md 0, checklists/dr-authority-matrix.md
+- **Goes into:** runbooks/RB-02-failover.md 0, checklists/dr-authority-matrix.md
 - **NIST:** 4.2.1 Activation Criteria and Procedure (SP 800-34 Rev. 1 Chapter 4, Information System Contingency Plan Development)
 
 #### `continuity.activation_criteria`
@@ -291,10 +250,10 @@ in `runbooks/RB-02`.
 > "What would you have to see, at three in the morning, to know this is a failover and not a bad hour?"
 
 - **Records:** The activation criteria, each one observable
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Comparisons against something knowable at 3am, not feelings.
-- **Lands in:** runbooks/RB-02-failover.md 0
+- **Goes into:** runbooks/RB-02-failover.md 0
 - **NIST:** 3.1 Activation Criteria and Procedure (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `continuity.decision_time_budget`
@@ -302,33 +261,33 @@ in `runbooks/RB-02`.
 > "How long may the decision itself take before the delay is the problem?"
 
 - **Records:** The time budget for the declaration decision
-- **Owner:** DR process owner · **Answer:** a duration in minutes
-- **Then ask:** "What is happening to the outage while that decision is being taken, and what stops being recoverable once the budget is spent?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Answers:** DR process owner · **Shape:** a duration in minutes
+- **Then ask:** "What is happening to the outage while that decision is being taken, and what stops being recoverable once the budget is spent?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
 - **Note:** Deciding is on the recovery critical path and is almost never budgeted. Whatever the number is, it comes out of the MTD.
-- **Lands in:** checklists/dr-authority-matrix.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/dr-authority-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `continuity.declaration_threshold_rule`
 
 > "Should the point at which you stop waiting be a fixed number of hours, or should it be worked out from how much of the tolerable downtime is left at that moment?"
 
 - **Records:** How the point of no return is calculated rather than what it is today
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The default action when nobody can estimate is a separate field and this is the rule behind it. A fixed threshold ages badly; one computed from what is left of the budget survives a change to the tier. Ask which they want and write down why.
-- **Lands in:** checklists/dr-authority-matrix.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/dr-authority-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `continuity.data_loss_gate`
 
 > "If you came up having lost more data than the tier allows, does downstream processing stay stopped until somebody clears it, or does it run?"
 
 - **Records:** What happens to downstream processing when the recovery point was missed
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Decide it in daylight. In the event this is asked of whoever is nearest, at speed, and the wrong answer pays somebody twice or fails to pay them at all. Name who clears it.
-- **Lands in:** checklists/dr-authority-matrix.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/dr-authority-matrix.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### 2.3 Roles and responsibilities
 
@@ -337,10 +296,10 @@ in `runbooks/RB-02`.
 > "If the first person does not answer, who is next? And after them? Keep going until you reach someone who is always reachable."
 
 - **Records:** The ordered line of succession and what each hand-off waits for
-- **Owner:** DR process owner · **Answer:** one row per item, columns `order` | `role` | `passes_after`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** one row per item, columns `order` | `role` | `passes_after`
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Must terminate in someone always reachable. Must agree with the Phase 0 deputy roster; a disagreement is a conflict with a named decision owner, never a silent preference for one list.
-- **Lands in:** checklists/roles-and-responsibilities.md
+- **Goes into:** checklists/roles-and-responsibilities.md
 - **NIST:** 2.3 Roles and Responsibilities (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `continuity.decision_and_recovery_roles`
@@ -348,22 +307,22 @@ in `runbooks/RB-02`.
 > "Who decides to declare, who runs the recovery, who authorizes spending, and who says it is over? Take them one at a time, and tell me where the same person appears twice."
 
 - **Records:** Each duty in a recovery, the role that holds it and the deputy behind them
-- **Owner:** DR process owner · **Answer:** one row per item, columns `duty` | `held_by` | `deputy`
+- **Answers:** DR process owner · **Shape:** one row per item, columns `duty` | `held_by` | `deputy`
 - **`duty` is one of:** `decides to declare`, `runs the recovery`, `authorizes the spending`, `says it is over`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Four duties, asked separately, because asking for one job title gets you one name and hides the overlap. Where the same role holds two of them, say so out loud and ask what they put down to do the other. Deciding whether the repair estimate beats the remaining budget and running the storage sequence are not the same work and cannot be done at the same minute.
-- **Lands in:** checklists/roles-and-responsibilities.md
-- **The toolkit supplies this element's words, not the customer.** They render as the toolkit's own and are never presented as something anybody said: The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorizes the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
+- **Goes into:** checklists/roles-and-responsibilities.md
+- **These words are the toolkit's, not the room's.** They render as its own and are never presented as something anybody in the room said: The toolkit names duties, not posts. It asks who decides to declare, who runs the recovery, who authorizes the spending and who says it is over, and it maps those answers onto the roles this plan already uses. A standard's own post names are supplied by the standard and never by the person being interviewed, because a question that names a post supplies the answer it was asked to elicit.
 
 #### `continuity.people_unavailable`
 
 > "If whatever caused this also took your people, one office or one time zone, who is left who could execute this, and where are they?"
 
 - **Records:** Who could execute the plan if the disruption also removed the primary team
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Almost never asked and almost never has an answer. 'Nobody' is the correct answer where it is true, and it belongs in the plan as a named hole rather than being filled in by whoever is drafting.
-- **Lands in:** checklists/roles-and-responsibilities.md
+- **Goes into:** checklists/roles-and-responsibilities.md
 - **NIST:** 3.4.6 Roles and Responsibilities (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
 
 ### 3.3 Outage assessment
@@ -373,21 +332,21 @@ in `runbooks/RB-02`.
 > "If nobody can say how long the repair will take, do you declare or do you wait?"
 
 - **Records:** The default action when the repair estimate is unknown
-- **Owner:** DR process owner · **Answer:** one of `declare`, `wait`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** one of `declare`, `wait`
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Declare, or wait? Nobody has answered this. Decide it in daylight.
-- **Lands in:** checklists/outage-assessment.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/outage-assessment.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `continuity.assessment_procedure`
 
 > "Who works out how bad it is, and how do they produce a repair estimate the person declaring can act on?"
 
 - **Records:** The outage assessment procedure and where the repair estimate comes from
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Where the repair estimate the activation criteria consume comes from.
-- **Lands in:** checklists/outage-assessment.md
+- **Goes into:** checklists/outage-assessment.md
 - **NIST:** 3.3 Outage Assessment (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `continuity.assessment_calibration`
@@ -395,11 +354,11 @@ in `runbooks/RB-02`.
 > "Last time something broke badly, how long was it before anyone could say how long it would take to fix?"
 
 - **Records:** How long this organization actually takes to produce a repair estimate
-- **Owner:** DR process owner · **Answer:** a duration in minutes
-- **Then ask:** "What were they waiting on for that long, and is that thing any faster now?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Answers:** DR process owner · **Shape:** a duration in minutes
+- **Then ask:** "What were they waiting on for that long, and is that thing any faster now?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
 - **Note:** Calibrates the assessment budget against what this organization can do rather than against what the plan would like. If the honest answer is two hours, a ten-minute assessment step is fiction and the plan should say so.
-- **Lands in:** checklists/outage-assessment.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/outage-assessment.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### 3.2 Notification
 
@@ -408,10 +367,10 @@ in `runbooks/RB-02`.
 > "Once it is declared, who gets told, in what order, and by whom? What happens when one of them does not pick up?"
 
 - **Records:** The call tree, its order, and the unreachable procedure
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The unreachable branch is the half that gets skipped and the half that gets used.
-- **Lands in:** checklists/contact-roster.md
+- **Goes into:** checklists/contact-roster.md
 - **NIST:** 3.2 Notification (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `continuity.bridge`
@@ -419,10 +378,10 @@ in `runbooks/RB-02`.
 > "Where does everyone gather to work the incident, and what does joining it depend on?"
 
 - **Records:** The incident bridge and its dependencies
-- **Owner:** DR process owner · **Answer:** free text
+- **Answers:** DR process owner · **Shape:** free text
 - **Note:** Check what it depends on. A bridge that authenticates through the failed environment is a plan with a loop in it.
-- **Lands in:** checklists/contact-roster.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/contact-roster.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### 4.3 Recovery escalation and notification
 
@@ -431,10 +390,10 @@ in `runbooks/RB-02`.
 > "Once recovery is running, what would tell a tired person at 4am that it is going badly enough to wake someone more senior?"
 
 - **Records:** The escalation thresholds, each observable
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Observable at 3am by a tired person. 'When it feels wrong' is not one.
-- **Lands in:** docs/09 5
+- **Goes into:** docs/09 5
 - **NIST:** 4.3 Recovery Escalation Notices/Awareness (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### 5.10 Deactivation
@@ -444,10 +403,10 @@ in `runbooks/RB-02`.
 > "Who says it is over, and what do they have to see before they can say it?"
 
 - **Records:** Who may deactivate the plan and on what evidence
-- **Owner:** DR process owner · **Answer:** free text
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** free text
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Declaration and deactivation are a matched pair.
-- **Lands in:** docs/10 4.2
+- **Goes into:** docs/10 4.2
 - **NIST:** 5.10 Deactivation (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### A. Personnel contact list
@@ -457,10 +416,10 @@ in `runbooks/RB-02`.
 > "For every role we have named: who holds it, how do I reach them out of hours, and when did anyone last ring that number and get an answer?"
 
 - **Records:** Each role, who holds it, how they are reached and when that was last verified
-- **Owner:** DR process owner · **Answer:** one row per item, columns `role` | `held_by` | `reached_by` | `last_verified`
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** one row per item, columns `role` | `held_by` | `reached_by` | `last_verified`
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The one file that must never be committed to a shared repository, and the one that is useless if it is out of date. Press on the last column: a roster nobody has rung is a list of numbers, not a call tree. A role with no holder is a gap with a name on it and belongs here as MISSING rather than being quietly left out.
-- **Lands in:** checklists/contact-roster.md
+- **Goes into:** checklists/contact-roster.md
 - **NIST:** APPENDIX A PERSONNEL CONTACT LIST (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### B. Vendor contact list
@@ -470,9 +429,9 @@ in `runbooks/RB-02`.
 > "Which outside organizations would you have to call during this, how do you reach them out of hours, and what reference do they need you to quote before they will help?"
 
 - **Records:** Each vendor, what they supply, how they are reached and the reference they need
-- **Owner:** DR process owner · **Answer:** one row per item, columns `organization` | `what_they_supply` | `reached_by` | `reference_to_quote`
+- **Answers:** DR process owner · **Shape:** one row per item, columns `organization` | `what_they_supply` | `reached_by` | `reference_to_quote`
 - **Note:** The reference column is the one that saves an hour. A support contract number stored only inside the system being recovered is not a contract number. Ask where a printed copy lives.
-- **Lands in:** checklists/contact-roster.md
+- **Goes into:** checklists/contact-roster.md
 - **NIST:** APPENDIX B VENDOR CONTACT LIST (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### Vendor obligations during a recovery
@@ -482,10 +441,10 @@ in `runbooks/RB-02`.
 > "Is anyone outside this organization contracted to do part of this if you cannot? What does the contract actually oblige them to do, and how fast?"
 
 - **Records:** Each external party, what their contract obliges, how fast, and where the contract is held
-- **Owner:** governance/risk contact · **Answer:** one row per item, columns `organization` | `what_the_contract_obliges` | `response_time` | `where_the_contract_is_held`
+- **Answers:** governance/risk contact · **Shape:** one row per item, columns `organization` | `what_the_contract_obliges` | `response_time` | `where_the_contract_is_held`
 - **Note:** Not a NIST appendix: the templates have no heading for this and the coverage map invented one. It is still worth asking, because a recovery that assumes a vendor will help is a recovery resting on goodwill. If the answer is that nobody has read the contract, record that.
-- **Lands in:** checklists/contact-roster.md, checklists/risk-register.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/contact-roster.md, checklists/risk-register.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### 5.4 Recovery declaration
 
@@ -494,10 +453,10 @@ in `runbooks/RB-02`.
 > "Who tells the business it is recovered, and what do they have to have seen before they are allowed to say it?"
 
 - **Records:** Who declares recovery complete and the evidence they need first
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Distinct from standing the plan down. This is the moment users are told they may work, and the evidence for it is the validation pack rather than the infrastructure being green.
-- **Lands in:** docs/10-phase-reconstitution.md
+- **Goes into:** docs/10-phase-reconstitution.md
 - **NIST:** 5.4 Recovery Declaration (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### 5.5 Notification (users)
@@ -507,10 +466,10 @@ in `runbooks/RB-02`.
 > "How do users find out they can work again? Who sends it, through what, and what does it have to tell them?"
 
 - **Records:** How users are told service is restored, by whom and what the message must carry
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Ask what the message has to say, not just who sends it. Users coming back to a system that lost fifteen minutes of work need to be told that, and a channel that runs through the recovered environment is a channel with a loop in it.
-- **Lands in:** checklists/contact-roster.md, docs/10-phase-reconstitution.md
+- **Goes into:** checklists/contact-roster.md, docs/10-phase-reconstitution.md
 - **NIST:** 5.5 Notifications (users) (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### 5.6 Cleanup
@@ -520,8 +479,126 @@ in `runbooks/RB-02`.
 > "Once it is over, what has to be taken down or put back? And what is the thing you would most regret leaving running?"
 
 - **Records:** What is dismantled after the event, and who is responsible for each of it
-- **Owner:** DR process owner · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** DR process owner · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The second half of the question finds the expensive one. Ask also what must deliberately not be torn down: the replication that was rebuilt is the thing most often cleaned up by somebody tidying.
-- **Lands in:** docs/10-phase-reconstitution.md
+- **Goes into:** docs/10-phase-reconstitution.md
 - **NIST:** 5.6 Cleanup (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+---
+
+## The worksheet
+
+Print this. One line per answer, filled in as it is said rather than afterwards.
+
+- **Never leave a cell blank.** No answer means write the name of who can give one.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
+- Two people, two answers: **write both**, and write whose decision it is.
+
+### 3.1 Activation criteria and procedure; who may activate
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The single individual with declaration authority, and their named deputy (`continuity.declaration_authority`) |  |  | H / M / L |  |
+| The activation criteria, each one observable (`continuity.activation_criteria`) |  |  | H / M / L |  |
+| The time budget for the declaration decision (`continuity.decision_time_budget`) |  |  | H / M / L |  |
+| How the point of no return is calculated rather than what it is today (`continuity.declaration_threshold_rule`) |  |  | H / M / L |  |
+| What happens to downstream processing when the recovery point was missed (`continuity.data_loss_gate`) |  |  | H / M / L |  |
+
+### 2.3 Roles and responsibilities
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Who could execute the plan if the disruption also removed the primary team (`continuity.people_unavailable`) |  |  | H / M / L |  |
+
+**The ordered line of succession and what each hand-off waits for** (`continuity.succession`) — one row each, add as many as the room needs
+
+| order | role | passes_after | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+
+**Each duty in a recovery, the role that holds it and the deputy behind them** (`continuity.decision_and_recovery_roles`) — one row each, add as many as the room needs
+
+| duty | held_by | deputy | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+
+### 3.3 Outage assessment
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The default action when the repair estimate is unknown (`continuity.unknown_estimate_default`) |  |  | H / M / L |  |
+| The outage assessment procedure and where the repair estimate comes from (`continuity.assessment_procedure`) |  |  | H / M / L |  |
+| How long this organization actually takes to produce a repair estimate (`continuity.assessment_calibration`) |  |  | H / M / L |  |
+
+### 3.2 Notification
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The call tree, its order, and the unreachable procedure (`continuity.call_tree`) |  |  | H / M / L |  |
+| The incident bridge and its dependencies (`continuity.bridge`) |  |  | H / M / L |  |
+
+### 4.3 Recovery escalation and notification
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The escalation thresholds, each observable (`continuity.escalation_thresholds`) |  |  | H / M / L |  |
+
+### 5.10 Deactivation
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Who may deactivate the plan and on what evidence (`continuity.deactivation_authority`) |  |  | H / M / L |  |
+
+### A. Personnel contact list
+
+**Each role, who holds it, how they are reached and when that was last verified** (`continuity.contact_roster`) — one row each, add as many as the room needs
+
+| role | held_by | reached_by | last_verified | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+
+### B. Vendor contact list
+
+**Each vendor, what they supply, how they are reached and the reference they need** (`continuity.vendor_contacts`) — one row each, add as many as the room needs
+
+| organization | what_they_supply | reached_by | reference_to_quote | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+
+### Vendor obligations during a recovery
+
+**Each external party, what their contract obliges, how fast, and where the contract is held** (`continuity.vendor_obligations`) — one row each, add as many as the room needs
+
+| organization | what_the_contract_obliges | response_time | where_the_contract_is_held | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+
+### 5.4 Recovery declaration
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Who declares recovery complete and the evidence they need first (`continuity.recovery_declaration`) |  |  | H / M / L |  |
+
+### 5.5 Notification (users)
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| How users are told service is restored, by whom and what the message must carry (`continuity.user_notification`) |  |  | H / M / L |  |
+
+### 5.6 Cleanup
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| What is dismantled after the event, and who is responsible for each of it (`continuity.cleanup`) |  |  | H / M / L |  |

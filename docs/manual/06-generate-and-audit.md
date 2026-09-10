@@ -1,20 +1,35 @@
-# Phase 6 — Assemble and audit
+# Phase 6 — Writing it up, and auditing what you wrote
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-Half a day, on your own. Working manually there is no renderer, so this phase is two jobs rather than one: write the repository from the answers you hold, then audit what you wrote.
+**You, on your own,** with the worksheets from every session in front of you.
 
-**The assembly is mechanical and the map for it is generated.** Every recorded field names the file it lands in; [`fields.md`](fields.md) lists them the other way round, file by file, which is the order you write in. The tree to create is below, and so are the rendering rules for a `MISSING` field, a low-confidence value and the *Unverified statements* section. A manually written plan that quietly omits its gaps has thrown away the thing this method produces.
+Half a day. There is no renderer here, so this is two jobs: write the documents from the worksheets, then audit what you wrote.
 
-Then audit. Fix what blocks approval and leave the rest visible.
+**The assembly is mechanical and the map is generated.** [fields.md](fields.md) lists every answer by the file it belongs in, which is the order to write in. The rules below for marking a missing answer, a low-confidence figure and the *Unverified statements* section are the part people skip, and skipping it is how a plan full of gaps comes out looking finished. **A cell your worksheet left open is a marked gap in the document, never a sentence you write to fill the space.**
 
-**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
+Then audit, starting from the position that every requirement is unmet until a sentence in your own document proves otherwise. Fix what blocks approval and leave the rest visible.
+
+**Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
 ---
 
-## The repository to write — `itscp-method-repo-scaffold`
+### Running this without the toolkit
 
-*The directory tree itscp-build generates, which skill fills each file, and the rendering rules for MISSING fields, low-confidence values and the References and Unverified statements sections. Read before creating or filling a plan repository.*
+The technique below is the skills' own words, and the skills assume a loaded plugin. You do not have one. These are the substitutions in effect on this page.
+
+| Where it says | In the room you |
+|---|---|
+| `python3 itscp_portfolio.py` | Check the register by hand. [Five passes over the wall](00-portfolio.md#checking-the-register-by-hand), each one a question you can answer from the cards in front of you. |
+| `itscp-build` | There is no generator in a tabletop. Phase 6 is you writing the documents, and [fields.md](fields.md) is the map of which answer goes into which one. |
+| `portfolio.toml` | The register is the wall: one card per system, one line per dependency. The file is only how it gets stored if somebody types it up afterwards. |
+| the answer store | The stack of worksheets. It holds the same things — the answer, who gave it, how sure they were — in columns rather than in keys. |
+| `answers.yaml` in the tree | The worksheets. Nothing to create; the stack of paper is the store. |
+| "the store" | The worksheet in front of you. |
+
+## The technique
+
+*From `itscp-method-repo-scaffold`: The directory tree itscp-build generates, which skill fills each file, and the rendering rules for MISSING fields, low-confidence values and the References and Unverified statements sections. Read before creating or filling a plan repository.*
 
 The tree `itscp-build` creates, and which skill fills each file. Structure follows the
 reference example so that anyone who has read one plan can navigate any other.
@@ -91,31 +106,7 @@ which are outstanding.
 The second section is not optional. It is what keeps a generated document honest about the
 difference between what was elicited and what was reasoned.
 
----
-
-## The technique — `itscp-audit`
-
-*Use when an IT service continuity plan (ITSCP) needs checking against NIST SP 800-34 or the SP 800-53 contingency planning controls, when someone asks whether their plan is complete or audit-ready, or before submitting a plan for approval or external review.*
-
-Audits a generated plan against the standard. Adversarial by construction: every requirement
-starts REFUTED and only a quoted sentence from a file in the plan moves it.
-
-**What is being audited against what.** The document under audit is an ITSCP, an IT service
-continuity plan. NIST SP 800-34 specifies an Information System Contingency Plan (ISCP), and
-the SP 800-53 CP family is written for that ISCP. The ITSCP aligns *to* the ISCP structure;
-it is not one. Every row therefore assesses an ISCP requirement against this ITSCP by way of
-the crosswalk in the `itscp-method-coverage-map` skill, and a finding holds or fails at that
-crosswalk: a runbook is the ITSCP's recovery procedure, the tier workshop is its BIA,
-"declare disaster" is its activation. Write "the ITSCP" or "the plan" for the document under
-audit and "ISCP" only inside a quotation or when naming NIST's or FedRAMP's own artefact. An
-auditor who conflates the two will cite the wrong instrument for the finding.
-
-Descended from the compliance-audit skill in the reference repository, generalised to
-audit *your* plan rather than that one.
-
-**Read first:** the `itscp-method-coverage-map` skill.
-
----
+*From `itscp-audit`: Use when an IT service continuity plan (ITSCP) needs checking against NIST SP 800-34 or the SP 800-53 contingency planning controls, when someone asks whether their plan is complete or audit-ready, or before submitting a plan for approval or external review.*
 
 ### The rule that makes this an audit rather than a review
 

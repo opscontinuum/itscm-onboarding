@@ -1,36 +1,24 @@
-# Phase 5 — The governance interview
+# Phase 5 — Approval, review and training
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-**Who is in the room:** governance, risk, audit, or compliance. In a smaller organization this may be the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that should be stated rather than discovered at audit.
+**Not the tabletop.** A separate session with governance, risk or audit, after the technical segments.
+
+**Whose answers these are:** governance, risk, audit, or compliance. In a smaller organization this may be the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that should be stated rather than discovered at audit.
 
 **How long:** 60 minutes.
 
 **A design describes what would happen; a plan is a design somebody committed to.** The difference is a signature, a review date and a trained population, and this phase is where all three are elicited.
 
-**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
+It is a short session and it does not need the technical teams. It does need somebody who can commit the organization to a review cadence and an exercise schedule, which is why it is not a tabletop segment.
+
+**Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
 ---
 
-## The technique — `itscp-interview-governance`
+## The technique
 
-*Use when a continuity plan needs approval, a review and maintenance cadence, a risk register, or a training and exercise program, when a system's security categorization or impact level must be established for a plan, or when someone asks what evidence an auditor will want for contingency planning.*
-
-The part that makes a design into a plan: who signs it, when it is reviewed, who is trained on
-it, what evidence exists, and which risks are owned. Produces the approval statement, the
-review cadence, Appendix J test/training/exercise documentation, the risk register, and the
-categorization the scope statement depends on.
-
-**Read first:** the `itscp-method-interview` skill. Run last — governance signs off on what
-the other interviews produced.
-
-**Interviewee:** governance, risk, audit, or compliance. In a smaller organization this may be
-the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that
-should be stated rather than discovered at audit.
-
-**Time:** 60 minutes.
-
----
+*From `itscp-interview-governance`: Use when a continuity plan needs approval, a review and maintenance cadence, a risk register, or a training and exercise program, when a system's security categorization or impact level must be established for a plan, or when someone asks what evidence an auditor will want for contingency planning.*
 
 ### The distinction that frames the whole interview
 
@@ -41,8 +29,6 @@ a plan.
 
 Open by saying this. It reframes the session from paperwork into the thing that makes the
 previous three interviews count.
-
----
 
 ### What to elicit
 
@@ -136,18 +122,6 @@ this plan reads is a register nobody reads.
 SLAs, support contracts and their severity paths, reciprocal agreements. Specifically: what
 the cloud provider commits to in a regional event, and whether anyone has read it.
 
----
-
-### Output
-
-Writes `governance.*`: signing authority and attestation, existing approvals, categorization
-and regulatory obligations, review cadence with triggers and owner, training program and
-evidence method, exercise tiers and evidence retention, finding-to-change route, risk register,
-vendor agreements.
-
-Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
-`checklists/risk-register.md`, the maintenance section of `README.md`, and Appendix J.
-
 ### Red flags
 
 | Thought | Reality |
@@ -162,9 +136,11 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 
 ---
 
-## The field checklist
+## What this segment has to come away with
 
-12 fields, in the order the bank holds them, grouped by the section of the plan each one feeds. Every one of them ends the session with a status. A field nobody could answer is `MISSING` against a named owner, which is a result and not a failure; a field left absent is an error.
+12 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+
+Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
 ### Plan Approval statement
 
@@ -173,10 +149,10 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "Who signs this plan, and who signs it if they are away for a month?"
 
 - **Records:** The signatory and the alternate signatory
-- **Owner:** signing authority · **Answer:** free text
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** signing authority · **Shape:** free text
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The signatory and the alternate signatory. A plan that can only be approved by one reachable person cannot be reapproved after a material change while they are away.
-- **Lands in:** docs/00-plan-approval.md
+- **Goes into:** docs/00-plan-approval.md
 - **NIST:** Plan Approval (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `governance.plan_custody`
@@ -184,11 +160,11 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "Where will the signed copy of this plan live? And where will it live when the thing holding it is the thing that is down?"
 
 - **Records:** Where the approved plan is held, and where it is held when the environment is unavailable
-- **Owner:** signing authority · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** signing authority · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** A plan readable only from the system it recovers is a plan nobody can read when they need it. The second half of the question is the whole question; ask it separately and wait.
-- **Lands in:** docs/00-plan-approval.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** docs/00-plan-approval.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### J. Test, training and exercise documentation
 
@@ -197,9 +173,9 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "How often does this get reviewed, what else triggers a review, and whose job is it to start one?"
 
 - **Records:** Review frequency, the triggers, and the owner of the review
-- **Owner:** governance/risk contact · **Answer:** free text
+- **Answers:** governance/risk contact · **Shape:** free text
 - **Note:** Frequency AND triggers AND an owner. An unowned cadence does not happen.
-- **Lands in:** README.md
+- **Goes into:** README.md
 - **NIST:** APPENDIX J TEST AND MAINTENANCE SCHEDULE (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 #### `governance.training_program`
@@ -207,10 +183,10 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "Separately from drills: how does someone new become competent to do their part of this?"
 
 - **Records:** The training program, distinct from the drill program
-- **Owner:** governance/risk contact · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** Distinct from drills. Drills exercise the plan; training makes individuals competent. Auditors check for both.
-- **Lands in:** checklists/contingency-training.md
+- **Goes into:** checklists/contingency-training.md
 - **NIST:** 3.5.2 Training (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
 
 #### `governance.drill_cadence`
@@ -218,10 +194,10 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "How often will you actually exercise this? Not what the policy says: what you will fund and staff."
 
 - **Records:** How often the plan is exercised, in practice
-- **Owner:** governance/risk contact · **Answer:** a duration in months
-- **Then ask:** "What would have to happen for one to be skipped, and who notices when it is?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Answers:** governance/risk contact · **Shape:** a duration in months
+- **Then ask:** "What would have to happen for one to be skipped, and who notices when it is?" It goes in the **what breaks at that number** column. An empty one makes the figure a guess, and the row is marked low confidence.
 - **Note:** Two questions in one and the second is the real one. A stricter cadence than the organization will fund is worse than an honest looser one, because the plan then documents a control that does not run and an auditor will find the gap rather than the intention.
-- **Lands in:** runbooks/RB-04-dr-drill.md
+- **Goes into:** runbooks/RB-04-dr-drill.md
 - **NIST:** 3.5 Plan Testing, Training, and Exercises (TT&E) (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
 
 ### Plan review and maintenance cadence
@@ -231,22 +207,22 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "A drill finds something wrong. What happens to that finding, and who closes it?"
 
 - **Records:** The route from a drill finding to a change in the plan
-- **Owner:** governance/risk contact · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** If there is no route, the drills are theater.
-- **Lands in:** README.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** README.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `governance.availability_boundary`
 
 > "Who owns keeping this available day to day, and who owns getting it back after a disaster? Same person, or different?"
 
 - **Records:** Where day-to-day availability ends and continuity begins, and who owns each side
-- **Owner:** governance/risk contact · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** The boundary most plans raise against themselves and never close. Where it is the same person, ask what they stop doing during a recovery; where it is two, ask who decides which one a given incident is.
-- **Lands in:** docs/07-standards-alignment.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** docs/07-standards-alignment.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### Risk register
 
@@ -255,21 +231,21 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "What are you assuming for this to work, that you would not want to discover was wrong during an outage? Take them one at a time."
 
 - **Records:** Each material assumption or design risk, its owner and its review date
-- **Owner:** governance/risk contact · **Answer:** one row per item, columns `risk` | `owner` | `review_date` | `mitigation`
+- **Answers:** governance/risk contact · **Shape:** one row per item, columns `risk` | `owner` | `review_date` | `mitigation`
 - **Note:** Material assumptions and design risks, owned and reviewed rather than scattered.
-- **Lands in:** checklists/risk-register.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/risk-register.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 #### `governance.breach_disclosure_clock`
 
 > "If the cause turns out to be an attack rather than a failure, who has to be told, how fast, and whose job is that clock? Name the role, not the department."
 
 - **Records:** Who owns the disclosure clock when the cause is an attack, and how fast it runs
-- **Owner:** governance/risk contact · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** A recovery driven by an attack is not only a continuity event, and this plan has no authority over the disclosure clock. Record who does. An unowned regulatory clock is the one gap in a continuity plan that costs money after the service is back.
-- **Lands in:** checklists/roles-and-responsibilities.md, docs/08-phase-activation.md
-- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+- **Goes into:** checklists/roles-and-responsibilities.md, docs/08-phase-activation.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 
 ### 5.9 Event documentation
 
@@ -278,10 +254,10 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "After a real event, who writes down what happened, what goes in it, and where does it end up? And has that ever actually been done here?"
 
 - **Records:** How a real event is written up, by whom, and where the record goes
-- **Owner:** governance/risk contact · **Answer:** several paragraphs, in their words
-- **Read it back** in one sentence and get a yes before recording it.
+- **Answers:** governance/risk contact · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
 - **Note:** A drill report and an event report are different documents and most organizations have neither. Ask the last part plainly: if it has never been done, the answer is what the plan should say, not an intention dressed as a procedure.
-- **Lands in:** docs/00-record-of-changes.md, runbooks/RB-04-dr-drill.md
+- **Goes into:** docs/00-record-of-changes.md, runbooks/RB-04-dr-drill.md
 - **NIST:** 5.9 Event Documentation (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### K. Associated plans and procedures
@@ -291,9 +267,9 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "What other plans does this one lean on or feed into? Anything for the building, for a security incident, for the wider business?"
 
 - **Records:** Each related plan, who owns it and how it relates to this one
-- **Owner:** governance/risk contact · **Answer:** one row per item, columns `plan` | `owner` | `how_it_relates`
+- **Answers:** governance/risk contact · **Shape:** one row per item, columns `plan` | `owner` | `how_it_relates`
 - **Note:** A continuity plan that assumes a facilities plan exists, and a facilities plan that assumes this one does, is a pair of documents each waiting for the other. Naming the owner is what makes the assumption checkable.
-- **Lands in:** docs/07-standards-alignment.md, README.md
+- **Goes into:** docs/07-standards-alignment.md, README.md
 - **NIST:** APPENDIX K ASSOCIATED PLANS AND PROCEDURES (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
 ### Drill levels and what each proves
@@ -303,7 +279,80 @@ Renders `docs/00-plan-approval.md`, `checklists/contingency-training.md`,
 > "For each exercise you run: does it prove the plan reads correctly, that the steps run, or that the business can work afterwards? And what does it leave unproven?"
 
 - **Records:** Each exercise level, what it proves and what it does not
-- **Owner:** governance/risk contact · **Answer:** one row per item, columns `level` | `what_it_proves` | `what_it_does_not_prove`
+- **Answers:** governance/risk contact · **Shape:** one row per item, columns `level` | `what_it_proves` | `what_it_does_not_prove`
 - **Note:** The last column is the one that gets argued about, which is why it is a column. An organization whose only evidence is a reading has a plan nobody has run, and it will believe otherwise until this table is filled in.
-- **Lands in:** docs/06-test-environments.md, runbooks/RB-04-dr-drill.md
-- **The toolkit supplies this element's words, not the customer.** They render as the toolkit's own and are never presented as something anybody said: An exercise proves one of three things and rarely all three: that the plan reads correctly, that the steps run, or that the business can work afterwards. The toolkit asks which level each exercise reaches and what it therefore leaves unproven, because a plan whose only evidence is a reading has never been shown to work.
+- **Goes into:** docs/06-test-environments.md, runbooks/RB-04-dr-drill.md
+- **These words are the toolkit's, not the room's.** They render as its own and are never presented as something anybody in the room said: An exercise proves one of three things and rarely all three: that the plan reads correctly, that the steps run, or that the business can work afterwards. The toolkit asks which level each exercise reaches and what it therefore leaves unproven, because a plan whose only evidence is a reading has never been shown to work.
+
+---
+
+## The worksheet
+
+Print this. One line per answer, filled in as it is said rather than afterwards.
+
+- **Never leave a cell blank.** No answer means write the name of who can give one.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
+- Two people, two answers: **write both**, and write whose decision it is.
+
+### Plan Approval statement
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The signatory and the alternate signatory (`governance.signing_authority`) |  |  | H / M / L |  |
+| Where the approved plan is held, and where it is held when the environment is unavailable (`governance.plan_custody`) |  |  | H / M / L |  |
+
+### J. Test, training and exercise documentation
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Review frequency, the triggers, and the owner of the review (`governance.review_cadence`) |  |  | H / M / L |  |
+| The training program, distinct from the drill program (`governance.training_program`) |  |  | H / M / L |  |
+| How often the plan is exercised, in practice (`governance.drill_cadence`) |  |  | H / M / L |  |
+
+### Plan review and maintenance cadence
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| The route from a drill finding to a change in the plan (`governance.finding_to_change_route`) |  |  | H / M / L |  |
+| Where day-to-day availability ends and continuity begins, and who owns each side (`governance.availability_boundary`) |  |  | H / M / L |  |
+
+### Risk register
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Who owns the disclosure clock when the cause is an attack, and how fast it runs (`governance.breach_disclosure_clock`) |  |  | H / M / L |  |
+
+**Each material assumption or design risk, its owner and its review date** (`governance.risk_register`) — one row each, add as many as the room needs
+
+| risk | owner | review_date | mitigation | Who said it | Sure? |
+|---|---|---|---|---|---|
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+|   |   |   |   |  | H / M / L |
+
+### 5.9 Event documentation
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| How a real event is written up, by whom, and where the record goes (`governance.event_documentation`) |  |  | H / M / L |  |
+
+### K. Associated plans and procedures
+
+**Each related plan, who owns it and how it relates to this one** (`governance.associated_plans`) — one row each, add as many as the room needs
+
+| plan | owner | how_it_relates | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+
+### Drill levels and what each proves
+
+**Each exercise level, what it proves and what it does not** (`governance.drill_levels`) — one row each, add as many as the room needs
+
+| level | what_it_proves | what_it_does_not_prove | Who said it | Sure? |
+|---|---|---|---|---|
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |
+|   |   |   |  | H / M / L |

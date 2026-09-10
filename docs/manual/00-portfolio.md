@@ -2,36 +2,35 @@
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-**Who is in the room:** whoever can see the whole portfolio — enterprise architect, head of infrastructure, or the CIO. Usually two or three people together, because nobody has the complete picture alone. That gap is itself the first finding.
+**A workshop, before the tabletop.** Whoever can see the whole environment, which is usually two or three people and never one.
+
+**Whose answers these are:** whoever can see the whole portfolio — enterprise architect, head of infrastructure, or the CIO. Usually two or three people together, because nobody has the complete picture alone. That gap is itself the first finding.
 
 **How long:** half a day for a first register, plus an hour per follow-up.
 
-Runs once for the organization, before any plan. It produces `portfolio.toml`: the register of systems, the comparative tier ranking, the recovery waves, and the dependency graph between them. Four failures live only above the level of a single plan and none of them are visible from inside one, which is why this comes first rather than after the plan that would have to be rebuilt.
+Runs once for the organization, before any plan. It produces the register: every system, the tier ranking, the recovery waves, and what each system needs from the others. Four failures live only above the level of a single plan and none of them are visible from inside one, which is why this comes first rather than after the plan that would have to be rebuilt.
 
-**Nothing in this phase is recorded in an answer store.** A register of systems is a different shape from a set of facts about one system, so it is written by hand into `portfolio.toml` and checked with `python3 plugin/itscp_portfolio.py portfolio.toml`. The fields that file holds are listed at the end of this page.
+**Run it on a wall.** One card per system, laid out left to right in recovery waves, with a line drawn for every dependency. The room argues with the wall rather than with a document, and the four failures are things you can see: a line pointing backwards, a loop, a card whose number is smaller than the card it depends on. The blank register and the five checks are at the end of this page.
 
-**Do not start a per-system plan while the validator reports errors.** An inversion means two signed figures contradict each other, and a plan built on top of one bakes the contradiction in.
+**Do not start a per-system plan while a check is failing.** An inversion means two signed figures contradict each other, and a plan built on top of one bakes the contradiction in.
 
-**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
-
----
-
-## The technique — `itscp-portfolio`
-
-*Use when an organization needs continuity plans for more than one system, when it is unclear which application to plan for first or in what order systems recover, when recovery tiers must be ranked across a portfolio rather than assigned one application at a time, or when asked how many plans an organization needs.*
-
-Builds the register of systems, ranks them against each other, and fixes the order they
-recover in. Run **before** any per-system plan.
-
-**Read first:** `itscp-method-interview` for the elicitation discipline.
-
-**Interviewee:** whoever can see the whole portfolio — enterprise architect, head of
-infrastructure, or the CIO. Usually two or three people together, because nobody has the
-complete picture alone. That gap is itself the first finding.
-
-**Time:** half a day for a first register, plus an hour per follow-up.
+**Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
 ---
+
+### Running this without the toolkit
+
+The technique below is the skills' own words, and the skills assume a loaded plugin. You do not have one. These are the substitutions in effect on this page.
+
+| Where it says | In the room you |
+|---|---|
+| `python3 itscp_portfolio.py` | Check the register by hand. [Five passes over the wall](00-portfolio.md#checking-the-register-by-hand), each one a question you can answer from the cards in front of you. |
+| `itscp-build` | There is no generator in a tabletop. Phase 6 is you writing the documents, and [fields.md](fields.md) is the map of which answer goes into which one. |
+| `portfolio.toml` | The register is the wall: one card per system, one line per dependency. The file is only how it gets stored if somebody types it up afterwards. |
+
+## The technique
+
+*From `itscp-portfolio`: Use when an organization needs continuity plans for more than one system, when it is unclear which application to plan for first or in what order systems recover, when recovery tiers must be ranked across a portfolio rather than assigned one application at a time, or when asked how many plans an organization needs.*
 
 ### Why this exists
 
@@ -52,24 +51,6 @@ inside one:
 
 `itscp_portfolio.py` checks all four mechanically. Your job is to elicit the register it
 checks.
-
----
-
-### What a register holds
-
-One `portfolio.toml`, one row per system:
-
-| Field | Notes |
-|---|---|
-| `slug`, `name` | The name the business uses, not the hostname |
-| `class` | `shared-platform`, `core-data`, `dependent-app`, `supporting-infra`, `public-api`, `public-web` |
-| `business_owner`, `application_owner` | **A system with neither is an error, not a gap.** Nobody can sign its recovery target |
-| `tier`, `rto`, `rpo`, `mtd` | Ranked comparatively, not assigned in isolation |
-| `wave` | Which recovery step it belongs to |
-| `plan_repo` | Where its ISCP lives. Empty means known-about and unplanned |
-| `depends_on` | Elicited by `itscp-dependencies` |
-
----
 
 ### Run order
 
@@ -151,16 +132,12 @@ Exit 0 clean, 1 warnings, 2 errors. Errors are contradictions, not preferences �
 inversion means one of two signed figures is wrong and the two business owners have to agree
 which. **Take inversions back to the owners; never resolve one by editing a number yourself.**
 
----
-
 ### Then, per system
 
 `itscp-build` runs once per system, in wave order, generating a plan repository each. The
 register is the input: it supplies the tier, the targets and the dependencies each plan has
 to honor. Re-validate after each plan is signed, because a signed plan can change a number
 the register was checked against.
-
----
 
 ### Red flags
 
@@ -173,31 +150,7 @@ the register was checked against.
 | "Waves are obvious, I'll assign them" | The concurrency limit is a statement about people. Ask |
 | "Supporting tooling recovers last" | Not if the runbooks are in it. Ask what recovery needs, not what production needs |
 
----
-
-## The technique — `itscp-dependencies`
-
-*Use when mapping what one system needs from another, when the recovery order across several systems has to be established, when checking whether recovery targets are consistent between a system and the things it depends on, or when working out what is needed in order to recover a system as opposed to run it.*
-
-Builds the dependency graph in `portfolio.toml`, and it is one question that makes it worth
-doing separately from everything else:
-
-> **What does this system need in order to be *recovered*, as distinct from what it needs in
-> order to *run*?**
-
-Every interview in every continuity toolkit asks the second. Almost none ask the first. The
-gap between them is where real invocations fail.
-
-**Read first:** `itscp-method-interview`. Run after `itscp-portfolio` has the register and
-before or alongside the per-system interviews.
-
-**Interviewee:** the application owner and the infrastructure owner for each system, together
-where possible. Runtime dependencies are usually known; recovery dependencies usually are not,
-and the conversation that surfaces them needs both people in it.
-
-**Time:** 20–30 minutes per system, faster once the pattern is understood.
-
----
+*From `itscp-dependencies`: Use when mapping what one system needs from another, when the recovery order across several systems has to be established, when checking whether recovery targets are consistent between a system and the things it depends on, or when working out what is needed in order to recover a system as opposed to run it.*
 
 ### Three kinds of edge
 
@@ -209,8 +162,6 @@ and the conversation that surfaces them needs both people in it.
 
 Plus a criticality: `hard` means it does not work at all without it; `soft` means degraded but
 functional. Only hard edges constrain the recovery order.
-
----
 
 ### Eliciting recovery dependencies
 
@@ -243,8 +194,6 @@ error. **The fix is never to reorder the pair** — it is to put what one of the
 runbook copy, a break-glass credential, console access that does not federate) somewhere
 outside the cycle.
 
----
-
 ### Checking the graph
 
 ```bash
@@ -276,8 +225,6 @@ The third is the best answer and the one nobody reaches for unaided — offer it
 **Never resolve an inversion by editing a number.** The register would validate and the plan
 would still be impossible; you would have deleted the finding rather than the problem.
 
----
-
 ### What to record
 
 Per edge: `on`, `kind`, `criticality`, and a note saying *what breaks* without it. The note is
@@ -286,8 +233,6 @@ what survives a re-organization; the slug is just a pointer.
 Keep `soft` honest. "Degraded but functional" must mean somebody can still do their job, not
 that the system technically starts. If the answer is "it comes up but nobody can use it",
 that edge is `hard`.
-
----
 
 ### Red flags
 
@@ -302,37 +247,46 @@ that edge is `hard`.
 
 ---
 
-## What `portfolio.toml` holds
+## The register, on a wall
 
-Written by hand and checked with `python3 plugin/itscp_portfolio.py portfolio.toml`. `plugin/portfolio.example.toml` is a fourteen-system register in this shape.
+One card per system, laid out left to right in recovery waves. Everything below is what a card carries and what the room checks it against. If somebody types it up afterwards the file has these same fields, and then a validator can make these same five passes for you.
 
-**Once for the organization**
+### Once for the organization
+
+| Ask | Write down |
+|---|---|
+| The organization's name | The name that goes on the plan |
+| "You can have this many systems at each tier." | The tier budget. Asked without one, every owner answers tier 0 and is not wrong to |
+| "How many of these can you genuinely bring up at once, with the people you would actually have at 3am on a Sunday?" | The concurrency limit for each wave. It is a statement about people far more often than about capacity |
+
+### On each system's card
 
 | Field | What it holds |
 |---|---|
-| `organization` | The organization's name |
-| `tier_budget` | How many systems each tier may hold. The budget is what makes the ranking comparative; without one every owner answers tier 0, and is not wrong to |
-| `wave` | One block per step of the recovery order: `id`, `name`, `purpose`, and `max_concurrent` — how many of that wave's systems can genuinely be recovered at once, which is a statement about people far more often than about capacity |
+| Name | What the business calls it, not the hostname |
+| Class | One of `shared-platform`, `core-data`, `dependent-app`, `supporting-infra`, `public-api`, `public-web` |
+| Business owner, application owner | A system with neither is an error, not a gap: nobody can sign its recovery target |
+| Tier, RTO, RPO, MTD | Ranked against the other cards, never in isolation |
+| Wave | Which step of the recovery order it belongs to |
+| Where its plan lives | Blank means known about and unplanned, which is worth seeing on the wall |
 
-**Once per system**
-
-| Field | What it holds |
-|---|---|
-| `slug`, `name` | The name the business uses, not the hostname |
-| `class` | One of `shared-platform`, `core-data`, `dependent-app`, `supporting-infra`, `public-api`, `public-web` |
-| `business_owner`, `application_owner` | A system with neither is an error, not a gap: nobody can sign its recovery target |
-| `tier`, `rto`, `rpo`, `mtd` | Ranked against the other systems, never in isolation. Durations as people write them: `0`, `30m`, `4h`, `2d` |
-| `wave` | Which step of the recovery order it belongs to |
-| `plan_repo` | Where its plan lives. Empty means known about and unplanned |
-| `notes` | Anything the register would otherwise lose |
-
-**Once per dependency, under the system that has it**
+### On each line between cards
 
 | Field | What it holds |
 |---|---|
-| `on` | The slug of the system depended on. A slug not in the register is an error |
-| `kind` | One of `runtime`, `recovery`, `data`. `recovery` is the one almost nobody asks for, and the one that finds the circular plans |
-| `criticality` | `hard` or `soft`. Only hard edges constrain the recovery order |
-| `notes` | What breaks without it. This is what survives a reorganization; the slug is only a pointer |
+| Points at | The card it needs |
+| Kind | One of `runtime`, `recovery`, `data`. `recovery` is the one almost nobody asks for, and the one that finds the circular plans |
+| How badly | `hard` or `soft`. Only hard lines constrain the recovery order |
+| What breaks without it | The sentence that survives a reorganization. The card's name is only a pointer |
 
-A system with 4 or more hard dependants is a shared service in practice, whatever its declared class, and the validator says so.
+### Checking the register by hand
+
+Five passes over the wall. Each one is a question you can answer by looking, and each is a check the toolkit's validator makes under the name in brackets.
+
+1. **Walk every hard line and compare the two numbers.** If a card claims to be back before something it cannot run without, that is a contradiction between two signed figures. [`rto-inversion`, an error]
+2. **Follow the recovery lines and see if you come back to where you started.** Two systems that each need the other recovered first is a deadlock, and neither plan can see it because each is separately reasonable. [`recovery-cycle`, an error] Do the same walk along the runtime lines: a loop there is only a warning, because mutually dependent at runtime means recover them together, which is possible. [`runtime-cycle`, a warning]
+3. **Check that every hard line points leftwards.** A dependency scheduled after the thing that needs it cannot execute in the order it is written. Same wave is not an error but it is unspecified, so say which goes first. [`wave-inversion`, an error; `wave-concurrency`, a warning]
+4. **Count the cards in each tier against the budget.** More tier 0 systems than the budget allows means the ranking has not happened yet. [`tier-budget-exceeded`]
+5. **Count the hard lines arriving at each card.** 4 or more makes it a shared service in practice whatever it is labelled, and hiding that from the recovery order is how it ends up in the wrong wave. [`undeclared-shared-service`]
+
+**Never fix a failing check by editing a number.** The wall would agree with itself and the plan would still be impossible; you would have deleted the finding rather than the problem. Three honest outcomes: the dependency's target tightens, the dependant's relaxes, or the dependency is broken — a cached credential, a read-only mode, a queue that absorbs the gap. The third is the best answer and the one nobody reaches for unaided, so offer it.
