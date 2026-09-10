@@ -5,23 +5,21 @@ infrastructure teams in one room, a printed worksheet on the table, and nothing 
 It covers the same phases the plugin runs and asks the same questions, because it is generated
 from the same files.
 
-Three things it is deliberately not.
+It is not a transcript of the skills. They are written for an agent with the plugin loaded, so
+they say *invoke this*, *run that script*, *write it to the answer store*, and a room has none
+of those. Sections that only drive the toolkit are left out by name in
+:data:`SKIPPED_SECTIONS`. Every mention that survives is answered in the page's own *Running
+this without the toolkit* table, rendered from :data:`TRANSLATIONS` against the text that
+actually got embedded, and a reference nothing translates fails the build.
 
-**It is not a transcript of the skills.** The skills are written for an agent with the plugin
-loaded, so they say *invoke this*, *run that script*, *write it to the answer store*. A room
-has none of those. Sections that are only about driving the toolkit are left out by name in
-:data:`SKIPPED_SECTIONS`, and every remaining mention of a tool is answered in the page's own
-*Running this without the toolkit* table, rendered from :data:`TRANSLATIONS` against the text
-that actually got embedded. A reference nothing translates fails the build.
+Nor does it produce TOML. The plugin's answer store is a file; the tabletop's is the stack of
+worksheets, holding the same things in columns: the answer, who gave it, how sure they were,
+what breaks at that number. Typing those up into the store is an appendix, for an organization
+that later adopts the toolkit.
 
-**It does not produce TOML.** The plugin's answer store is a file; the tabletop's answer store
-is the stack of worksheets, which hold the same things in columns — the answer, who gave it,
-how sure they were, what breaks at that number. Transcribing into the toolkit later is
-possible and is an appendix, not the procedure.
-
-**It does not assume a cloud.** Phase 1 is what the teams bring to the room, gathered however
-they already gather it. The read-only walk the toolkit ships is one option for one provider,
-and the part of it that generalises is the rule that discovery never changes anything.
+It assumes no particular cloud either. Phase 1 is whatever the teams already use to see their
+environment. The read-only walk the toolkit ships is one provider's shortcut, and what
+generalises out of it is the rule that discovery never changes anything.
 
 What is generated, and from where:
 
@@ -204,19 +202,20 @@ PHASES: tuple[Phase, ...] = (
                                          "Red flags")),
         ),
         (),
-        "Runs once for the organization, before any plan. It produces the register: every "
-        "system, the tier ranking, the recovery waves, and what each system needs from the "
-        "others. Four failures live only above the level of a single plan and none of them "
-        "are visible from inside one, which is why this comes first rather than after the "
-        "plan that would have to be rebuilt.\n\n"
-        "**Run it on a wall.** One card per system, laid out left to right in recovery waves, "
-        "with a line drawn for every dependency. The room argues with the wall rather than "
-        "with a document, and the four failures are things you can see: a line pointing "
-        "backwards, a loop, a card whose number is smaller than the card it depends on. The "
-        "blank register and the five checks are at the end of this page.\n\n"
-        "**Do not start a per-system plan while a check is failing.** An inversion means two "
-        "signed figures contradict each other, and a plan built on top of one bakes the "
-        "contradiction in.",
+        "Once for the organization, before anybody plans anything. You come out of it with a "
+        "register: every system, how the tiers rank against each other, the recovery waves, "
+        "and what each system needs from the others.\n\n"
+        "Four of the failures this method exists to catch live above the level of a single "
+        "plan, and none of them can be seen from inside one. That is why this runs first, "
+        "rather than after the plan that would have to be rebuilt.\n\n"
+        "Do it on a wall. One card per system, laid out left to right in waves, a line drawn "
+        "for every dependency. A room will argue with a wall in a way it never argues with a "
+        "document, and the failures turn into things you can point at: a line running "
+        "backwards, a loop, a card promising to be back sooner than the card it depends on. "
+        "The blank register and the five checks are at the foot of this page.\n\n"
+        "**Do not start a per-system plan while a check is still failing.** An inversion "
+        "means two signed figures contradict each other, and a plan built on top of one "
+        "carries that contradiction into everything after it.",
         produces="the register, on a wall",
         session=True,
     ),
@@ -229,19 +228,21 @@ PHASES: tuple[Phase, ...] = (
                                   "What discovery cannot tell you")),),
         ("discovery",),
         "The technical segments go badly from a blank page and well from a list, so the "
-        "teams bring the list. **Nothing here is a tool you have to install.** Whatever your "
-        "teams already use to see the environment — the provider console, a CMDB extract, an "
-        "architecture review, a spreadsheet somebody maintains — is what you print and put on "
-        "the table.\n\n"
-        "Two rules survive whatever you use. **Discovery never changes anything**: read, "
-        "export, screenshot, and never a command that writes, in an environment that is "
-        "currently the production one. And **what it cannot find is the point** — the gaps "
-        "are the interview material. A resource nobody can name, a standby that was supposed "
-        "to exist, a replication policy covering three buckets of five: write each one on the "
-        "wall as a question, and put a name against it.\n\n"
-        "If you are on the provider the toolkit supports and somebody has a clone of this "
-        "repository, the read-only walk it ships will produce the same list faster. That is "
-        "an accelerator, not the procedure.",
+        "teams bring the list. There is nothing to install for this. Whatever your people "
+        "already use to see the environment will do: the provider console, a CMDB extract, "
+        "last quarter's architecture review, the spreadsheet somebody keeps. Print it and "
+        "put it on the table.\n\n"
+        "Two rules matter more than where the list came from. The first is that **discovery "
+        "never changes anything.** Read, export, screenshot; never run a command that "
+        "writes, in what is currently somebody's production environment.\n\n"
+        "The second is that what the list cannot tell you is most of the reason for bringing "
+        "it. A resource nobody can name, a standby that was supposed to exist, a replication "
+        "policy covering three buckets out of five: each one goes on the wall as a question "
+        "with a name against it, and those questions are what the next two segments are "
+        "for.\n\n"
+        "If you happen to be on the provider the toolkit supports, and somebody has a clone "
+        "of the repository, the read-only walk it ships will build the same list faster. Use "
+        "it if you have it. The room works the same either way.",
         produces="the inventory and the gaps in it",
         session=False,
     ),
@@ -254,17 +255,21 @@ PHASES: tuple[Phase, ...] = (
                 "Why this interview gates the others", "Run order",
                 "The cost conversation, once", "Red flags")),),
         ("business",),
-        "**This one is not a tabletop, and holding that line is the whole point of the "
-        "phase.** Tiers, maximum tolerable downtime and recovery point are the business's "
-        "figures. Run in a room full of engineers they become IT's figures, and IT deciding "
-        "what it is allowed to fail at is the failure this sequence is built to prevent.\n\n"
-        "**Do not start the technical segments without a signed tier assignment.** Tier "
-        "determines standby capacity, replication topology and run cost. Everything after "
-        "this is built to these numbers and all of it is expensive to change. With the plugin "
-        "a build step holds that gate; here you hold it.\n\n"
-        "If the business owner is unavailable for three weeks, wait three weeks. Proceeding "
-        "on assumed tiers feels productive and is the most costly mistake available here: "
-        "assumed tiers become real architecture within a day and are never revisited.",
+        "Tiers, maximum tolerable downtime and recovery point are the business's numbers, "
+        "and they only stay the business's numbers if the business gives them alone. Put the "
+        "same questions to a room full of engineers and what you get is IT deciding what it "
+        "is allowed to fail at, which is the failure this whole sequence is arranged to "
+        "prevent. So this session happens on its own, and keeping it that way is most of the "
+        "work.\n\n"
+        "**The technical segments do not start until a tier assignment is signed.** Tier "
+        "decides standby capacity, replication topology and what the thing costs to run. "
+        "Everything after this is built to those numbers and all of it is expensive to "
+        "change later. Running the toolkit, a build step holds that gate for you. Here you "
+        "are the gate.\n\n"
+        "If the business owner cannot meet for three weeks, wait three weeks. Carrying on "
+        "with assumed tiers feels like progress and is the most expensive mistake on offer: "
+        "an assumed tier becomes real architecture within a day, and nobody goes back to "
+        "check it.",
         session=True,
     ),
     Phase(
@@ -275,16 +280,17 @@ PHASES: tuple[Phase, ...] = (
                ("Open with the inventory, not a blank page", "What to elicit", "Hand-offs",
                 "Red flags")),),
         ("system", "app"),
-        "Open by putting phase 1's inventory on the table. The application team corrects a "
-        "list far faster than it reconstructs one from memory, and the corrections are "
-        "themselves findings.\n\n"
-        "**Bring the deputies.** The backup lead engineer sitting in is the cheapest test "
-        "available of whether the deputy could really do it, and it usually answers the "
-        "question before you have to ask it.\n\n"
-        "**Expect a contradiction with phase 2, and do not resolve it in the room.** The "
-        "business said four hours; the application owner says batch reprocessing alone takes "
-        "a day. Write both on the worksheet, write the name of whose decision it is, and take "
-        "it back to the business owner. A plan with a visible, owned contradiction is honest.",
+        "Open by putting phase 1's inventory on the table. A team corrects a list much "
+        "faster than it rebuilds one from memory, and the corrections are themselves "
+        "findings worth writing down.\n\n"
+        "Bring the deputies to this one. A backup lead engineer sitting quietly through the "
+        "session is the cheapest test you will get of whether the deputy could really do any "
+        "of it, and it usually answers that question before you have to ask.\n\n"
+        "Expect a contradiction with phase 2 here, and do not settle it in the room. The "
+        "business said four hours; the application owner says the batch reprocessing alone "
+        "takes a day. Write both down, write the name of whoever decides between them, and "
+        "carry it back to the business owner. A plan that shows a contradiction and says who "
+        "owns it is more honest than one where somebody quietly picked a side.",
         session=True,
     ),
     Phase(
@@ -295,15 +301,16 @@ PHASES: tuple[Phase, ...] = (
                ("Start from the targets, not the technology", "What to elicit",
                 "The conversation where targets meet price", "Red flags")),),
         ("infra",),
-        "The segment that turns the signed targets into a topology and a monthly figure. "
-        "Read the tier targets from phase 2 out loud before anything else, so the design "
-        "conversation starts from what it has to meet.\n\n"
-        "**The lead engineer answers the measured questions, not the owner.** The difference "
-        "between a replication design and a replication design that has been executed is the "
-        "difference between most of this plan being real and most of it being intended, and "
-        "only the person who has run it knows which.\n\n"
-        "**Keep the gaps from phase 1 visible on the wall through this segment.** They are "
-        "the questions this room can actually close.",
+        "This is where the signed targets turn into a topology and a monthly bill. Read the "
+        "tier targets from phase 2 out loud before anything else, so the design conversation "
+        "starts from what it has to meet rather than from what already exists.\n\n"
+        "Anything that has been measured, ask the lead engineer rather than the owner. A "
+        "replication design that has been executed and one that has only been drawn look "
+        "identical on a whiteboard, and the person who has run it is the only one in the "
+        "room who can tell you which you are looking at. How much of this plan turns out to "
+        "be real mostly comes down to that difference.\n\n"
+        "Keep the gaps from phase 1 up on the wall while this runs. They are the ones this "
+        "particular room can close.",
         session=True,
     ),
     Phase(
@@ -316,15 +323,17 @@ PHASES: tuple[Phase, ...] = (
                 "Part 3 — Notification (§3.2)", "Part 4 — Outage assessment (§3.3)",
                 "Part 5 — Escalation thresholds (§4.3) and deactivation (§5.4)", "Red flags")),),
         ("continuity",),
-        "Runs last of the technical segments, because escalation thresholds need real "
-        "recovery steps to threshold against. By now the room has the steps.\n\n"
-        "This is the segment where most organizations discover that **nobody owns the "
-        "declaration decision.** That is not a failure of the exercise; it is the single most "
-        "valuable thing it produces, and a tabletop surfaces it faster than an interview "
-        "because everybody who assumed somebody else owned it is sitting in the room.\n\n"
-        "The succession named here and the deputy roster from phase 0 must agree. Where they "
-        "do not, write both down with the decision owner named, rather than reconciling it "
-        "quietly at the whiteboard.",
+        "This one goes last of the technical segments, because you cannot set an escalation "
+        "threshold without real recovery steps to set it against. By the time you get here "
+        "the room has them.\n\n"
+        "It is also the segment where most organizations find out that nobody owns the "
+        "decision to declare. That is not the exercise going wrong. It is the most useful "
+        "thing the exercise produces, and a tabletop finds it faster than any interview "
+        "will, because everybody who assumed somebody else owned it is sitting at the same "
+        "table.\n\n"
+        "The succession named here has to agree with the deputy roster from phase 0. Where "
+        "the two disagree, write both versions down with the decision owner named against "
+        "them, rather than settling it quietly at the whiteboard.",
         session=True,
     ),
     Phase(
@@ -335,12 +344,12 @@ PHASES: tuple[Phase, ...] = (
                ("The distinction that frames the whole interview", "What to elicit",
                 "Red flags")),),
         ("governance",),
-        "**A design describes what would happen; a plan is a design somebody committed to.** "
-        "The difference is a signature, a review date and a trained population, and this "
-        "phase is where all three are elicited.\n\n"
-        "It is a short session and it does not need the technical teams. It does need "
-        "somebody who can commit the organization to a review cadence and an exercise "
-        "schedule, which is why it is not a tabletop segment.",
+        "A design describes what would happen. A plan is a design somebody committed to, "
+        "and the difference is a signature, a review date and a population that has been "
+        "trained. This session collects all three.\n\n"
+        "It is short and it does not need the technical teams. It does need somebody who can "
+        "commit the organization to a review cadence and an exercise schedule, which is why "
+        "it sits outside the tabletop rather than inside it.",
         session=True,
     ),
     Phase(
@@ -355,17 +364,18 @@ PHASES: tuple[Phase, ...] = (
                                   "Scope", "Output", "Red flags")),
         ),
         (),
-        "Half a day. There is no renderer here, so this is two jobs: write the documents from "
+        "Half a day on your own, and two jobs rather than one: write the documents out of "
         "the worksheets, then audit what you wrote.\n\n"
-        "**The assembly is mechanical and the map is generated.** [fields.md](fields.md) "
-        "lists every answer by the file it belongs in, which is the order to write in. The "
-        "rules below for marking a missing answer, a low-confidence figure and the "
-        "*Unverified statements* section are the part people skip, and skipping it is how a "
-        "plan full of gaps comes out looking finished. **A cell your worksheet left open is a "
-        "marked gap in the document, never a sentence you write to fill the space.**\n\n"
-        "Then audit, starting from the position that every requirement is unmet until a "
-        "sentence in your own document proves otherwise. Fix what blocks approval and leave "
-        "the rest visible.",
+        "The writing is mechanical. [fields.md](fields.md) lists every answer under the "
+        "document it belongs in, which is also the order to work through them. What people "
+        "skip is the part below about marking a missing answer, flagging a low-confidence "
+        "figure and keeping the *Unverified statements* section honest, and skipping it is "
+        "exactly how a plan riddled with gaps comes out looking finished. **A cell your "
+        "worksheet left open becomes a marked gap in the document.** It never becomes a "
+        "sentence you wrote to fill the space.\n\n"
+        "Then audit, starting from the position that nothing in the plan is met until a "
+        "sentence in your own document proves it. Fix whatever blocks approval and leave the "
+        "rest visible.",
         produces="the written plan",
         session=False,
     ),
@@ -728,15 +738,17 @@ def _worksheet(namespaces: tuple[str, ...]) -> list[str]:
         "",
         "## The worksheet",
         "",
-        "Print this. One line per answer, filled in as it is said rather than afterwards.",
+        "Print this. One line per answer, filled in as it is said rather than afterwards. "
+        "Never leave a cell blank: where nobody in the room can answer, write the name of "
+        "somebody who can. Two columns need a word of explanation.",
         "",
-        "- **Never leave a cell blank.** No answer means write the name of who can give one.",
-        "- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have "
-        "measured it or read it off a screen while you waited. M: confident from experience, "
-        "never measured. L: worked out in the room just now. Ask when you cannot tell.",
+        "- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or "
+        "read off a screen while you waited. M: confident from experience, never measured. "
+        "L: worked out in the room just now. Ask when you cannot tell.",
         "- **What breaks at that number** is what makes a figure arguable rather than "
-        "arbitrary. A duration with an empty cell beside it is a guess, and is marked L.",
-        "- Two people, two answers: **write both**, and write whose decision it is.",
+        "arbitrary. A duration with an empty cell beside it is a guess, and gets an L.",
+        "",
+        "Where two people give two answers, write both, and write whose decision it is.",
         "",
     ]
     for row in dict.fromkeys(question.coverage_row for question in questions):
@@ -872,19 +884,20 @@ def _index_page() -> str:
         "",
         _BANNER,
         "",
-        "This engagement run as a facilitated exercise: the application and infrastructure "
-        "teams in one room, a printed worksheet on the table, and nothing to install. It asks "
-        "the same questions the toolkit asks, because it is generated from the same files.",
+        "This engagement, run as a facilitated exercise: the application and infrastructure "
+        "teams in one room, a printed worksheet on the table, and nothing to install. The "
+        "questions are the same ones the toolkit asks, because both are generated from the "
+        "same files.",
         "",
-        "**Two of the phases are deliberately not tabletop segments.** The business figures "
-        "are elicited on their own, before the room meets, because tiers agreed in front of "
-        "the engineers who will have to meet them stop being the business's figures. "
-        "Governance is elicited afterwards, and needs nobody technical.",
+        "Two of the phases are deliberately kept out of the room. The business figures come "
+        "first, on their own, because tiers agreed in front of the engineers who will have "
+        "to meet them stop being the business's figures. Governance comes afterwards and "
+        "needs nobody technical.",
         "",
-        "**Read [the method](method.md) before the first session.** It is the discipline all "
-        "of this is run under, and the one part that is not optional: a plan whose numbers "
-        "nobody gave is worse than one with visible gaps, and the method is what keeps the "
-        "difference legible.",
+        "Read [the method](method.md) before the first session. It is the discipline all of "
+        "this runs under, and the one part that is not optional. A plan whose numbers nobody "
+        "gave is worse than one with visible gaps, and the method is what keeps the two "
+        "apart.",
         "",
         "## The running order",
         "",
@@ -931,11 +944,10 @@ def _capture_sheet() -> list[str]:
     return [
         "## Capturing what the room says",
         "",
-        "There is no file to write and nothing to install. **The answer store is the stack of "
-        "worksheets**, and it holds exactly what the toolkit's store holds — the answer, who "
-        "gave it, how sure they were, and what breaks at that number — in columns instead of "
-        "keys. Where the pages that follow say *write it to the store*, they mean the sheet "
-        "in front of you.",
+        "There is no file to write and nothing to install. The answer store is the stack of "
+        "worksheets, holding what the toolkit's store holds: the answer, who gave it, how "
+        "sure they were, and what breaks at that number. Columns instead of keys. Where the "
+        "pages that follow say *write it to the store*, they mean the sheet in front of you.",
         "",
         "Every phase page ends with its own worksheet. They all have the same five columns:",
         "",
@@ -948,19 +960,19 @@ def _capture_sheet() -> list[str]:
         "| Time to rebuild from backup | 6h | Lead engineer | L | Never measured. First drill "
         "objective |",
         "",
-        "Four rules, and the first is the one that makes the rest work.",
+        "Four rules, and the first is the one that makes the other three work.",
         "",
         "1. **Never leave a cell blank.** An answer nobody has is a name, written in the "
         "answer column. A room that leaves twelve named unknowns has done more for the "
         "organization than one that leaves twelve confident inventions.",
-        "2. **Write it as it is said, not afterwards.** A worksheet filled in from memory at "
-        "the end of the day is a worksheet nobody can attribute.",
-        "3. **Sure? is about how the answer arrived**, not how plausible it sounds. \"Is that "
-        "something you have measured, or is it your best read?\" is not a rude question. It "
-        "is the question that decides whether the figure can go in front of an auditor, and "
-        "people are usually relieved to be asked.",
-        "4. **Two answers means two rows**, with the name of whoever decides between them. "
-        "Never average them, never keep the more senior one quietly.",
+        "2. Write it as it is said. A worksheet filled in from memory at the end of the day "
+        "is a worksheet nobody can attribute.",
+        "3. The Sure? column is about how the answer arrived, not how plausible it sounds. "
+        "\"Is that something you have measured, or is it your best read?\" is not a rude "
+        "question. It decides whether the figure can go in front of an auditor, and people "
+        "are usually relieved to be asked.",
+        "4. Two answers means two rows, with the name of whoever decides between them. Do "
+        "not average them, and do not quietly keep the more senior one.",
         "",
     ]
 

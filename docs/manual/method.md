@@ -8,7 +8,7 @@ Read this before the first session. It is the discipline every phase is run unde
 
 ## Capturing what the room says
 
-There is no file to write and nothing to install. **The answer store is the stack of worksheets**, and it holds exactly what the toolkit's store holds — the answer, who gave it, how sure they were, and what breaks at that number — in columns instead of keys. Where the pages that follow say *write it to the store*, they mean the sheet in front of you.
+There is no file to write and nothing to install. The answer store is the stack of worksheets, holding what the toolkit's store holds: the answer, who gave it, how sure they were, and what breaks at that number. Columns instead of keys. Where the pages that follow say *write it to the store*, they mean the sheet in front of you.
 
 Every phase page ends with its own worksheet. They all have the same five columns:
 
@@ -18,12 +18,12 @@ Every phase page ends with its own worksheet. They all have the same five column
 | Who declares a disaster | *nobody in the room knew — **Ops Director** to confirm* |  |  | Raised in session, unowned |
 | Time to rebuild from backup | 6h | Lead engineer | L | Never measured. First drill objective |
 
-Four rules, and the first is the one that makes the rest work.
+Four rules, and the first is the one that makes the other three work.
 
 1. **Never leave a cell blank.** An answer nobody has is a name, written in the answer column. A room that leaves twelve named unknowns has done more for the organization than one that leaves twelve confident inventions.
-2. **Write it as it is said, not afterwards.** A worksheet filled in from memory at the end of the day is a worksheet nobody can attribute.
-3. **Sure? is about how the answer arrived**, not how plausible it sounds. "Is that something you have measured, or is it your best read?" is not a rude question. It is the question that decides whether the figure can go in front of an auditor, and people are usually relieved to be asked.
-4. **Two answers means two rows**, with the name of whoever decides between them. Never average them, never keep the more senior one quietly.
+2. Write it as it is said. A worksheet filled in from memory at the end of the day is a worksheet nobody can attribute.
+3. The Sure? column is about how the answer arrived, not how plausible it sounds. "Is that something you have measured, or is it your best read?" is not a rude question. It decides whether the figure can go in front of an auditor, and people are usually relieved to be asked.
+4. Two answers means two rows, with the name of whoever decides between them. Do not average them, and do not quietly keep the more senior one.
 
 ---
 

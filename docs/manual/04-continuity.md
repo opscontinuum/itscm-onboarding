@@ -8,11 +8,11 @@
 
 **How long:** 90 minutes.
 
-Runs last of the technical segments, because escalation thresholds need real recovery steps to threshold against. By now the room has the steps.
+This one goes last of the technical segments, because you cannot set an escalation threshold without real recovery steps to set it against. By the time you get here the room has them.
 
-This is the segment where most organizations discover that **nobody owns the declaration decision.** That is not a failure of the exercise; it is the single most valuable thing it produces, and a tabletop surfaces it faster than an interview because everybody who assumed somebody else owned it is sitting in the room.
+It is also the segment where most organizations find out that nobody owns the decision to declare. That is not the exercise going wrong. It is the most useful thing the exercise produces, and a tabletop finds it faster than any interview will, because everybody who assumed somebody else owned it is sitting at the same table.
 
-The succession named here and the deputy roster from phase 0 must agree. Where they do not, write both down with the decision owner named, rather than reconciling it quietly at the whiteboard.
+The succession named here has to agree with the deputy roster from phase 0. Where the two disagree, write both versions down with the decision owner named against them, rather than settling it quietly at the whiteboard.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -489,12 +489,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### 3.1 Activation criteria and procedure; who may activate
 

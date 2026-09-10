@@ -162,27 +162,27 @@ Freshness is enforced rather than remembered. `test_manual` rebuilds every page 
 the first differing line, so changing a skill without regenerating is a failing test — the
 same guard `examples/` is held to, for the same reason.
 
-**The manual is a tabletop, and that is not a formatting choice.** A manual run is a room:
-the application and infrastructure teams together, a facilitator, and paper. Three things
-follow, and each is enforced rather than intended.
+**A manual run is a room, not a person reading a file.** The application and infrastructure
+teams sit down together with a facilitator and paper, so the manual is a tabletop. Three
+things follow from that, and each is enforced by a test rather than left as an intention.
 
-*It produces no TOML.* The plugin's answer store is a file; the tabletop's is the stack of
-worksheets, holding the same things in columns — the answer, who gave it, how sure they were,
-what breaks at that number. Transcription into the store is an appendix for an organization
-that later adopts the toolkit, never the procedure.
+It produces no TOML. The plugin's answer store is a file; the tabletop's is the stack of
+worksheets, holding the same things in columns: the answer, who gave it, how sure they were,
+what breaks at that number. Typing those up into the store is an appendix, for an organization
+that later adopts the toolkit.
 
-*It tells nobody to run anything.* The skills are written for an agent with the plugin
-loaded, so they name scripts, tools and files a room does not have. Sections that are only
-about driving the toolkit are excluded by name with a stated reason; every surviving mention
-is answered by the page's own *Running this without the toolkit* table. A test scans each page
-for command-shaped text with a pattern written independently of that table, so a reference
-nothing translates fails the build. Where a script did real work — the register's five
-cross-system checks — the manual carries the procedure by hand, and a further test asserts
-each check still names a finding the validator actually raises.
+It tells nobody to run anything. The skills are written for an agent with the plugin loaded,
+so they name scripts, tools and files a room does not have. Sections that only drive the
+toolkit are excluded by name with a stated reason, and every surviving mention is answered by
+the page's own *Running this without the toolkit* table. A test scans each page for
+command-shaped text using a pattern written independently of that table, so a reference
+nothing translates fails the build. Where a script did real work, as the validator does for
+the register's five cross-system checks, the manual carries the procedure by hand; a further
+test asserts each check still names a finding the validator actually raises.
 
-*It assumes no particular cloud.* Phase 1 is what the teams bring, gathered however they
-already gather it. The read-only walk is one provider's accelerator; what generalizes is the
-rule that discovery never changes anything.
+It assumes no particular cloud. Phase 1 is whatever the teams already use to see their
+environment. The read-only walk is one provider's shortcut, and what generalizes out of it is
+the rule that discovery never changes anything.
 
 **Rejected — a manual that links to the skills instead of embedding them.** It is trivially
 drift-free and it is an index, not a manual. Somebody facilitating from a printed page needs

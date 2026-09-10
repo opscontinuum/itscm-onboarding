@@ -8,11 +8,11 @@
 
 **How long:** 90–120 minutes.
 
-The segment that turns the signed targets into a topology and a monthly figure. Read the tier targets from phase 2 out loud before anything else, so the design conversation starts from what it has to meet.
+This is where the signed targets turn into a topology and a monthly bill. Read the tier targets from phase 2 out loud before anything else, so the design conversation starts from what it has to meet rather than from what already exists.
 
-**The lead engineer answers the measured questions, not the owner.** The difference between a replication design and a replication design that has been executed is the difference between most of this plan being real and most of it being intended, and only the person who has run it knows which.
+Anything that has been measured, ask the lead engineer rather than the owner. A replication design that has been executed and one that has only been drawn look identical on a whiteboard, and the person who has run it is the only one in the room who can tell you which you are looking at. How much of this plan turns out to be real mostly comes down to that difference.
 
-**Keep the gaps from phase 1 visible on the wall through this segment.** They are the questions this room can actually close.
+Keep the gaps from phase 1 up on the wall while this runs. They are the ones this particular room can close.
 
 **Run under [the method](method.md).** Nothing enters the plan unless somebody in the room said it, an inventory shows it, or it is written down as a gap with a name against it.
 
@@ -375,12 +375,12 @@ Every one of them leaves the room with something written against it. An answer n
 
 ## The worksheet
 
-Print this. One line per answer, filled in as it is said rather than afterwards.
+Print this. One line per answer, filled in as it is said rather than afterwards. Never leave a cell blank: where nobody in the room can answer, write the name of somebody who can. Two columns need a word of explanation.
 
-- **Never leave a cell blank.** No answer means write the name of who can give one.
-- **Sure?** is how the answer arrived, not how plausible it sounds. H: they have measured it or read it off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
-- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and is marked L.
-- Two people, two answers: **write both**, and write whose decision it is.
+- **Sure?** is how the answer arrived, not how plausible it sounds. H: measured, or read off a screen while you waited. M: confident from experience, never measured. L: worked out in the room just now. Ask when you cannot tell.
+- **What breaks at that number** is what makes a figure arguable rather than arbitrary. A duration with an empty cell beside it is a guess, and gets an L.
+
+Where two people give two answers, write both, and write whose decision it is.
 
 ### 2.1 System description
 

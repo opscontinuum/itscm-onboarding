@@ -2,11 +2,11 @@
 
 > **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
 
-This engagement run as a facilitated exercise: the application and infrastructure teams in one room, a printed worksheet on the table, and nothing to install. It asks the same questions the toolkit asks, because it is generated from the same files.
+This engagement, run as a facilitated exercise: the application and infrastructure teams in one room, a printed worksheet on the table, and nothing to install. The questions are the same ones the toolkit asks, because both are generated from the same files.
 
-**Two of the phases are deliberately not tabletop segments.** The business figures are elicited on their own, before the room meets, because tiers agreed in front of the engineers who will have to meet them stop being the business's figures. Governance is elicited afterwards, and needs nobody technical.
+Two of the phases are deliberately kept out of the room. The business figures come first, on their own, because tiers agreed in front of the engineers who will have to meet them stop being the business's figures. Governance comes afterwards and needs nobody technical.
 
-**Read [the method](method.md) before the first session.** It is the discipline all of this is run under, and the one part that is not optional: a plan whose numbers nobody gave is worse than one with visible gaps, and the method is what keeps the difference legible.
+Read [the method](method.md) before the first session. It is the discipline all of this runs under, and the one part that is not optional. A plan whose numbers nobody gave is worse than one with visible gaps, and the method is what keeps the two apart.
 
 ## The running order
 
