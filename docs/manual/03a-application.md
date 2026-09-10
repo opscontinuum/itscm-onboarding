@@ -150,7 +150,7 @@ plan to address it.
 
 ## What this segment has to come away with
 
-19 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
+22 answers, grouped by the section of the plan each one feeds. Read this before the session; the worksheet at the end is what you take into it.
 
 Every one of them leaves the room with something written against it. An answer nobody in the room could give is a **name** — whoever can — which is a result and not a failure. A blank is neither.
 
@@ -334,6 +334,40 @@ Every one of them leaves the room with something written against it. An answer n
 - **Goes into:** runbooks/RB-02-failover.md, runbooks/RB-01-switchover.md
 - **NIST:** 4.2 Recovery Procedures (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
 
+### Playbooks, runbooks and where they live
+
+#### `app.component_playbooks`
+
+> "Take the pieces one at a time. For each, is there a written procedure for bringing it back, where does that document live, and who keeps it current?"
+
+- **Records:** Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised
+- **Answers:** lead engineer · **Shape:** one row per item, columns `component` | `procedure` | `where_it_lives` | `who_maintains` | `last_exercised`
+- **Note:** 'It is in somebody's head' is an answer, and it is the one worth writing down: it names a person the plan depends on being reachable. A procedure nobody has exercised in two years is a different finding from one that does not exist, so keep the last-exercised column honest rather than blank.
+- **Goes into:** runbooks/RB-01-switchover.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `app.playbook_reachability`
+
+> "It is three in the morning and the primary region is gone. Where is the copy of the procedure you would actually be reading, and can you reach it without the systems that are down?"
+
+- **Records:** Where the procedures can be read from during an invocation, and what that depends on
+- **Answers:** lead engineer · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
+- **Note:** The question that separates what a system needs to run from what it needs to be recovered. Source control in the failed region, a wiki behind the identity provider that is also down, a bookmark on one laptop: each is a recovery dependency, and each belongs on the register as an edge rather than in a footnote here.
+- **Goes into:** docs/01-architecture.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `app.reconstitution_order`
+
+> "Coming back to the primary is not the same trip in reverse. What says the order to bring the pieces up in for the return, and who wrote it?"
+
+- **Records:** The reconstitution order, where it is written and who owns it
+- **Answers:** lead engineer · **Shape:** several paragraphs, in their words
+- **Say it back** in one sentence and get a yes before you write it.
+- **Note:** Distinct from the cold start order, which answers a different question. A return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Where the answer is that nobody has written it, that is the honest record and a drill objective.
+- **Goes into:** docs/10-phase-reconstitution.md, runbooks/RB-03-failback.md
+- **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
+
 ### 5.2 Validation data testing
 
 #### `app.validation_data_tests`
@@ -474,6 +508,21 @@ Where two people give two answers, write both, and write whose decision it is.
 | What it records | Answer | Who said it | Sure? | What breaks at that number |
 |---|---|---|---|---|
 | The recovery procedure at the level of what is actually typed, in order (`app.recovery_procedures`) |  |  | H / M / L |  |
+
+### Playbooks, runbooks and where they live
+
+| What it records | Answer | Who said it | Sure? | What breaks at that number |
+|---|---|---|---|---|
+| Where the procedures can be read from during an invocation, and what that depends on (`app.playbook_reachability`) |  |  | H / M / L |  |
+| The reconstitution order, where it is written and who owns it (`app.reconstitution_order`) |  |  | H / M / L |  |
+
+**Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised** (`app.component_playbooks`) — one row each, add as many as the room needs
+
+| component | procedure | where_it_lives | who_maintains | last_exercised | Who said it | Sure? |
+|---|---|---|---|---|---|---|
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
+|   |   |   |   |   |  | H / M / L |
 
 ### 5.2 Validation data testing
 

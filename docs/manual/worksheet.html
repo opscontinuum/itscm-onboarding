@@ -541,6 +541,45 @@ table.rows input, table.rows select { width: 100%; }
      "readback": true
     },
     {
+     "id": "app.component_playbooks",
+     "prompt": "Take the pieces one at a time. For each, is there a written procedure for bringing it back, where does that document live, and who keeps it current?",
+     "records": "Per component: the procedure for recovering it, where it is held, who maintains it and when it was last exercised",
+     "owner": "lead engineer",
+     "kind": "rows",
+     "row": "Playbooks, runbooks and where they live",
+     "writtenTo": "runbooks/RB-01-switchover.md",
+     "guidance": "'It is in somebody's head' is an answer, and it is the one worth writing down: it names a person the plan depends on being reachable. A procedure nobody has exercised in two years is a different finding from one that does not exist, so keep the last-exercised column honest rather than blank.",
+     "columns": [
+      "component",
+      "procedure",
+      "where_it_lives",
+      "who_maintains",
+      "last_exercised"
+     ]
+    },
+    {
+     "id": "app.playbook_reachability",
+     "prompt": "It is three in the morning and the primary region is gone. Where is the copy of the procedure you would actually be reading, and can you reach it without the systems that are down?",
+     "records": "Where the procedures can be read from during an invocation, and what that depends on",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "Playbooks, runbooks and where they live",
+     "writtenTo": "docs/01-architecture.md",
+     "guidance": "The question that separates what a system needs to run from what it needs to be recovered. Source control in the failed region, a wiki behind the identity provider that is also down, a bookmark on one laptop: each is a recovery dependency, and each belongs on the register as an edge rather than in a footnote here.",
+     "readback": true
+    },
+    {
+     "id": "app.reconstitution_order",
+     "prompt": "Coming back to the primary is not the same trip in reverse. What says the order to bring the pieces up in for the return, and who wrote it?",
+     "records": "The reconstitution order, where it is written and who owns it",
+     "owner": "lead engineer",
+     "kind": "narrative",
+     "row": "Playbooks, runbooks and where they live",
+     "writtenTo": "docs/10-phase-reconstitution.md, runbooks/RB-03-failback.md",
+     "guidance": "Distinct from the cold start order, which answers a different question. A return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Where the answer is that nobody has written it, that is the honest record and a drill objective.",
+     "readback": true
+    },
+    {
      "id": "app.validation_data_tests",
      "prompt": "Once it is back up, how would you satisfy yourself that the data is right, as opposed to the system being up? Who is the person whose word settles it?",
      "records": "Each data validation check, what it proves and who signs it off",
@@ -836,6 +875,86 @@ table.rows input, table.rows select { width: 100%; }
      "row": "5.8 Data backup",
      "writtenTo": "docs/10-phase-reconstitution.md, docs/03-replication-matrix.md",
      "guidance": "The step most likely to be missed, because the system is up and everyone goes home. Until this is done a second event is unrecoverable, so the answer needs a name and a time attached to it, not an intention.",
+     "readback": true
+    },
+    {
+     "id": "infra.backup_strategy",
+     "prompt": "Somebody deletes a table this morning and nobody notices until tomorrow. What do you reach for? Now the whole region is gone instead. What do you reach for then?",
+     "records": "What protects each part of the system, and which loss each protection answers",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "5.8 Data backup",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "Two different failures, and organizations routinely have an answer for the second and none for the first. Replication is not a backup: it copies the deletion faithfully and at once. If the answer to both questions is the same mechanism, that is the finding.",
+     "readback": true
+    },
+    {
+     "id": "infra.backup_matrix",
+     "prompt": "Take the pieces one at a time. For each: what is copied, by what, how often, and how long is the copy kept before it is thrown away?",
+     "records": "Per component: what is backed up, how, what kind of copy, how often and for how long",
+     "owner": "infrastructure owner",
+     "kind": "rows",
+     "row": "5.8 Data backup",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "One row per piece, and 'none' is a legal value in the type column: a component nobody backs up is a decision somebody made, and it belongs on the page rather than in an assumption. Frequency and retention are what make the row usable. A daily full kept for seven days and an hourly incremental kept for a year describe very different recoveries, and the difference decides what a recovery point objective is actually worth.",
+     "columns": [
+      "component",
+      "method",
+      "type",
+      "frequency",
+      "retention",
+      "where_it_lands"
+     ],
+     "columnOptions": {
+      "type": [
+       "full",
+       "differential",
+       "incremental",
+       "snapshot",
+       "log or journal",
+       "continuous",
+       "none"
+      ]
+     }
+    },
+    {
+     "id": "infra.backup_restore_duration",
+     "prompt": "Take the largest piece. If you had to rebuild it from a copy rather than fail over, how long from the decision to somebody being able to use it?",
+     "records": "How long a restore of the largest component takes, end to end",
+     "owner": "lead engineer",
+     "kind": "duration",
+     "row": "Measured durations on the recovery critical path",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "unit": "hours",
+     "guidance": "This is the number that decides whether restoring is a real option during an invocation or only on paper. Where it exceeds the recovery time objective, the plan cannot use restore as its answer and has to say so.",
+     "mechanism": "Is that measured or estimated? At what data volume, and which part of it takes the longest?"
+    },
+    {
+     "id": "infra.backup_last_restore",
+     "prompt": "When did somebody last put a copy back, for real rather than checking the backup job reported success? What did they restore, and how long did it take?",
+     "records": "Each restore actually performed: what, from which copy, when, and how long it took",
+     "owner": "lead engineer",
+     "kind": "rows",
+     "row": "Restores actually performed",
+     "writtenTo": "docs/06-test-environments.md, runbooks/RB-04-dr-drill.md",
+     "guidance": "A backup nobody has restored is a hypothesis, and a backup job reporting success is evidence about the job rather than about the copy. An empty table is an honest and common answer, and it is the first thing the drill programme should fix.",
+     "columns": [
+      "what_was_restored",
+      "from_which_copy",
+      "when",
+      "how_long_it_took",
+      "who_did_it"
+     ]
+    },
+    {
+     "id": "infra.backup_immutability",
+     "prompt": "Somebody has your administrator credentials and wants every copy gone. Which copy survives them, and who holds what is needed to bring it back?",
+     "records": "The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it",
+     "owner": "infrastructure owner",
+     "kind": "narrative",
+     "row": "Copies that survive a compromised administrator",
+     "writtenTo": "docs/03-replication-matrix.md",
+     "guidance": "A continuity plan whose every copy is reachable with one set of credentials has one failure away from nothing. NOT_APPLICABLE is not available here; where no such copy exists the honest answer is that none does, named as a risk with an owner, and it usually becomes the most expensive finding in the engagement.",
      "readback": true
     }
    ]
@@ -1166,6 +1285,22 @@ table.rows input, table.rows select { width: 100%; }
      "writtenTo": "README.md",
      "guidance": "If there is no route, the drills are theater.",
      "readback": true
+    },
+    {
+     "id": "governance.retention_obligation",
+     "prompt": "What are you required to keep, for how long, and who says so? Name the regulation, the contract or the policy rather than the practice.",
+     "records": "Each retention obligation, its minimum period, what imposes it and who confirms it",
+     "owner": "governance/risk contact",
+     "kind": "rows",
+     "row": "Retention obligations and what sets them",
+     "writtenTo": "docs/07-standards-alignment.md",
+     "guidance": "Elicited here rather than from the infrastructure owner, because what a backup schedule keeps and what the organization is obliged to keep are set by different people and routinely disagree. Where a retention in the backup table is shorter than an obligation in this one, that contradiction is a finding with two named owners, and it is not the interviewer's to resolve.",
+     "columns": [
+      "data_or_records",
+      "minimum_retention",
+      "what_requires_it",
+      "who_confirms"
+     ]
     },
     {
      "id": "governance.risk_register",
@@ -1553,6 +1688,19 @@ function questionCard(q) {
   return el('div', { class: cls }, kids);
 }
 
+// A list long enough to need trimming says what it trimmed. A page that shows forty of
+// eighty-nine and stops reads as if forty were all of them, which is the wrong thing to
+// believe about your own gaps.
+const SHOWN = 40;
+function listing(kids, items) {
+  kids.push(el('ul', {}, items.slice(0, SHOWN).map(t => el('li', { text: t }))));
+  if (items.length > SHOWN) {
+    kids.push(el('p', { class: 'saved',
+      text: 'Showing the first ' + SHOWN + '. ' + (items.length - SHOWN) +
+            ' more are open and not listed here.' }));
+  }
+}
+
 function whyFlagged(q) {
   const a = state.answers[q.id];
   const given = said(a).filter(s => s.value && String(s.value).trim());
@@ -1572,10 +1720,10 @@ function summary() {
     ? open.length + ' answer(s) with nothing written against them. A blank is not a result; ' +
       'an answer nobody has is a name.'
     : 'Every answer has something written against it.' })];
-  if (open.length) kids.push(el('ul', {}, open.slice(0, 40).map(t => el('li', { text: t }))));
+  if (open.length) listing(kids, open);
   if (unsure.length) {
     kids.push(el('p', { text: unsure.length + ' answered without the thing that makes it hold up:' }));
-    kids.push(el('ul', {}, unsure.slice(0, 40).map(t => el('li', { text: t }))));
+    listing(kids, unsure);
   }
   return el('div', { class: 'summary' }, kids);
 }

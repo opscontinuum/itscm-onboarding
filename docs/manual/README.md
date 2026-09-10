@@ -17,10 +17,10 @@ Read [the method](method.md) before the first session. It is the discipline all 
 | [Phase 0 — The portfolio and the dependency map](00-portfolio.md) | A workshop, before the tabletop | the register, on a wall |
 | [Phase 1 — What the room brings](01-discovery.md) | The tabletop | 1 answer, plus the inventory and the gaps in it |
 | [Phase 2 — The business figures, which gate everything after them](02-business.md) | Not the tabletop | 11 answers |
-| [Phase 3a — The application segment](03a-application.md) | The tabletop | 19 answers |
-| [Phase 3b — The infrastructure segment](03b-infrastructure.md) | The tabletop | 18 answers |
+| [Phase 3a — The application segment](03a-application.md) | The tabletop | 22 answers |
+| [Phase 3b — The infrastructure segment](03b-infrastructure.md) | The tabletop | 23 answers |
 | [Phase 4 — The continuity segment](04-continuity.md) | The tabletop | 21 answers |
-| [Phase 5 — Approval, review and training](05-governance.md) | Not the tabletop | 12 answers |
+| [Phase 5 — Approval, review and training](05-governance.md) | Not the tabletop | 13 answers |
 | [Phase 6 — Writing it up, and auditing what you wrote](06-generate-and-audit.md) | You, on your own, with the worksheets from every session in front of you | the written plan |
 
 Phase 7 is not a document. It is the signature, and then the drill: **every duration in the plan is a design target, and none of them are commitments until a drill has measured one.** Schedule the first drill before the approval meeting ends.
