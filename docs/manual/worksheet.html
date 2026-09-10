@@ -576,7 +576,7 @@ table.rows input, table.rows select { width: 100%; }
      "kind": "narrative",
      "row": "Playbooks, runbooks and where they live",
      "writtenTo": "docs/10-phase-reconstitution.md, runbooks/RB-03-failback.md",
-     "guidance": "Distinct from the cold start order, which answers a different question. A return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Where the answer is that nobody has written it, that is the honest record and a drill objective.",
+     "guidance": "The cold start order at 4.1 answers what to bring up first when everything is off. This answers a different question and usually has a different answer: a return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Ask it separately rather than assuming the first answer reversed. Where nobody has written it down, that is the honest record and a drill objective.",
      "readback": true
     },
     {
@@ -858,7 +858,7 @@ table.rows input, table.rows select { width: 100%; }
      "kind": "rows",
      "row": "5.7 Offsite data storage",
      "writtenTo": "docs/03-replication-matrix.md",
-     "guidance": "NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on physical media, and it is a better answer than an invented courier. What is never legitimate is leaving retention blank: a retention shorter than the records the business has to keep is a finding on its own.",
+     "guidance": "This is the table of copies, and the backup rows at 5.8 point into it by name. NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on physical media, and it is a better answer than an invented courier. What is never legitimate is leaving retention blank: a retention shorter than the records the business has to keep is a finding on its own, and the obligation it has to clear is elicited from governance rather than from you.",
      "columns": [
       "copy",
       "where_it_is_held",
@@ -896,14 +896,14 @@ table.rows input, table.rows select { width: 100%; }
      "kind": "rows",
      "row": "5.8 Data backup",
      "writtenTo": "docs/03-replication-matrix.md",
-     "guidance": "One row per piece, and 'none' is a legal value in the type column: a component nobody backs up is a decision somebody made, and it belongs on the page rather than in an assumption. Frequency and retention are what make the row usable. A daily full kept for seven days and an hourly incremental kept for a year describe very different recoveries, and the difference decides what a recovery point objective is actually worth.",
+     "guidance": "One row per piece, and 'none' is a legal value in the type column: a component nobody backs up is a decision somebody made, and it belongs on the page rather than in an assumption. The last column names the copy the backup lands in, from the table of copies at 5.7 offsite storage; where a component's copy is not in that table yet, add it there. How long anything is kept is a property of the copy and is asked once, there, so that two tables filled in by the same person in the same hour cannot end up disagreeing about it.",
      "columns": [
       "component",
+      "what_is_copied",
       "method",
       "type",
       "frequency",
-      "retention",
-      "where_it_lands"
+      "copy"
      ],
      "columnOptions": {
       "type": [
@@ -926,7 +926,7 @@ table.rows input, table.rows select { width: 100%; }
      "row": "Measured durations on the recovery critical path",
      "writtenTo": "docs/03-replication-matrix.md",
      "unit": "hours",
-     "guidance": "This is the number that decides whether restoring is a real option during an invocation or only on paper. Where it exceeds the recovery time objective, the plan cannot use restore as its answer and has to say so.",
+     "guidance": "The number that decides whether restoring is a real option during an invocation or only on paper. Where it exceeds the recovery time objective, the plan cannot use restore as its answer and has to say so. Where the table of restores actually performed already holds a real figure for this component, that figure is the answer here; do not estimate over the top of a measurement somebody took.",
      "mechanism": "Is that measured or estimated? At what data volume, and which part of it takes the longest?"
     },
     {
