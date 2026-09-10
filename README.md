@@ -164,7 +164,10 @@ Verify it yourself:
 plugin/scripts/discover/test-readonly.sh
 ```
 
-Three independent checks: the guard's unit tests, a static tripwire that fails if any script
+That runs the proof every environment carries. Discovery is organized one directory per
+environment under `plugin/scripts/discover/`, with `oci/` the only one implemented today and
+[a README](plugin/scripts/discover/README.md) stating what a new one owes. Three independent
+checks: the guard's unit tests, a static tripwire that fails if any script
 ever calls the CLI outside the guard, and an end-to-end check that every command a full walk
 would issue is a read.
 

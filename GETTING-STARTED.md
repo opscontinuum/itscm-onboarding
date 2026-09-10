@@ -137,6 +137,11 @@ yourself before pointing it at production, from your clone of this repository:
 plugin/scripts/discover/test-readonly.sh
 ```
 
+That runs the proof for every environment discovery covers. Today that is OCI alone; the
+layout is one directory per environment, and `plugin/scripts/discover/README.md` says what a
+new one has to provide. **A workload anywhere else starts from what the teams already have**,
+which is the ordinary case and is what the tabletop assumes.
+
 **You now have an inventory and, more usefully, `gaps.md`.** The gaps are interview material:
 resources nobody can name, a standby that was supposed to exist, a replication policy covering
 three of five buckets.
