@@ -8,7 +8,7 @@
 
 **Whose answers these are:** the application owner — whoever is accountable for the application working, not for the infrastructure under it. In an ERP context this is usually the functional lead or applications DBA rather than the cloud team.
 
-**How long:** 90 minutes. Bring the discovery inventory; it halves the session.
+**How long:** Just under 2 hours. Bring the discovery inventory; it halves the first half.
 
 Open by putting phase 1's inventory on the table. A team corrects a list much faster than it rebuilds one from memory, and the corrections are themselves findings worth writing down.
 
@@ -103,7 +103,32 @@ Validation is on the critical path of the MTD and is routinely forgotten in the 
 A validation pack requiring four people over two hours turns a 60-minute RTO into a
 3-hour recovery, and the business signed for the shorter number.
 
-#### 5. Work recovery time (15 min)
+#### 5. Where the procedures live (15 min)
+
+A plan is read during the thing it plans for, so where it is kept is part of whether it works.
+Take the pieces one at a time and ask what exists, where it is, and who keeps it current. "It
+is in somebody's head" is a real answer and worth writing down as one: it names a person the
+recovery depends on being reachable at three in the morning.
+
+Then the question that turns documentation into a dependency:
+
+> "The primary region is gone. Where is the copy of the procedure you would actually be
+> reading, and can you get to it without the systems that are down?"
+
+Source control in the failed region. A wiki behind the identity provider that is also down. A
+bookmark on one laptop. Each is a recovery dependency and belongs on the register as an edge,
+not as a footnote here — hand it to whoever holds the portfolio.
+
+Last, the return trip, which is not the outward one reversed:
+
+> "Coming back to the primary: what says the order to bring the pieces up in, and who wrote
+> it?"
+
+Data moves the other way, somebody has to agree a cutover window, and a decision waits about
+what happens to the standby afterwards. Ask it separately. Where nobody has written it down,
+record that rather than assuming the cold start order covers it.
+
+#### 6. Work recovery time (15 min)
 
 The activities between "the system is up" and "the business is working".
 
@@ -117,7 +142,7 @@ For each, get the duration **and** whether it can run in parallel with system br
 parallel/serial distinction is usually the difference between meeting the MTD and missing it,
 and nobody has ever been asked about it before.
 
-#### 6. Concurrent processing (5 min)
+#### 7. Concurrent processing (5 min)
 
 NIST names it as a validation option; most systems cannot do it.
 
@@ -364,7 +389,7 @@ Every one of them leaves the room with something written against it. An answer n
 - **Records:** The reconstitution order, where it is written and who owns it
 - **Answers:** lead engineer · **Shape:** several paragraphs, in their words
 - **Say it back** in one sentence and get a yes before you write it.
-- **Note:** Distinct from the cold start order, which answers a different question. A return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Where the answer is that nobody has written it, that is the honest record and a drill objective.
+- **Note:** The cold start order at 4.1 answers what to bring up first when everything is off. This answers a different question and usually has a different answer: a return has data moving the other way, a cutover window somebody has to agree, and a decision about what happens to the standby afterwards. Ask it separately rather than assuming the first answer reversed. Where nobody has written it down, that is the honest record and a drill objective.
 - **Goes into:** docs/10-phase-reconstitution.md, runbooks/RB-03-failback.md
 - **No NIST slot.** An element this toolkit carries deliberately; the answer in it is elicited like any other.
 

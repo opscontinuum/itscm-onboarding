@@ -8,7 +8,7 @@
 
 **Whose answers these are:** governance, risk, audit, or compliance. In a smaller organization this may be the CIO. If nobody holds it, the plan can still be built; it just cannot be approved, and that should be stated rather than discovered at audit.
 
-**How long:** 60 minutes.
+**How long:** 80 minutes.
 
 A design describes what would happen. A plan is a design somebody committed to, and the difference is a signature, a review date and a population that has been trained. This session collects all three.
 
@@ -106,7 +106,23 @@ plan change.
 If there is no route, the drills are theater. That is a finding, not a criticism, and it is
 usually welcomed.
 
-#### 6. Risk register (10 min)
+#### 6. Retention obligations (10 min)
+
+The infrastructure owner said how long the copies are kept. This asks what the organization is
+required to keep, which is a different question with a different owner and frequently a
+different answer:
+
+> "What are you required to keep, for how long, and who says so? Name the regulation, the
+> contract or the policy rather than the practice."
+
+The period on its own is not enough. Record what imposes it, because "seven years" with
+nothing behind it cannot be argued for when somebody proposes a cheaper retention, and cannot
+be defended when an auditor asks why.
+
+**Where an obligation here is longer than a retention in the backup table, that is a finding
+with two named owners, and it is not yours to resolve.** Take it back to both.
+
+#### 7. Risk register (10 min)
 
 Material assumptions and design risks are, by this point, scattered across the other three
 interviews. Consolidate them into an owned register: each risk with an owner, likelihood,
@@ -117,7 +133,7 @@ impact and treatment.
 Prefer plugging into the existing risk process over creating a parallel one. A register only
 this plan reads is a register nobody reads.
 
-#### 7. Vendor agreements — Appendix L (5 min)
+#### 8. Vendor agreements — Appendix L (5 min)
 
 SLAs, support contracts and their severity paths, reciprocal agreements. Specifically: what
 the cloud provider commits to in a regional event, and whether anyone has read it.

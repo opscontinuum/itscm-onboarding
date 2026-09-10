@@ -615,10 +615,12 @@ owner = "lead engineer"
 notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
 
 # app.reconstitution_order - asked of the lead engineer
-# Distinct from the cold start order, which answers a different question. A return has
+# The cold start order at 4.1 answers what to bring up first when everything is off.
+# This answers a different question and usually has a different answer: a return has
 # data moving the other way, a cutover window somebody has to agree, and a decision
-# about what happens to the standby afterwards. Where the answer is that nobody has
-# written it, that is the honest record and a drill objective.
+# about what happens to the standby afterwards. Ask it separately rather than assuming
+# the first answer reversed. Where nobody has written it down, that is the honest
+# record and a drill objective.
 # Read this back and get a yes before recording it.
 [facts."app.reconstitution_order"]
 status = "MISSING"
@@ -960,10 +962,12 @@ licensed = "nobody knows"
 where_it_is_recorded = "not stated in the reference plan"
 
 # infra.offsite_storage - asked of the infrastructure owner
+# This is the table of copies, and the backup rows at 5.8 point into it by name.
 # NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on
 # physical media, and it is a better answer than an invented courier. What is never
 # legitimate is leaving retention blank: a retention shorter than the records the
-# business has to keep is a finding on its own.
+# business has to keep is a finding on its own, and the obligation it has to clear is
+# elicited from governance rather than from you.
 [facts."infra.offsite_storage"]
 status = "ANSWERED"
 provenance = "document:oci-itscp/runbooks/RB-05-replication-lifecycle.md"
@@ -1021,19 +1025,22 @@ notes = "Added to the question bank after this example was derived, and the deri
 # infra.backup_matrix - asked of the infrastructure owner
 # One row per piece, and 'none' is a legal value in the type column: a component
 # nobody backs up is a decision somebody made, and it belongs on the page rather than
-# in an assumption. Frequency and retention are what make the row usable. A daily full
-# kept for seven days and an hourly incremental kept for a year describe very
-# different recoveries, and the difference decides what a recovery point objective is
-# actually worth.
+# in an assumption. The last column names the copy the backup lands in, from the table
+# of copies at 5.7 offsite storage; where a component's copy is not in that table yet,
+# add it there. How long anything is kept is a property of the copy and is asked once,
+# there, so that two tables filled in by the same person in the same hour cannot end
+# up disagreeing about it.
 [facts."infra.backup_matrix"]
 status = "MISSING"
 owner = "infrastructure owner"
 notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one. The offsite-storage rows in this same store record three copies with their retention, which is part of what this table wants."
 
 # infra.backup_restore_duration - asked of the lead engineer
-# This is the number that decides whether restoring is a real option during an
-# invocation or only on paper. Where it exceeds the recovery time objective, the plan
-# cannot use restore as its answer and has to say so.
+# The number that decides whether restoring is a real option during an invocation or
+# only on paper. Where it exceeds the recovery time objective, the plan cannot use
+# restore as its answer and has to say so. Where the table of restores actually
+# performed already holds a real figure for this component, that figure is the answer
+# here; do not estimate over the top of a measurement somebody took.
 # The figure needs its mechanism beside it. Ask:
 # Is that measured or estimated? At what data volume, and which part of it takes the
 # longest?
