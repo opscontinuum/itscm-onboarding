@@ -1,0 +1,396 @@
+# Phase 3b — The infrastructure interview
+
+> **Generated file.** It is assembled from the skills, the question bank and `GETTING-STARTED.md` by `plugin/itscp_manual.py`, and an edit made here is deleted by the next regeneration. Change the source and run `python3 plugin/itscp_manual.py`.
+
+**Who is in the room:** the cloud or infrastructure owner, with the lead engineer. The owner holds the design and the budget; the lead engineer holds the measured figures and the answer to section 6, and those are the parts of this interview that decide how much of the plan is real.
+
+**How long:** 90–120 minutes.
+
+The second half of phase 3, and the one that turns the signed targets into a topology and a monthly figure. Bring the lead engineer for anything measured and for anything that has actually been executed rather than designed.
+
+**Take `gaps.md` from phase 1 into this session.** It is the difference between reconstructing the environment for forty minutes and correcting a list for ten.
+
+**Run under [the method](method.md).** No fact enters the plan unless a human said it, a read-only API returned it, or it is marked `MISSING` against a named owner.
+
+---
+
+## The technique — `itscp-interview-infrastructure`
+
+*Use when a continuity plan needs its recovery strategy, replication design or alternate processing site documented, when deciding between synchronous and asynchronous replication or between hot, warm and cold standby, or when the cost of standby capacity has to be reconciled with the recovery targets the business asked for.*
+
+The recovery strategy and the machinery that implements it. Produces the architecture, the
+replication matrix, Appendix C alternate site and storage, Appendix D recovery procedures, and
+the cost model that decides whether the business's chosen tier is affordable.
+
+**Read first:** the `itscp-method-interview` skill, plus the discovery inventory and the
+signed tier assignment. This interview is where the business's targets meet physics and price.
+
+**Interviewee:** the cloud or infrastructure owner, with the lead engineer. The owner holds the
+design and the budget; the lead engineer holds the measured figures and the answer to section 6,
+and those are the parts of this interview that decide how much of the plan is real.
+
+**Time:** 90–120 minutes.
+
+---
+
+### Start from the targets, not the technology
+
+Open with the signed tiers:
+
+> "The business has signed an MTD of two hours for order entry and cash application, RPO
+> effectively zero. Here's what's in the tenancy today. Can we meet that, and what would it
+> take?"
+
+This framing does the work. It makes the conversation about a commitment already made rather
+than an aspiration, and it surfaces the gap between wanted and available in the first ten
+minutes instead of the last.
+
+---
+
+### What to elicit
+
+#### 1. Current state versus intended state (15 min)
+
+> "Does what I found in the tenancy match what you think is there? What's missing, and what's
+> there that shouldn't be?"
+
+The gap is a finding. Undocumented resources, an absent standby, a replication policy that
+covers three of five buckets — these are the plan's first real risks, and they are best found
+here rather than during a drill.
+
+#### 2. Replication, mechanism by mechanism (30 min)
+
+For every data tier — database, block, file, object, backup — establish:
+
+| Field | Why it matters |
+|---|---|
+| Mechanism | Determines everything else |
+| Synchronous or asynchronous | Whether an RPO 0 claim is even available |
+| Measured lag today, not the target | The plan's RPO evidence |
+| Behavior on failover | Some replicas activate to a clone; some become read-only until a resource is deleted |
+| **Re-baseline or resume after reversal** | The failback cost, and usually a surprise |
+| One-way door? | Whether the step can be undone at all |
+
+**The re-baseline question is the one to press.** Several cloud replication primitives copy
+from zero rather than resuming after a role reversal. That turns failback from a cutover into
+a multi-day project, and almost nobody has costed it. Ask explicitly:
+
+> "After we fail over and want to come back — does this resume where it left off, or copy
+> everything again? How long, at your data volume?"
+
+If the answer is unknown, it is a `MISSING` and a Tier B test objective, not an assumption.
+
+#### 3. Latency and distance (10 min)
+
+Synchronous replication waits for the far side to acknowledge. Beyond a certain distance that
+cost lands on every commit.
+
+> "What's the measured round-trip time between the two regions? Not the published figure —
+> have you measured it?"
+
+If unmeasured, mark it `confidence: low` and make measuring it a prerequisite, not a
+follow-up. A design that assumes synchronous replication over an unmeasured link is a design
+with an unexploded assumption in the middle of it.
+
+#### 4. Standby posture and the cost floor (20 min)
+
+> "What does the standby cost today, and what's the cheapest it can be while still meeting the
+> RPO the business signed?"
+
+Every platform has a floor below which a standby stops functioning as one — a minimum node
+count, a minimum OCPU allocation, a license that bills whether running or not. Establish the
+floor explicitly, because the tier the business chose may be unaffordable at it, and that is a
+conversation to have now rather than at renewal.
+
+Then: can the posture change on a schedule, and who is allowed to change it?
+
+#### 5. Naming, addressing and the biggest RTO lever (15 min)
+
+> "When you bring the application up in the standby region, does it know it moved?"
+
+Applications that hard-code host names, IPs or region-specific endpoints turn a 30-minute
+recovery into a half-day reconfiguration. Establish what is region-locked and what resolves
+locally. This is frequently the single largest RTO lever available and it is usually cheaper
+to fix than any amount of extra standby capacity.
+
+#### 6. Orchestration and drills (10 min)
+
+What exists today: orchestration service, scripts, or a document. Then the question that
+decides how much of the plan is real:
+
+> "When was the last time any of this was actually executed, end to end?"
+
+"Never" is a common and acceptable answer. Record it plainly; it sets the drill program's
+first objective and calibrates how much the current design's timings can be trusted.
+
+Then the question that turns drill history into a roster finding:
+
+> "Who ran it? And who else has ever run it?"
+
+One name is an availability requirement on a person, sitting inside a document written to
+remove single points of failure. Record it against the lead engineer and their deputy.
+
+#### 7. Alternate site and telecommunications — Appendix C (10 min)
+
+For cloud environments most of NIST's Appendix C is answered by the provider. Record which parts
+the provider owns, which the organization owns, and which are genuinely not applicable —
+each with a reason. Do not silently drop them; an auditor reads the omission as an oversight.
+
+---
+
+### The conversation where targets meet price
+
+At some point the signed tier and the affordable design will not match. Do not resolve it
+inside this interview, and do not quietly design to the cheaper one.
+
+Produce three costed options — meet the target, meet it partially, and the cheapest defensible
+design — with the standby cost and the achievable RTO/RPO for each. Hand them back to the
+business owner as a decision.
+
+**A tier silently downgraded by IT is the most dangerous artifact this toolkit could produce**,
+because the business believes it has protection it is not paying for and will not find out
+until the invocation.
+
+---
+
+### Output
+
+Writes `infra.*`: current-versus-intended gaps, replication matrix with lag and re-baseline
+behavior, measured latency, standby posture and cost floor, region-locked naming, orchestration
+state, drill history, Appendix C determinations, costed options.
+
+Renders `docs/01-architecture.md`, `docs/03-replication-matrix.md`,
+`docs/05-cost-and-teardown.md`, and seeds the runbook templates.
+
+### Red flags
+
+| Thought | Reality |
+|---|---|
+| "Replication exists, so RPO is met" | Existence is not currency. Get measured lag, or mark it unmeasured |
+| "They said it resumes after failback" | Ask how they know. Untested belief about re-baselining is expensive to be wrong about |
+| "Latency is fine, it's the published figure" | Published figures are not measurements. Mark it low confidence |
+| "The business wants Tier 0 but can't afford it, I'll design Tier 1" | Never. Present costed options and let them choose |
+| "They've never drilled, but the design is sound" | Then every duration is a target, and the plan must say so everywhere |
+| "The lead engineer has done it, that's enough" | Once, by one person, is not a capability. Ask who else, and record the deputy gap |
+| "Appendix C is mostly not applicable for cloud" | Probably true, and each one still needs its reason written down |
+
+---
+
+## The field checklist
+
+18 fields, in the order the bank holds them, grouped by the section of the plan each one feeds. Every one of them ends the session with a status. A field nobody could answer is `MISSING` against a named owner, which is a result and not a failure; a field left absent is an error.
+
+### 2.1 System description
+
+#### `infra.primary_region`
+
+> "Where does this run today? Discovery says the primary region is the one I will read back to you; correct me if that is wrong."
+
+- **Records:** The primary region
+- **Owner:** infrastructure owner · **Answer:** free text
+- **Discovery may prefill this** (`ListAvailabilityDomains`). Read the value back for correction rather than asking cold; a value the interviewee did not confirm keeps its discovery provenance and never gains theirs.
+- **Note:** Discovery can name this, so it is read back for correction rather than asked cold. A correction is itself worth having: it usually means something moved and nobody updated the diagram.
+- **Lands in:** docs/01-architecture.md 2
+- **NIST:** 2.1 System Description (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+#### `infra.availability_domains`
+
+> "Within each region, which availability domains is this spread across, and where does anything that arbitrates between the two regions sit?"
+
+- **Records:** The availability domains in use, and where any arbitrator sits
+- **Owner:** infrastructure owner · **Answer:** free text
+- **Discovery may prefill this** (`ListAvailabilityDomains`). Read the value back for correction rather than asking cold; a value the interviewee did not confirm keeps its discovery provenance and never gains theirs.
+- **Note:** Discovery can name these, so read them back rather than asking cold. The arbitrator is the half people forget: one that sits in the primary region is a vote that is always lost at exactly the moment it is needed.
+- **Lands in:** docs/01-architecture.md
+- **NIST:** 2.1 System Description (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+#### `infra.shared_storage`
+
+> "What sits on shared storage that more than one node needs, and what protocol do those nodes speak to it?"
+
+- **Records:** What lives on shared storage and how it is reached
+- **Owner:** infrastructure owner · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** This decides a real fork in the recovery design and is usually answered by whoever is in the room rather than by whoever knows. Ask for the protocol, not the product.
+- **Lands in:** docs/01-architecture.md
+- **NIST:** 2.1 System Description (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+### C. Alternate site, storage and telecommunications
+
+#### `infra.standby_region`
+
+> "And where would it run instead? Discovery found resources in a second region; I will read back what it found."
+
+- **Records:** The standby region
+- **Owner:** infrastructure owner · **Answer:** free text
+- **Discovery may prefill this** (`ListDrProtectionGroups`). Read the value back for correction rather than asking cold; a value the interviewee did not confirm keeps its discovery provenance and never gains theirs.
+- **Note:** Where discovery finds standby resources in a region nobody names as the standby, that is a shadow environment and worth surfacing before the interview moves on.
+- **Lands in:** docs/01 5, docs/03
+- **NIST:** APPENDIX F ALTERNATE STORAGE, SITE, AND TELECOMMUNICATIONS (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+### Cost model and posture economics
+
+#### `infra.measured_rtt_ms`
+
+> "Has anyone measured the round-trip time between the two regions, as opposed to reading the published figure? What did it come out at, and when?"
+
+- **Records:** Measured inter-region round-trip time in milliseconds
+- **Owner:** lead engineer · **Answer:** a number in ms
+- **Then ask:** "What was running when it was measured, and at what time of day? And at what figure would this design stop working?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Note:** Measured, not published. A synchronous design over an unmeasured link has an unexploded assumption in the middle of it.
+- **Lands in:** docs/03-replication-matrix.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.standby_cost_floor`
+
+> "What does the standby cost to keep running when nothing is happening? The floor, not the average."
+
+- **Records:** The monthly standby cost floor
+- **Owner:** infrastructure owner · **Answer:** a currency
+- **Then ask:** "What is in that figure and what is not? Name the lines it covers, and say what would have to be switched off to make it smaller." Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Note:** The tier the business chose may be unaffordable at the floor. Now is when that conversation is cheap.
+- **Lands in:** docs/05-cost-and-teardown.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.region_locked_naming`
+
+> "Do any hostnames, connection strings or certificates have the region baked into them? What would have to change on failover?"
+
+- **Records:** Which names are region-locked and what changing them costs in recovery time
+- **Owner:** infrastructure owner · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** Often the single largest RTO lever, and cheaper than more capacity.
+- **Lands in:** docs/01-architecture.md 1
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.inter_region_transport`
+
+> "How does traffic get between the two regions today? A dedicated circuit, the provider's own backbone, or the public internet? And is there a bandwidth commitment anywhere in writing?"
+
+- **Records:** How the two regions are joined and what is committed in writing
+- **Owner:** infrastructure owner · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** Press on the writing. A replication design rests on this link, and 'it has always been fine' is a measurement of the past. If nothing is committed, that is a risk register row with an owner, not a footnote.
+- **Lands in:** docs/01-architecture.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.storage_constraints`
+
+> "Does the data use any storage feature that only works on particular hardware? Compression, encryption at a layer below the database, anything the standby would have to match?"
+
+- **Records:** Storage features that constrain what the standby may be built on
+- **Owner:** lead engineer · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** A single feature here can rule out the cheap standby entirely, and it is usually discovered after the budget is signed. Read the answer back and record who confirmed it.
+- **Lands in:** docs/03-replication-matrix.md, docs/05-cost-and-teardown.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.standby_posture`
+
+> "What do you do to the standby when nothing is happening? Leave it running, stop things, scale something down? And who is allowed to change that?"
+
+- **Records:** The standby's steady-state posture and who may change it
+- **Owner:** infrastructure owner · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** Two answers, and the second one matters more. A posture with no named owner gets changed by whoever is looking at the bill that month, which is how a standby quietly stops being one.
+- **Lands in:** runbooks/RB-05-replication-lifecycle.md, docs/05-cost-and-teardown.md
+- **The toolkit supplies this element's words, not the customer.** They render as the toolkit's own and are never presented as something anybody said: A standby is held in one of a small number of postures, and the posture is a decision about cost against readiness rather than a property of the environment. The toolkit asks what is done to the standby when nothing is happening, what is done when there is warning, and who may change it. A posture nobody may change is a cost nobody may reduce; a posture anybody may change is a recovery nobody can rely on.
+
+#### `infra.warned_posture_time`
+
+> "When you get warning, a storm track or an announced maintenance window, is there a readier state you move to? How long does getting there take?"
+
+- **Records:** How long it takes to move the standby to its warned state
+- **Owner:** infrastructure owner · **Answer:** a duration in hours
+- **Then ask:** "What does that state cost while you are holding it, and what decides when you come back down from it?" Record the answer in `mechanism`. Without one the figure is `confidence: low`.
+- **Note:** Most environments have no warned state and have never been asked for one. NOT_APPLICABLE with a reason is a good answer here; silence is not.
+- **Lands in:** runbooks/RB-05-replication-lifecycle.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+#### `infra.licensing`
+
+> "Which optional features is the standby entitled to use? And do you have that in writing rather than in somebody's memory of a call?"
+
+- **Records:** Each optional feature the design needs, whether it is licensed and where that is recorded
+- **Owner:** infrastructure owner · **Answer:** one row per item, columns `feature` | `licensed` | `where_it_is_recorded`
+- **`licensed` is one of:** `yes`, `no`, `nobody knows`
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** The line item most often discovered late, and the one the plan is least likely to ask about. 'Nobody knows' is the most useful answer in the column and belongs in the risk register the same day.
+- **Lands in:** docs/05-cost-and-teardown.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+### 4.2 Recovery procedures
+
+#### `infra.replication`
+
+> "For each tier, how does the data get to the other region, is it synchronous, and what is the measured lag? Then: when you fail back, do you have to re-baseline?"
+
+- **Records:** Per tier: the replication mechanism, whether it is synchronous, measured lag, failover behavior, whether reversal needs a re-baseline, and whether it is one-way
+- **Owner:** infrastructure owner · **Answer:** one row per item, columns `tier` | `mechanism` | `sync` | `measured_lag` | `what_breaks_at_that_lag` | `failover_behavior` | `rebaseline_on_reversal` | `one_way`
+- **Every `measured_lag` owes a `what_breaks_at_that_lag`.** A target with no stated consequence is a number nobody has to meet.
+- **Discovery may prefill this** (`ListVolumeGroupReplicas`). Read the value back for correction rather than asking cold; a value the interviewee did not confirm keeps its discovery provenance and never gains theirs.
+- **Note:** Press the re-baseline question. It is the failback cost and it is almost never costed.
+- **Lands in:** docs/03-replication-matrix.md
+- **NIST:** 3.4.1 Backup and Recovery (SP 800-34 Rev. 1 Chapter 3, Information System Contingency Planning Process)
+
+### J. Test, training and exercise documentation
+
+#### `infra.last_end_to_end_execution`
+
+> "When did anyone last run this end to end, and who ran it?"
+
+- **Records:** The date of the last end-to-end execution and who performed it
+- **Owner:** lead engineer · **Answer:** a date, `YYYY-MM-DD`
+- **Note:** 'Never' is common and acceptable. Record it; it calibrates how much every duration in the plan can be trusted. Record who ran it, too: one name means the runbook has an availability requirement on a person.
+- **Lands in:** runbooks/RB-04-dr-drill.md
+- **NIST:** APPENDIX J TEST AND MAINTENANCE SCHEDULE (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+### Alert catalog
+
+#### `infra.silent_failures`
+
+> "What has broken before without anyone noticing until it mattered?"
+
+- **Records:** The failures this environment does not notice, and what would have shown them
+- **Owner:** lead engineer · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** Ask it exactly like that and then stop talking. It is the question that produces the alert catalog, and it produces it as a story about something that already happened rather than as a list of metrics somebody invented.
+- **Lands in:** docs/04-monitoring.md
+- **No NIST slot.** This element is one the toolkit carries deliberately; the answer in it is elicited like any other.
+
+### Reversibility and one-way doors
+
+#### `infra.irreversible_choices`
+
+> "Which of the choices in this design could you undo next week, and which could you not undo at all without starting again? What would undoing each one cost?"
+
+- **Records:** Each decision that cannot be cheaply reversed, what reversing it costs and who may take it
+- **Owner:** lead engineer · **Answer:** one row per item, columns `decision` | `cost_to_reverse` | `who_may_take_it`
+- **Note:** Deleting a replication relationship to save money is the one everybody finds by doing it. Ask whether it has happened here; a scar is worth more than a warning.
+- **Lands in:** docs/03-replication-matrix.md
+- **The toolkit supplies this element's words, not the customer.** They render as the toolkit's own and are never presented as something anybody said: Some decisions in a continuity design cost a change ticket to undo and some cannot be undone at all without rebuilding from nothing. The toolkit separates the two and costs the second kind before it is taken, because otherwise the moment a one-way door is noticed is the moment somebody has already walked through it to save money.
+
+### 5.7 Offsite data storage
+
+#### `infra.offsite_storage`
+
+> "Where do the backups live, how long are they kept, and what would you actually do to get one back? If none of it is physical, say so."
+
+- **Records:** Each backup copy, where it is held, how long it is kept and how it is retrieved
+- **Owner:** infrastructure owner · **Answer:** one row per item, columns `copy` | `where_it_is_held` | `retention` | `how_it_is_retrieved`
+- **Note:** NOT_APPLICABLE with a reason is a legitimate and common answer where nothing is on physical media, and it is a better answer than an invented courier. What is never legitimate is leaving retention blank: a retention shorter than the records the business has to keep is a finding on its own.
+- **Lands in:** docs/03-replication-matrix.md
+- **NIST:** 5.7 Offsite Data Storage (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
+
+### 5.8 Data backup
+
+#### `infra.post_recovery_backup`
+
+> "Once you are running in the other region, what protects you? When does the first backup of the new primary happen, and who checks that it did?"
+
+- **Records:** How the recovered system is protected again, when, and who confirms it
+- **Owner:** infrastructure owner · **Answer:** several paragraphs, in their words
+- **Read it back** in one sentence and get a yes before recording it.
+- **Note:** The step most likely to be missed, because the system is up and everyone goes home. Until this is done a second event is unrecoverable, so the answer needs a name and a time attached to it, not an intention.
+- **Lands in:** docs/10-phase-reconstitution.md, docs/03-replication-matrix.md
+- **NIST:** 5.8 Data Backup (SP 800-34 Rev. 1 Appendix A.3, Sample Template for High-Impact Systems)
