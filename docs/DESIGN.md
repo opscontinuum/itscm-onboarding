@@ -256,6 +256,14 @@ and it is exactly what the store's own rule prevents by treating an absent key a
 Reads and writes are now separate calls, and a regression check opens the page, touches
 nothing, and asserts the file is empty.
 
+**A question holds every answer it was given.** The business owner says four hours and the
+application owner says the batch alone takes a day: that pair is the finding the method most
+wants kept, so the page records both, each with its own who, confidence and mechanism, and
+asks whose decision it is. It stays flagged until somebody is named. Making the facilitator
+pick one in the moment, or bury the second in a note, is how a plan ends up asserting a number
+nobody agreed to. Files written before a question could hold more than one answer fold their
+single answer into the list on load rather than losing it.
+
 **Paper stays.** Both artifacts generate from one bank, so keeping the printed worksheets
 costs nothing and buys the room where a laptop is not allowed, not available, or not working.
 
