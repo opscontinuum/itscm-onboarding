@@ -9,6 +9,10 @@ This document is generated from the answer store. Correct it by correcting the i
 - **The release of each major component, and any upgrade in flight**: **[MISSING — owner: application owner]**
 - **The operating system of each tier, and what that constrains**: **[MISSING — owner: infrastructure owner]**
 
+## 5.8 Data Backup
+
+- **Each thing that needs protecting, what it is, which policy covers it and why anything uncovered is uncovered**: **[MISSING — owner: infrastructure owner]**
+
 ## APPENDIX H HARDWARE AND SOFTWARE INVENTORY
 
 - **Whether a discovery walk has run, and when**: **[MISSING — owner: infrastructure owner]**
@@ -25,4 +29,5 @@ Engineering judgments, outstanding gaps and disagreements, labeled as such.
 
 - **The release of each major component, and any upgrade in flight**: **[MISSING — owner: application owner]**
 - **The operating system of each tier, and what that constrains**: **[MISSING — owner: infrastructure owner]**
+- **Each thing that needs protecting, what it is, which policy covers it and why anything uncovered is uncovered**: **[MISSING — owner: infrastructure owner]**
 - **Whether a discovery walk has run, and when**: **[MISSING — owner: infrastructure owner]**
