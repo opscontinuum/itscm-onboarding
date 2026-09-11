@@ -4,7 +4,7 @@
      GETTING-STARTED.md. Regenerate with: python3 plugin/itscp_manual.py -->
 > **Generated page.** It is assembled from the interview skills and the question bank, so that it asks what they ask. An edit made here is overwritten; change the source.
 
-The 91 answers a first plan is built from, listed twice: by the document each one is written into, which is the order to write in, and then as a flat index. An answer feeding two documents appears under both.
+The 92 answers a first plan is built from, listed twice: by the document each one is written into, which is the order to write in, and then as a flat index. An answer feeding two documents appears under both.
 
 ---
 
@@ -155,7 +155,8 @@ The 91 answers a first plan is built from, listed twice: by the document each on
 | `infra.offsite_storage` | Each backup copy, where it is held, how long it is kept and how it is retrieved | infrastructure owner |
 | `infra.post_recovery_backup` | How the recovered system is protected again, when, and who confirms it | infrastructure owner |
 | `infra.backup_strategy` | What protects each part of the system, and which loss each protection answers | infrastructure owner |
-| `infra.backup_matrix` | Per component: what is backed up, how, what kind of copy, how often and for how long | infrastructure owner |
+| `infra.backup_policies` | Each backup policy: its mechanism, the kind of copy it makes, its rhythm and where it lands | infrastructure owner |
+| `infra.backup_coverage` | Each thing that needs protecting, what it is, which policy covers it and why anything uncovered is uncovered | infrastructure owner |
 | `infra.backup_restore_duration` | How long a restore of the largest component takes, end to end | lead engineer |
 | `infra.backup_immutability` | The copy that cannot be deleted or encrypted by a compromised administrator, and who holds access to it | infrastructure owner |
 
@@ -226,6 +227,7 @@ The 91 answers a first plan is built from, listed twice: by the document each on
 |---|---|---|
 | `system.releases` | The release of each major component, and any upgrade in flight | application owner |
 | `system.operating_systems` | The operating system of each tier, and what that constrains | infrastructure owner |
+| `infra.backup_coverage` | Each thing that needs protecting, what it is, which policy covers it and why anything uncovered is uncovered | infrastructure owner |
 | `discovery.completed` | Whether a discovery walk has run, and when | infrastructure owner |
 
 ### `docs/12-interconnections.md`
@@ -334,7 +336,8 @@ The 91 answers a first plan is built from, listed twice: by the document each on
 | `infra.offsite_storage` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.7 Offsite data storage |
 | `infra.post_recovery_backup` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | 5.8 Data backup |
 | `infra.backup_strategy` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | 5.8 Data backup |
-| `infra.backup_matrix` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.8 Data backup |
+| `infra.backup_policies` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.8 Data backup |
+| `infra.backup_coverage` | [3b](03b-infrastructure.md) | rows | infrastructure owner | 5.8 Data backup |
 | `infra.backup_restore_duration` | [3b](03b-infrastructure.md) | duration | lead engineer | Measured durations on the recovery critical path |
 | `infra.backup_last_restore` | [3b](03b-infrastructure.md) | rows | lead engineer | Restores actually performed |
 | `infra.backup_immutability` | [3b](03b-infrastructure.md) | narrative | infrastructure owner | Copies that survive a compromised administrator |

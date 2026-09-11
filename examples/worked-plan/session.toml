@@ -992,17 +992,6 @@ notes = "Added to the question bank after this example was derived, and the deri
 [[entries]]
 event = "unanswered"
 at = "2026-09-04"
-interviewee_role = "infrastructure owner"
-question_id = "infra.backup_matrix"
-prompt = "Take the pieces one at a time. For each: what is copied, by what, how often, and how long is the copy kept before it is thrown away?"
-answer = "Not derived. The reference plan was not re-read for this field."
-owner = "infrastructure owner"
-mutation = "infra.backup_matrix MISSING owner=infrastructure owner"
-notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one. The offsite-storage rows in this same store record three copies with their retention, which is part of what this table wants."
-
-[[entries]]
-event = "unanswered"
-at = "2026-09-04"
 interviewee_role = "lead engineer"
 question_id = "infra.backup_restore_duration"
 prompt = "Take the largest piece. If you had to rebuild it from a copy rather than fail over, how long from the decision to somebody being able to use it?"
@@ -1075,4 +1064,26 @@ prompt = "What are you required to keep, for how long, and who says so? Name the
 answer = "Not derived. The reference plan was not re-read for this field."
 owner = "governance/risk contact"
 mutation = "governance.retention_obligation MISSING owner=governance/risk contact"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."
+
+[[entries]]
+event = "unanswered"
+at = "2026-09-04"
+interviewee_role = "infrastructure owner"
+question_id = "infra.backup_policies"
+prompt = "What backup policies are there? Take them one at a time: what runs, by what, how often, and into which copy does it land?"
+answer = "Not derived. The reference plan was not re-read for this field."
+owner = "infrastructure owner"
+mutation = "infra.backup_policies MISSING owner=infrastructure owner"
+notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one. The offsite-storage rows in this same store record three copies with their retention, which is where a re-derivation should start."
+
+[[entries]]
+event = "unanswered"
+at = "2026-09-04"
+interviewee_role = "infrastructure owner"
+question_id = "infra.backup_coverage"
+prompt = "Now go down the inventory. For each thing that would have to come back, which policy covers it? Where nothing covers it, say so and say why."
+answer = "Not derived. The reference plan was not re-read for this field."
+owner = "infrastructure owner"
+mutation = "infra.backup_coverage MISSING owner=infrastructure owner"
 notes = "Added to the question bank after this example was derived, and the derivation has not been run again against the reference plan. The field carries no value rather than a guess at one."

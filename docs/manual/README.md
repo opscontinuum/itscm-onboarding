@@ -18,7 +18,7 @@ Read [the method](method.md) before the first session. It is the discipline all 
 | [Phase 1 — What the room brings](01-discovery.md) | The tabletop | 1 answer, plus the inventory and the gaps in it |
 | [Phase 2 — The business figures, which gate everything after them](02-business.md) | Not the tabletop | 11 answers |
 | [Phase 3a — The application segment](03a-application.md) | The tabletop | 22 answers |
-| [Phase 3b — The infrastructure segment](03b-infrastructure.md) | The tabletop | 23 answers |
+| [Phase 3b — The infrastructure segment](03b-infrastructure.md) | The tabletop | 24 answers |
 | [Phase 4 — The continuity segment](04-continuity.md) | The tabletop | 21 answers |
 | [Phase 5 — Approval, review and training](05-governance.md) | Not the tabletop | 13 answers |
 | [Phase 6 — Writing it up, and auditing what you wrote](06-generate-and-audit.md) | You, on your own, with the worksheets from every session in front of you | the written plan |
