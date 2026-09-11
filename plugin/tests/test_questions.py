@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import itscp_questions as bank
 from harness import Section, equal
 
-EXPECTED_STARTER_KEYS = 91
+EXPECTED_STARTER_KEYS = 92
 #: The seven fields ``templates/answers.example.yaml`` annotates ``# list of {...}``. Named
 #: rather than counted, so a rename cannot silently satisfy the check.
 YAML_LIST_FIELDS = (
@@ -65,7 +65,8 @@ DELIBERATE_EXTRA_ROW_FIELDS = (
     # Added with the backup and procedure-custody questions. Each is a table in the plan for
     # the same reason the ones above are: a row per component, with a column somebody has to
     # keep current, and prose that lists them is not the same artifact.
-    "infra.backup_matrix",
+    "infra.backup_policies",
+    "infra.backup_coverage",
     "infra.backup_last_restore",
     "app.component_playbooks",
     "governance.retention_obligation",
@@ -88,8 +89,8 @@ _IDENTIFIED = re.compile(r"^(?:\d+(?:\.\d+)?|[A-Z]\.)$")
 #: `retention` column should be a decision somebody wrote down, not something that turns up in
 #: a worksheet. Adding a name here is cheap; the check exists so that adding it is deliberate.
 JOIN_COLUMNS: dict[str, str] = {
-    "component": "a piece of the system, described once in the inventory",
     "copy": "a backup copy, described once in the table of copies at 5.7",
+    "policy": "a backup policy, defined once and applied to everything it covers",
     "role": "a role, described once in the contact roster",
     "tier": "a recovery tier, defined once in the tier targets",
     "process": "a business process, described once in the impact analysis",
