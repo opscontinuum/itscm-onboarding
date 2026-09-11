@@ -1392,23 +1392,42 @@ QUESTIONS: tuple[Question, ...] = (
         nist_heading="5.8 Data Backup", nist_source=_A3,
     ),
     Question(
-        "infra.backup_matrix", "infra", "5.8", "5.8 Data backup",
+        "infra.backup_policies", "infra", "5.8", "5.8 Data backup",
         "docs/03-replication-matrix.md",
-        "Take the pieces one at a time. For each: what is copied, by what, how often, and how "
-        "long is the copy kept before it is thrown away?",
-        "Per component: what is backed up, how, what kind of copy, how often and for how long",
+        "What backup policies are there? Take them one at a time: what runs, by what, how "
+        "often, and into which copy does it land?",
+        "Each backup policy: its mechanism, the kind of copy it makes, its rhythm and where "
+        "it lands",
         "infrastructure owner", "nist", kind="rows",
-        columns=("component", "what_is_copied", "method", "type", "frequency", "copy"),
+        columns=("policy", "method", "type", "frequency", "copy"),
         enum_columns={"type": ("full", "differential", "incremental", "snapshot",
                                "log or journal", "continuous", "none")},
-        guidance="One row per piece, and 'none' is a legal value in the type column: a "
-                 "component nobody backs up is a decision somebody made, and it belongs on "
-                 "the page rather than in an assumption. The last column names the copy the "
-                 "backup lands in, from the table of copies at 5.7 offsite storage; where a "
-                 "component's copy is not in that table yet, add it there. How long anything "
-                 "is kept is a property of the copy and is asked once, there, so that two "
-                 "tables filled in by the same person in the same hour cannot end up "
-                 "disagreeing about it.",
+        guidance="A policy is defined once and applied to many things, which is how every "
+                 "backup product models it and how the room will describe it. Expect a "
+                 "handful of rows rather than one per component. The last column names the "
+                 "copy it writes into, from the table at 5.7; how long anything is kept is a "
+                 "property of that copy and is asked once, there. What each policy actually "
+                 "covers is the next question, and it is the one that finds the gaps.",
+        nist_heading="5.8 Data Backup", nist_source=_A3,
+    ),
+    Question(
+        "infra.backup_coverage", "infra", "5.8", "5.8 Data backup",
+        "docs/03-replication-matrix.md, docs/11-inventory.md",
+        "Now go down the inventory. For each thing that would have to come back, which policy "
+        "covers it? Where nothing covers it, say so and say why.",
+        "Each thing that needs protecting, what it is, which policy covers it and why "
+        "anything uncovered is uncovered",
+        "infrastructure owner", "nist", kind="rows",
+        columns=("target", "kind", "what_is_copied", "policy", "not_covered_because"),
+        enum_columns={"kind": ("system", "application", "database", "filesystem",
+                               "volume or drive", "object store", "configuration", "other")},
+        guidance="Go finer than the component list where the answers differ: a data volume on "
+                 "a nightly incremental and an operating system volume nobody copies belong "
+                 "on separate rows, because that difference is the whole finding. An empty "
+                 "policy column with a reason beside it is a legitimate answer and the most "
+                 "useful row in the table; an empty one with nothing beside it is a gap "
+                 "nobody has decided about yet. Watch for configuration: a database with no "
+                 "copy of what configures it restores into nothing.",
         nist_heading="5.8 Data Backup", nist_source=_A3,
     ),
     Question(

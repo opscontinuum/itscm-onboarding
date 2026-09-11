@@ -77,20 +77,39 @@ other:
 > "Somebody deletes a table this morning and nobody notices until tomorrow. What do you reach
 > for? Now the whole region is gone instead. What do you reach for then?"
 
-Then the table, a row per component, because a schedule stated for the system as a whole
-hides the piece nobody covered:
+Then two tables, in this order, because they answer different questions and people conflate
+them. First the policies, which is how the room already thinks about it and how every backup
+product models it — a schedule defined once, applied to many things:
 
 | Column | What to press on |
 |---|---|
-| Component | Every piece, including the ones that feel too small to matter |
-| What is copied | Data, configuration, both. A database with no copy of its configuration restores into nothing |
+| Policy | Its name in whatever runs it, so somebody can find it afterwards |
 | Method | The mechanism, named. Not "we back it up" |
-| Type | Full, differential, incremental, snapshot, log, continuous — or `none`, which is a legal and useful answer |
+| Type | Full, differential, incremental, snapshot, log, continuous |
 | Frequency | The rhythm. Compare it against the recovery point objective the business signed |
-| Copy | Which copy it lands in, from the offsite storage table. How long anything is kept is asked once, there |
+| Copy | Which copy it writes into, from the offsite storage table. How long anything is kept is asked once, there |
 
-**A component whose type is `none` is a decision, not an omission.** Write it down as a
-decision with somebody's name against it, and it stops being a surprise during an invocation.
+Expect a handful of rows. A site with one nightly policy over twenty components has one row
+here, not twenty.
+
+Then what each policy covers, going down the inventory rather than down the policy list,
+because the gap is the point:
+
+| Column | What to press on |
+|---|---|
+| Target | Whatever would have to come back. Go finer than the component list wherever the answers differ |
+| Kind | System, application, database, filesystem, volume or drive, object store, configuration |
+| What is copied | Data, configuration, both. A database with no copy of what configures it restores into nothing |
+| Policy | Which one covers it, by name |
+| Not covered because | The reason, where nothing covers it |
+
+**A target nothing covers is a decision or a gap, and the difference is whether anybody has
+made it.** A reason written in that last column makes it a decision with a name against it. An
+empty cell beside an empty policy is the thing to go back for.
+
+The drive-level answers are where this earns its time. A data volume on a nightly incremental
+and an operating system volume nobody copies at all is an ordinary arrangement, entirely
+defensible, and completely invisible if the table stops at the application.
 
 Two questions that decide whether any of this is real:
 
